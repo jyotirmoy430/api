@@ -11,6 +11,7 @@ function alif(){
         'South Indian Movies'
     ];
     $counter = 0;
+    $finalAlif = [];
 
     foreach($CATEGORY as $key=>$cat){
         for($i=1980; $i<=2022; $i++){
@@ -62,7 +63,7 @@ function alif(){
                                 if($contentSubCat && $contentSubCat->items){
                                     $contentSubCat = $contentSubCat->items;
 
-                                    $finalAlif = [];
+
                                     foreach($contentSubCat as $subCat){
                                         $subCatHref = $subCat->href;
 

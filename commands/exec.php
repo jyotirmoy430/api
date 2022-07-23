@@ -14,9 +14,11 @@ try{
 $finalItems = array_merge($items, $alifItems);
 
 $finalArrFull = [];
+$counterMore = 0;
 foreach($finalItems as $key=>$ff){
-    $ff->id = $key;
+    $ff->id = $counterMore;
     $finalArrFull[] = $ff;
+    $counterMore++;
 }
 
 
