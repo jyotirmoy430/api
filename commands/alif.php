@@ -7,8 +7,10 @@ function alif(){
         'Bangla Movies',
         'English Movies',
         'Foreign Language Movies',
-        'Hindi Movies'
+        'Hindi Movies',
+        'South Indian Movies'
     ];
+    $counter = 0;
 
     foreach($CATEGORY as $key=>$cat){
         for($i=1980; $i<=2022; $i++){
@@ -70,7 +72,7 @@ function alif(){
                                                 strpos($HOST.$subCatHref, ".avi") !== false ||
                                                 strpos($HOST.$subCatHref, ".mkv") !== false){
                                                 $object = new stdClass();
-                                                $object->id = $key;
+                                                $object->id = $counter;
                                                 $object->flag = 1;
                                                 $object->video = $HOST.$subCatHref;
                                                 $object->size = formatBytes($subCat->size);
@@ -80,6 +82,7 @@ function alif(){
                                                 echo "</pre>";
 
                                                 $finalAlif[] = $object;
+                                                $counter++;
 
                                             }
 
@@ -153,9 +156,9 @@ function call($url, $payload){
         CURLOPT_FOLLOWLOCATION => true,     // follow redirects
         CURLOPT_ENCODING       => "",       // handle all encodings
         CURLOPT_AUTOREFERER    => true,     // set referer on redirect
-        CURLOPT_CONNECTTIMEOUT => 120,      // timeout on connect
-        CURLOPT_TIMEOUT        => 120,      // timeout on response
-        CURLOPT_MAXREDIRS      => 10,       // stop after 10 redirects
+        CURLOPT_CONNECTTIMEOUT => 10,      // timeout on connect
+        CURLOPT_TIMEOUT        => 10,      // timeout on response
+        CURLOPT_MAXREDIRS      => 2,       // stop after 10 redirects
     );
 
     $ch      = curl_init( $url );
