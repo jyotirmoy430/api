@@ -8,6 +8,7 @@ function init(){
         'http://10.16.100.202/ftps10',
         'http://10.16.100.212/iccftps12',
         'http://10.16.100.213/iccftps13',
+        'http://10.16.100.250',
     ];
 
     $TWO = [
@@ -17,6 +18,7 @@ function init(){
         'iccftps10sasd',
         'iccftps12sasd',
         'iccftps13sasd',
+        'ftps10d',
     ];
 
     $THREE=[
@@ -26,11 +28,13 @@ function init(){
         10,
         10,
         10,
+        2
     ];
 
     $MOVIE_FOLDER_URL = [
         'Movies',
         '',
+        'Movies',
         'Movies',
         'Movies',
         'Movies',
@@ -185,6 +189,9 @@ function init(){
 function addCustom( $urls ){
     $urls[] = 'http://10.16.100.245/ftps2d1/ftps1d3/English%20Movies/2014';
     $urls[] = 'http://10.16.100.245/ftps2d1/ftps1d3/English%20Movies/2015';
+    $urls[] = 'http://10.16.100.250/ftps10d1/TV%20Show/English/Lucifer%20Season%2001%20(2016)%20Completed';
+    $urls[] = 'http://10.16.100.250/ftps10d2/TV%20Show/English/Lucifer%20Season%2002%20(2016)%20Completed';
+    $urls[] = 'http://10.16.100.250/ftps10d2/TV%20Show/English/Lucifer%20Season%2003%20(2017)%20Completed';
     return $urls;
 }
 
