@@ -91,6 +91,10 @@ function init(){
 
     if($FINAL_URL){
         foreach($FINAL_URL as $key=>$final){
+            echo "<pre>";
+            print_r($final);
+            echo "</pre>";
+
             $data = get_web_page($final);
 
             if($data["http_code"] == 200){
@@ -100,6 +104,10 @@ function init(){
                 foreach ($dom->getElementsByTagName('a') as $item) {
                     //$output[] = $item->getAttribute('href');
                     $href = $item->getAttribute('href');
+
+                    echo "<pre>";
+                    print_r($href);
+                    echo "</pre>";
 
                     if($href){
                         $takeHref = explode(".",$href);
