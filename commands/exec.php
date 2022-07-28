@@ -4,12 +4,14 @@ include 'index.php';
 include 'alif.php';
 
 $items = init();
-try{
+/*try{
     $alifItems = alif();
 
 }catch (Exception $exception){
     $alifItems = [];
-}
+}*/
+
+$alifItems = [];
 
 $finalItems = array_merge($items, $alifItems);
 
