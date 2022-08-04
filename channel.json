@@ -1,14 +1,14 @@
 [
   {
     "id":0,
-    "url":"a",
-    "title":"duronto",
-    "thumb":""
+    "url":"http://bciptv.net:8082/duronto-tv/embed.html?token=e4af393c7280d94bde2c8982a078770eecbe26ae-08b0d339e97dee9c751be8266d84f8b1-1659633998-1659623198&remote=45.120.96.164",
+    "title":"Duronto",
+    "thumb":"http://bciptv.net/assets/images/duronto.jpg"
   },
   {
     "id":1,
-    "url":"b",
-    "title":"zee bangla",
-    "thumb":""
+    "url":"http://bciptv.net:8082/Sonyaath/embed.html?token=7c96f3076edce360e9e41a35fd45534e77463920-beadc17792580d12e215afeef46ec38f-1659634059-1659623259&remote=45.120.96.164",
+    "title":"Sony aath",
+    "thumb":"http://bciptv.net/assets/images/sonyaath.jpg"
   }
 ]
