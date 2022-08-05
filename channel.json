@@ -1,14 +1,20 @@
 [
   {
     "id":0,
-    "url":"https://youtu.be/0SCopio77gM",
-    "title":"Duronto c",
+    "url":"http://bciptv.net:8082/duronto-tv/embed.html?token=489b93c9696cb239cb677fcd21a0433bd1278804-1d2d19d4018ef79ff09cfe59830a23ed-1659696559-1659685759&remote=45.120.96.164",
+    "title":"Duronto",
     "thumb":"http://bciptv.net/assets/images/duronto.jpg"
   },
   {
     "id":1,
-    "url":"http://10.16.100.204:8082/tv/sonyaat.html",
-    "title":"Sony aath b",
+    "url":"http://bciptv.net:8082/Sonyaath/embed.html?token=caf4ea6b814201fcbf9c83383d6dde62e3b73609-988fd75852908a7f4053ffe924786e6d-1659696605-1659685805&remote=45.120.96.164",
+    "title":"Sony Aath",
     "thumb":"http://10.16.100.244/files/sonyaath.png"
+  },
+  {
+    "id":2,
+    "url":"http://bciptv.net:8082/zee-bangla/embed.html?token=a8f82e309228c61210082aff5644fe3014024d35-760e9ef4508a16979a413dd3ad88627d-1659696666-1659685866&remote=45.120.96.164",
+    "title":"Zee Bangla HD",
+    "thumb":"hhttp://bciptv.net/assets/images/zeebanglahd.jpg"
   }
 ]
