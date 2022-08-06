@@ -118,11 +118,8 @@ function init(){
                         if($takeHref && (end($takeHref) == "mp4" || end($takeHref) == "mkv"  || end($takeHref) == "avi")){
                             $implode = implode(".", $takeHref);
 
-
-
                             $explodeFinal = explode("/", $final);
                             $explodeImplode = explode("/", $implode);
-
 
                             $makeFinal = [];
                             foreach($explodeFinal as $key=>$ex){
@@ -133,13 +130,7 @@ function init(){
 
                             }
 
-
-
-
-
                             $final = implode("/", $makeFinal);
-
-
 
                             if(endsWith($final,"/") || startsWith($implode,"/")){
                                 $fullFinalUrl = $final.$implode;
@@ -192,6 +183,9 @@ function addCustom( $urls ){
     $urls[] = 'http://10.16.100.250/ftps10d1/TV%20Show/English/Lucifer%20Season%2001%20(2016)%20Completed';
     $urls[] = 'http://10.16.100.250/ftps10d2/TV%20Show/English/Lucifer%20Season%2002%20(2016)%20Completed';
     $urls[] = 'http://10.16.100.250/ftps10d2/TV%20Show/English/Lucifer%20Season%2003%20(2017)%20Completed';
+    $urls[] = 'http://ftp1.aliflailabd.com/Hindi%20Movies/2018/K.G.F%20Chapter%201%20%282018%29';
+    $urls[] = 'http://ftp1.aliflailabd.com/Hindi%20Movies/2018/K.G.F%20Chapter%201%20%282018%29';
+    $urls[] = 'http://ftp1.aliflailabd.com/Hindi%20Movies/2022/K.G.F%20Chapter%202%20%282022%29';
     return $urls;
 }
 
