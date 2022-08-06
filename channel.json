@@ -1,26 +1,26 @@
 [
   {
     "id":0,
-    "url":"http://10.16.100.207:8088/tv/gazihd.html",
-    "title":"Gazi tv",
-    "thumb":"http://10.16.100.244/files/gazitv.png"
+    "url":"duronto-tv",
+    "title":"Duronto tv",
+    "thumb":"http://bciptv.net/assets/images/duronto.jpg"
   },
   {
     "id":1,
-    "url":"http://10.16.100.204:8082/tv/sonyaat.html",
+    "url":"Sonyaath",
     "title":"Sony Aath",
-    "thumb":"http://10.16.100.244/files/sonyaath.png"
+    "thumb":"hhttp://bciptv.net/assets/images/sonyaath.jpg"
   },
   {
     "id":2,
-    "url":"http://10.16.100.204:8082/tv/zeebangla.html",
+    "url":"hzee-bangla",
     "title":"Zee Bangla HD",
     "thumb":"http://bciptv.net/assets/images/zeebanglahd.jpg"
   },
   {
     "id":3,
-    "url":"http://10.16.100.203:8082/tv/somoy.html",
+    "url":"Somoy-TV",
     "title":"Somoy",
-    "thumb":"http://10.16.100.244/files/somoy.png"
+    "thumb":"http://bciptv.net/assets/images/somoy.jpg"
   }
 ]
