@@ -37,6 +37,13 @@
   },
   {
     "id":6,
+    "url":"http://10.16.100.203:8082/tv/btv.html",
+    "title":"BTV",
+    "thumb":"http://10.16.100.244/files/btv.png",
+    "flag":1
+  },
+  {
+    "id":7,
     "url":"ngohd",
     "title":"National Geo",
     "thumb":"http://bciptv.net/assets/images/nationalgeobd.jpg"
