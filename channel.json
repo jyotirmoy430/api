@@ -2,48 +2,156 @@
   {
     "id":0,
     "url":"duronto-tv",
-    "title":"Duronto tv",
+    "title":"Duronto tv kids",
     "thumb":"http://bciptv.net/assets/images/duronto.jpg"
   },
   {
     "id":1,
     "url":"Sonyaath",
-    "title":"Sony Aath",
+    "title":"Sony Aath kids",
     "thumb":"http://bciptv.net/assets/images/sonyaath.jpg"
   },
   {
     "id":2,
     "url":"zee-bangla",
-    "title":"Zee Bangla HD",
+    "title":"Zee Bangla HD indian",
     "thumb":"http://bciptv.net/assets/images/zeebanglahd.jpg"
   },
   {
     "id":3,
-    "url":"Somoy-TV",
-    "title":"Somoy",
-    "thumb":"http://bciptv.net/assets/images/somoy.jpg"
+    "url":"jalsha",
+    "title":"Star Jalsha indian",
+    "thumb":"http://bciptv.net/assets/images/starjalshahd.jpg"
   },
   {
     "id":4,
-    "url":"it-care-gtv",
-    "title":"Gazi TV",
-    "thumb":"http://bciptv.net/assets/images/gazi.jpg"
+    "url":"Channel-i",
+    "title":"Channel-i bangla",
+    "thumb":"http://bciptv.net/assets/images/channeli.jpg"
   },
   {
     "id":5,
-    "url":"tsports",
-    "title":"T-Sports",
-    "thumb":"http://bciptv.net/assets/images/tsports.jpg"
+    "url":"ATN-Bangla",
+    "title":"ATN-Bangla",
+    "thumb":"http://bciptv.net/assets/images/atnbangla.jpg"
   },
   {
     "id":6,
-    "url":"http://10.16.100.203:8082/tv/btv.html",
+    "url":"depto-bangla",
+    "title":"Depto Bangla",
+    "thumb":"http://bciptv.net/assets/images/deeptotv.jpg"
+  },
+  {
+    "id":7,
+    "url":"Somoy-TV",
+    "title":"Somoy news",
+    "thumb":"http://bciptv.net/assets/images/somoy.jpg"
+  },
+  {
+    "id":8,
+    "url":"Ekattor-tv",
+    "title":"Ekattor TV news",
+    "thumb":"http://bciptv.net/assets/images/ekattortv.jpg"
+  },
+  {
+    "id":9,
+    "url":"DBC-NEWS",
+    "title":"DBC news",
+    "thumb":"http://bciptv.net/assets/images/dbc.jpg"
+  },
+  {
+    "id":10,
+    "url":"jamuna-tv",
+    "title":"Jamuna TV news",
+    "thumb":"http://bciptv.net/assets/images/jamunatv.jpg"
+  },
+  {
+    "id":11,
+    "url":"Independent-Tv",
+    "title":"Independent TV news",
+    "thumb":"http://bciptv.net/assets/images/independenttv.jpg"
+  },
+  {
+    "id":12,
+    "url":"it-care-gtv",
+    "title":"Gazi TV sports",
+    "thumb":"http://bciptv.net/assets/images/gazi.jpg"
+  },
+  {
+    "id":13,
+    "url":"star-sports1",
+    "title":"Star sports 1",
+    "thumb":"http://bciptv.net/assets/images/starsports1.jpg"
+  },
+  {
+    "id":14,
+    "url":"star-sports2",
+    "title":"Star sports 2",
+    "thumb":"http://bciptv.net/assets/images/starsports2.jpg"
+  },
+  {
+    "id":15,
+    "url":"sony-ten1-hd",
+    "title":"Sony ten1 sports",
+    "thumb":"http://bciptv.net/assets/images/ten1hd.jpg"
+  },
+  {
+    "id":16,
+    "url":"sony-six-hd",
+    "title":"Sony Six sports",
+    "thumb":"http://bciptv.net/assets/images/sonysixhd.jpg"
+  },
+  {
+    "id":17,
+    "url":"sony-ten2",
+    "title":"Sony Ten2 sports",
+    "thumb":"http://bciptv.net/assets/images/ten2hd.jpg"
+  },
+  {
+    "id":18,
+    "url":"ten3",
+    "title":"Ten3 sports",
+    "thumb":"http://bciptv.net/assets/images/ten3hd.jpg"
+  },
+  {
+    "id":19,
+    "url":"tsports",
+    "title":"T-Sports sports",
+    "thumb":"http://bciptv.net/assets/images/tsports.jpg"
+  },
+  {
+    "id":20,
+    "url":"WILLOW-CRICKET-HD",
+    "title":"Willow Cricket sports",
+    "thumb":"http://bciptv.net/assets/images/willowhd.jpg"
+  },
+  {
+    "id":21,
+    "url":"http://tv.bdixsports.live/all/channels/web/btvworld.php",
     "title":"BTV",
     "thumb":"http://10.16.100.244/files/btv.png",
     "flag":1
   },
   {
-    "id":7,
+    "id":22,
+    "url":"andpictures",
+    "title":"And pictures movies",
+    "thumb":"http://bciptv.net/assets/images/andpictureshd.jpg"
+  },
+  {
+    "id":23,
+    "url":"star-movies-hd",
+    "title":"Star movies",
+    "thumb":"http://bciptv.net/assets/images/starmovieshd.jpg"
+  },
+  {
+    "id":24,
+    "url":"sony-pix-hd",
+    "title":"Sony pix movies",
+    "thumb":"http://bciptv.net/assets/images/sonypix.jpg"
+  },
+  {
+    "id":25,
     "url":"ngohd",
     "title":"National Geo",
     "thumb":"http://bciptv.net/assets/images/nationalgeobd.jpg"
