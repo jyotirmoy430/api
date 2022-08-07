@@ -2,16 +2,17 @@
 include 'helper.php';
 include 'index.php';
 include 'alif.php';
+include 'series.php';
 
 $items = init();
-/*try{
-    $alifItems = alif();
+//$items = [];
+try{
+    $alifItems = series();
 
 }catch (Exception $exception){
     $alifItems = [];
-}*/
+}
 
-$alifItems = [];
 
 $finalItems = array_merge($items, $alifItems);
 
