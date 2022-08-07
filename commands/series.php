@@ -131,7 +131,7 @@ function series(){
 
                             $FULL_FINAL_LIST[] = $fullFinalUrl;
                         }else{
-                            $OTHERS_FOLDERS[] =$final. $takeHref[0];
+                            $OTHERS_FOLDERS[] =$final."/". $takeHref[0];
                         }
                     }
 
