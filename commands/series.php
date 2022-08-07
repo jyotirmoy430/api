@@ -62,11 +62,13 @@ function series(){
                 $urlWithLoop[] = $initialUrl.$i."/".'Tv%20Show';
                 $urlWithLoop[] = $initialUrl.$i."/".'Tv%20Shows';
                 $urlWithLoop[] = $initialUrl.$i."/".'TV%20Shows';
+                $urlWithLoop[] = $initialUrl.$i."/".'TV%20Show';
             }
         }else{
             $urlWithLoop[] = $initialUrl.$MOVIE_FOLDER_URL[$key];
             $urlWithLoop[] = $initialUrl.'Tv%20Shows';
             $urlWithLoop[] = $initialUrl.'TV%20Shows';
+            $urlWithLoop[] = $initialUrl.'TV%20Show';
         }
 
     }
