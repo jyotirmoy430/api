@@ -46,6 +46,7 @@ function series(){
         'English',
         'Bangla%20(BD)',
         'Bangla%20(Kolkata)',
+        'Dual%20Audio',
     ];
 
 
