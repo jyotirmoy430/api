@@ -155,5 +155,12 @@
     "url":"ngohd",
     "title":"National Geo",
     "thumb":"http://bciptv.net/assets/images/nationalgeobd.jpg"
-  }
+  },
+  {
+    "id":26,
+    "url":"http://10.16.100.207:8088/tv/gazihd.html",
+    "title":"GTV 2",
+    "thumb":"http://10.16.100.244/files/btv.png",
+    "flag":1
+  },
 ]
