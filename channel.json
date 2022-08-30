@@ -159,8 +159,21 @@
   {
     "id":26,
     "url":"http://10.16.100.207:8088/tv/gazihd.html",
-    "title":"GTV 2",
-    "thumb":"http://10.16.100.244/files/btv.png",
+    "title":"Gazi tv 2",
+    "thumb":"http://bciptv.net/assets/images/gazi.jpg",
     "flag":1
+  },
+  {
+    "id":27,
+    "url":"http://10.16.100.245/tv/ptvsports.html",
+    "title":"Gazi tv 3",
+    "thumb":"http://bciptv.net/assets/images/gazi.jpg",
+    "flag":1
+  },
+  {
+    "id":28,
+    "url":"GTV",
+    "title":"Gazi TV 4",
+    "thumb":"http://bciptv.net/assets/images/gazi.jpg"
   }
 ]
