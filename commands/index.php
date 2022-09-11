@@ -90,7 +90,7 @@ function init(){
     }
     $FULL_FINAL_LIST = [];
 
-    $FINAL_URL = addCustom($FINAL_URL);
+    //$FINAL_URL = addCustom($FINAL_URL);
 
 
     if($FINAL_URL){
