@@ -228,6 +228,24 @@ function series(){
         $object->id = $key;
         $object->video = $final;
 
+        if(strpos($final, "2022") !== false){
+            $object->year = 2022;
+        } elseif(strpos($final, "2021") !== false){
+            $object->year = 2021;
+        } elseif(strpos($final, "2020") !== false){
+            $object->year = 2020;
+        } elseif(strpos($final, "2019") !== false){
+            $object->year = 2019;
+        } elseif(strpos($final, "2018") !== false){
+            $object->year = 2018;
+        } elseif(strpos($final, "2017") !== false){
+            $object->year = 2017;
+        } elseif(strpos($final, "2016") !== false){
+            $object->year = 2016;
+        } else{
+            $object->year = 0;
+        }
+
         echo "<pre>";
         print_r($object);
         echo "</pre>";

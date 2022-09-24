@@ -16,6 +16,14 @@ try{
 
 $finalItems = array_merge($items, $alifItems);
 
+$year = array();
+foreach ($finalItems as $key => $row)
+{
+    $year[$key] = $row->year;
+}
+array_multisort($year, SORT_DESC, $finalItems);
+
+
 $finalArrFull = [];
 $counterMore = 0;
 foreach($finalItems as $key=>$ff){
