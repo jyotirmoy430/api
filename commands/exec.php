@@ -21,7 +21,7 @@ foreach ($finalItems as $key => $row)
 {
     $year[$key] = $row->year;
 }
-array_multisort($year, SORT_DESC, $finalItems);
+array_multisort($year, SORT_ASC, $finalItems);
 
 
 $finalArrFull = [];
