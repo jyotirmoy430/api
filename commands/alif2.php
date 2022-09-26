@@ -1,5 +1,5 @@
 <?php
-function alif(){
+function alif2(){
     $HOST = 'http://cinemabazar.net/DATA/NAS1/Movies';
     $HOST_ONLY = 'http://cinemabazar.net';
 
