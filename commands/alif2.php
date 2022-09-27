@@ -1,25 +1,135 @@
 <?php
-function alif2(){
-    $HOST = 'http://cinemabazar.net/DATA/NAS1/Movies';
+
+
+function loopAndTake($parent, $payload, $data){
     $HOST_ONLY = 'http://cinemabazar.net';
 
+/*    echo "<pre>";
+    print_r($parent);
+    echo "</pre>";
+    echo "<pre>";
+    print_r($payload);
+    echo "</pre>\n\n\n";*/
+
+
+
+    $result = call($parent, $payload);
+
+    /*if($parent == 'http://cinemabazar.net/DATA/NAS1/TV%20Series/Bangla%20TV%20Series/Tiktiki/s1/'){
+        echo "aa<pre>";
+        print_r($payload);
+        echo "</pre>\n\n\n\n";
+        exit;
+    }*/
+
+    if($result && $result["content"]) {
+        $content = $result["content"];
+
+        $content = json_decode($content);
+
+        if($content) {
+            if ($content && isset($content->items)) {
+                $items = $content->items;
+
+
+
+
+                $parsedPayload = json_decode($payload);
+                foreach($items as $item){
+
+
+
+
+
+                    if(
+                        $item->href !== $parsedPayload->items->href &&
+                        strpos($item->href, $parsedPayload->items->href) !== false){
+
+                        if(strpos($item->href, ".jpg") === false &&
+                            (strpos($item->href, ".mp4") !== false ||
+                            strpos($item->href, ".MP4") !== false ||
+                            strpos($item->href, ".avi") !== false ||
+                            strpos($item->href, ".AVI") !== false ||
+                            strpos($item->href, ".MKV") !== false ||
+                            strpos($item->href, ".mkv") !== false)){
+                            array_push($data, $HOST_ONLY.$item->href);
+
+
+                            $data = array_unique($data);
+
+
+                        }else{
+                            $newParent = $HOST_ONLY.$item->href;
+
+
+                            $newPayload = '{"action":"get","items":{"href":"'.$item->href.'","what":1}}';
+
+                            $newItems = loopAndTake($newParent, $newPayload, $data);
+
+                            $newData = array_merge($data, $newItems);
+
+
+                            $data = array_unique($newData);
+
+                            echo "<pre>";
+                            print_r($data);
+                            echo "</pre>";
+
+                        }
+
+                        echo "Word Found!";
+                    } else{
+                        //echo "Word Not Found!";
+                    }
+
+                }
+
+            }
+        }
+
+
+    }
+    return array_values($data);
+}
+
+function alif2(){
+    $HOST = 'http://cinemabazar.net/DATA/NAS1/TV%20Series/Bangla%20TV%20Series/';
+
+
     $CATEGORY = [
-        'Animation',
-        'Bangla%28BD%29',
-        'Bollywood',
-        'Hollywood',
-        'Indian-Bangla',
+        'Bangla TV Series'
     ];
     $counter = 0;
     $finalAlif = [];
 
+
+    $parent = $HOST.'/';
+    $payloadHref = '/DATA/NAS1/TV%20Series/Bangla%20TV%20Series/';
+    $payload = '{"action":"get","items":{"href":"'.$payloadHref.'","what":1}}';
+    $parent = str_replace(' ', '%20', $parent);
+    $payload = str_replace(' ', '%20', $payload);
+
+
+    $bigArr = loopAndTake($parent, $payload, []);
+
+    echo "<pre>";
+    print_r($bigArr);
+    echo "</pre>";
+    exit;
+
+
+    exit;
+
+
+
     foreach($CATEGORY as $key=>$cat){
-        for($i=2001; $i<=2022; $i++){
-            $parent = $HOST.'/'.$cat.'/'.$i.'/';
-            $payloadHref = '/DATA/NAS1/Movies/'.$cat.'/'.$i.'/';
+            $parent = $HOST.'/'.$cat.'/';
+            $payloadHref = '/DATA/NAS1/TV%20Series/'.$cat.'/';
             $payload = '{"action":"get","items":{"href":"'.$payloadHref.'","what":1}}';
             $parent = str_replace(' ', '%20', $parent);
             $payload = str_replace(' ', '%20', $payload);
+
+
 
 
 
@@ -144,7 +254,7 @@ function alif2(){
 
             }
 
-        }
+
     }
 
     $FULL_FINAL = [];
@@ -186,52 +296,13 @@ function alif2(){
     }
 
 
+    echo "<pre>";
+    print_r($FULL_FINAL);
+    echo "</pre>";
+    exit;
+
 
     return $FULL_FINAL;
 
 }
 
-function formatBytes($size, $precision = 2) {
-    $base = log($size, 1024);
-    $suffixes = array('', 'KB', 'MB', 'GB', 'TB');
-
-    return round(pow(1024, $base - floor($base)), $precision) .''. $suffixes[floor($base)];
-
-}
-
-function call($url, $payload){
-   // sleep(1);
-    $user_agent='Mozilla/5.0 (Windows NT 6.1; rv:8.0) Gecko/20100101 Firefox/8.0';
-
-    $options = array(
-
-        CURLOPT_CUSTOMREQUEST  =>"POST",        //set request type post or get
-        CURLOPT_POSTFIELDS  =>$payload,        //set request type post or get
-        CURLOPT_POST           =>true,
-        CURLOPT_USERAGENT      => $user_agent, //set user agent
-        CURLOPT_COOKIEFILE     =>"cookie.txt", //set cookie file
-        CURLOPT_COOKIEJAR      =>"cookie.txt", //set cookie jar
-        CURLOPT_RETURNTRANSFER => true,     // return web page
-        CURLOPT_HEADER         => false,    // don't return headers
-        CURLOPT_FOLLOWLOCATION => true,     // follow redirects
-        CURLOPT_ENCODING       => "",       // handle all encodings
-        CURLOPT_AUTOREFERER    => true,     // set referer on redirect
-        CURLOPT_CONNECTTIMEOUT => 10,      // timeout on connect
-        CURLOPT_TIMEOUT        => 10,      // timeout on response
-        CURLOPT_MAXREDIRS      => 2,       // stop after 10 redirects
-    );
-
-    $ch      = curl_init( $url );
-    curl_setopt_array( $ch, $options );
-    $content = curl_exec( $ch );
-    $err     = curl_errno( $ch );
-    $errmsg  = curl_error( $ch );
-    $header  = curl_getinfo( $ch );
-    curl_close( $ch );
-
-    $header['errno']   = $err;
-    $header['errmsg']  = $errmsg;
-    $header['content'] = $content;
-
-    return $header;
-}

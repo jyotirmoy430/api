@@ -5,7 +5,13 @@ include 'alif.php';
 include 'alif2.php';
 include 'series.php';
 
-$cinemabazar = alif();
+$cinemabazar = alif2();
+
+echo "<pre>";
+print_r($cinemabazar);
+echo "</pre>";
+exit;
+
 
 try{
     $alif2 = alif2();
