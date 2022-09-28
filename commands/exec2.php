@@ -5,12 +5,7 @@ include 'alif.php';
 include 'alif2.php';
 include 'series.php';
 
-$cinemabazar = alif2();
 
-echo "<pre>";
-print_r($cinemabazar);
-echo "</pre>";
-exit;
 
 
 try{
@@ -21,7 +16,7 @@ try{
 }
 
 
-$finalItems = array_merge($cinemabazar, $alif2);
+$finalItems = $alif2;
 
 
 $year = array();

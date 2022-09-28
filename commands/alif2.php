@@ -54,6 +54,10 @@ function loopAndTake($parent, $payload, $data){
                             strpos($item->href, ".mkv") !== false)){
                             array_push($data, $HOST_ONLY.$item->href);
 
+                            echo "<pre>";
+                            print_r($HOST_ONLY.$item->href);
+                            echo "</pre>\n\n\n";
+
 
                             $data = array_unique($data);
 
@@ -71,9 +75,9 @@ function loopAndTake($parent, $payload, $data){
 
                             $data = array_unique($newData);
 
-                            echo "<pre>";
+                            /*echo "<pre>";
                             print_r($data);
-                            echo "</pre>";
+                            echo "</pre>";*/
 
                         }
 
@@ -93,7 +97,7 @@ function loopAndTake($parent, $payload, $data){
 }
 
 function alif2(){
-    $HOST = 'http://cinemabazar.net/DATA/NAS1/TV%20Series/Bangla%20TV%20Series/';
+    $HOST = 'http://cinemabazar.net/DATA/NAS1/';
 
 
     $CATEGORY = [
@@ -104,7 +108,7 @@ function alif2(){
 
 
     $parent = $HOST.'/';
-    $payloadHref = '/DATA/NAS1/TV%20Series/Bangla%20TV%20Series/';
+    $payloadHref = '/DATA/NAS1/';
     $payload = '{"action":"get","items":{"href":"'.$payloadHref.'","what":1}}';
     $parent = str_replace(' ', '%20', $parent);
     $payload = str_replace(' ', '%20', $payload);
@@ -112,8 +116,48 @@ function alif2(){
 
     $bigArr = loopAndTake($parent, $payload, []);
 
+    $FULL_FINAL = [];
+
+    if($bigArr){
+        foreach($bigArr as $key=>$final){
+
+
+
+            $object = new stdClass();
+            $object->id = $key;
+            $object->video = $final;
+
+
+
+            if(strpos($final, "2022") !== false){
+                $object->year = 2022;
+            } elseif(strpos($final, "2001") !== false){
+                $object->year = 2001;
+            } elseif(strpos($final, "2020") !== false){
+                $object->year = 2020;
+            } elseif(strpos($final, "2019") !== false){
+                $object->year = 2019;
+            } elseif(strpos($final, "2018") !== false){
+                $object->year = 2018;
+            } elseif(strpos($final, "2017") !== false){
+                $object->year = 2017;
+            } elseif(strpos($final, "2016") !== false){
+                $object->year = 2016;
+            } else{
+                $object->year = 0;
+            }
+
+            echo "<pre>";
+            print_r($object);
+            echo "</pre>";
+
+            $FULL_FINAL[] = $object;
+
+        }
+    }
+
     echo "<pre>";
-    print_r($bigArr);
+    print_r($FULL_FINAL);
     echo "</pre>";
     exit;
 
@@ -264,23 +308,23 @@ function alif2(){
 
             $object = new stdClass();
             $object->id = $key;
-            $object->video = $final->video;
+            $object->video = $final;
 
 
 
-            if(strpos($final->video, "2022") !== false){
+            if(strpos($final, "2022") !== false){
                 $object->year = 2022;
-            } elseif(strpos($final->video, "2001") !== false){
+            } elseif(strpos($final, "2001") !== false){
                 $object->year = 2001;
-            } elseif(strpos($final->video, "2020") !== false){
+            } elseif(strpos($final, "2020") !== false){
                 $object->year = 2020;
-            } elseif(strpos($final->video, "2019") !== false){
+            } elseif(strpos($final, "2019") !== false){
                 $object->year = 2019;
-            } elseif(strpos($final->video, "2018") !== false){
+            } elseif(strpos($final, "2018") !== false){
                 $object->year = 2018;
-            } elseif(strpos($final->video, "2017") !== false){
+            } elseif(strpos($final, "2017") !== false){
                 $object->year = 2017;
-            } elseif(strpos($final->video, "2016") !== false){
+            } elseif(strpos($final, "2016") !== false){
                 $object->year = 2016;
             } else{
                 $object->year = 0;
