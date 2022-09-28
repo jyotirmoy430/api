@@ -1,35 +1,20 @@
 <?php
 include 'helper.php';
-include 'index.php';
-include 'alif.php';
-include 'alif2.php';
-include 'series.php';
+include 'cinemabazar.php';
 
-
-
-
-try{
-    $alif2 = alif2();
-
-}catch (Exception $exception){
-    $alif2 = [];
-}
-
-
-$finalItems = $alif2;
-
+$cinemabazar = cinemabazar();
 
 $year = array();
-foreach ($finalItems as $key => $row)
+foreach ($cinemabazar as $key => $row)
 {
     $year[$key] = $row->year;
 }
-array_multisort($year, SORT_ASC, $finalItems);
+array_multisort($year, SORT_ASC, $cinemabazar);
 
 
 $finalArrFull = [];
 $counterMore = 0;
-foreach($finalItems as $key=>$ff){
+foreach($cinemabazar as $key=>$ff){
     $ff->id = $counterMore;
     $finalArrFull[] = $ff;
     $counterMore++;
@@ -38,7 +23,7 @@ foreach($finalItems as $key=>$ff){
 
 
 
-file_put_contents("listncinebazar.json",json_encode($finalArrFull));
+file_put_contents("listncinemabazar.json",json_encode($finalArrFull));
 
 echo "completed";
 exit;
