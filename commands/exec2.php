@@ -7,21 +7,37 @@ include 'cinemabazar.php';
 
 $cinemabazar = cinemabazar();
 
+$currentStr = file_get_contents(__DIR__ . '/../listncinemabazar.json');
+$currentJson = json_decode($currentStr);
+
+$cinemabazarMerged = array_merge($currentJson, $cinemabazar);
+
+
+
 $year = array();
-foreach ($cinemabazar as $key => $row)
+foreach ($cinemabazarMerged as $key => $row)
 {
     $year[$key] = $row->year;
 }
-array_multisort($year, SORT_ASC, $cinemabazar);
+array_multisort($year, SORT_ASC, $cinemabazarMerged);
 
 
 $finalArrFull = [];
 $counterMore = 0;
-foreach($cinemabazar as $key=>$ff){
-    $ff->id = $counterMore;
-    $finalArrFull[] = $ff;
-    $counterMore++;
+
+$sourceGet = [];
+foreach($cinemabazarMerged as $key=>$ff){
+
+
+    if(!in_array($ff->video, $sourceGet)){
+        $ff->id = $counterMore;
+        $finalArrFull[] = $ff;
+        $counterMore++;
+        $sourceGet[] = $ff->video;
+    }
+
 }
+
 
 
 
