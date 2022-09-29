@@ -90,10 +90,10 @@ function loopAndTake($parent, $payload, $data){
 }
 
 function cinemabazar(){
-    $HOST = 'http://cinemabazar.net/DATA/NAS1/Cartoon/';
+    $HOST = 'http://cinemabazar.net/DATA/NAS1/Movie%20BOXSet/';
 
     $parent = $HOST.'/';
-    $payloadHref = '/DATA/NAS1/Cartoon/';
+    $payloadHref = '/DATA/NAS1/Movie%20BOXSet/';
     $payload = '{"action":"get","items":{"href":"'.$payloadHref.'","what":1}}';
     $parent = str_replace(' ', '%20', $parent);
     $payload = str_replace(' ', '%20', $payload);
