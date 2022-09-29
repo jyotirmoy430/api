@@ -84,7 +84,7 @@ function loopAndTake($parent, $payload, $data){
         }
         return array_values($data);
     }catch (\Exception $e){
-
+        return $data;
     }
 
 }
