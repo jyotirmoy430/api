@@ -228,6 +228,30 @@ function series(){
         $object->id = $key;
         $object->video = $final;
 
+
+        $CATEGORY = [
+            'Bangla',
+            'English',
+            'Bangla%20(BD)',
+            'Bangla%20(Kolkata)',
+            'Dual%20Audio',
+            'Animation',
+        ];
+
+        if(strpos($final, "Bangla") !== false){
+            $object->cat = "Bangla";
+        } elseif(strpos($final, "English") !== false){
+            $object->cat = "English";
+        } elseif(strpos($final, "Dual") !== false){
+            $object->cat = "Dual";
+        } elseif(strpos($final, "Animation") !== false){
+            $object->cat = "Animation";
+        } else{
+            $object->cat = "";
+        }
+
+
+
         if(strpos($final, "2022") !== false){
             $object->year = 2022;
         } elseif(strpos($final, "2021") !== false){

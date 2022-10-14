@@ -80,11 +80,15 @@ function init(){
         }
 
     }
+    $catCounter = 0;
     if($urlWithLoop){
         foreach($urlWithLoop as $key=>$top){
             foreach($CATEGORY as $four){
                 $takeUrl = $top.'/'.str_replace(' ', '%20', $four);
-                $FINAL_URL[] = $takeUrl;
+                $FINAL_URL[$catCounter]['url'] = $takeUrl;
+                $FINAL_URL[$catCounter]['cat'] = $four;
+
+                $catCounter++;
             }
         }
     }
@@ -93,8 +97,10 @@ function init(){
     //$FINAL_URL = addCustom($FINAL_URL);
 
 
+    $itemCounter = 0;
     if($FINAL_URL){
-        foreach($FINAL_URL as $key=>$final){
+        foreach($FINAL_URL as $key=>$itemGet){
+            $final = $itemGet["url"];
             echo "<pre>";
             print_r($final);
             echo "</pre>";
@@ -140,7 +146,9 @@ function init(){
                             $fullFinalUrl = str_replace("http:/","http://",$fullFinalUrl);
 
 
-                            $FULL_FINAL_LIST[] = $fullFinalUrl;
+                            $FULL_FINAL_LIST[$itemCounter]['url'] = $fullFinalUrl;
+                            $FULL_FINAL_LIST[$itemCounter]['cat'] = $itemGet['cat'];
+                            $itemCounter++;
                         }
                     }
 
@@ -157,7 +165,8 @@ function init(){
 
     $FULL_FINAL = [];
 
-    foreach($FULL_FINAL_LIST as $key=>$final){
+    foreach($FULL_FINAL_LIST as $key=>$itemGet){
+        $final = $itemGet['url'];
         $object = new stdClass();
         $object->id = $key;
         $object->video = $final;
@@ -180,6 +189,7 @@ function init(){
         } else{
             $object->year = 0;
         }
+        $object->cat = $itemGet['cat'];
 
         echo "<pre>";
         print_r($object);
