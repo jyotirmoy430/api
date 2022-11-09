@@ -238,7 +238,11 @@ function series(){
             'Animation',
         ];
 
-        if(strpos($final, "Bangla") !== false){
+        if(strpos($final, "Tv%20Show") !== false){
+            $object->cat = "Tv%20Show";
+        } elseif(strpos($final, "TV%20Show") !== false){
+            $object->cat = "Tv%20Show";
+        } elseif(strpos($final, "Bangla") !== false){
             $object->cat = "Bangla";
         } elseif(strpos($final, "English") !== false){
             $object->cat = "English";
