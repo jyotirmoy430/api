@@ -1,11 +1,12 @@
 <?php
-error_reporting(0);
+//error_reporting(0);
 
 try{
     $keyword = ($_GET["keyword"]) ? $_GET["keyword"] : "";
     $category = ($_GET["category"]) ? $_GET["category"] : "";
     $offset = ($_GET["offset"]) ? $_GET["offset"] : 0;
-    $limit = ($_GET["limit"]) ? $_GET["limit"] : 2;
+    $limit = ($_GET["limit"]) ? $_GET["limit"] : 20;
+    $sort = ($_GET["sort"] === 'asc') ? SORT_ASC : SORT_DESC;
 }catch (\Exception $e){
 }
 
@@ -17,38 +18,30 @@ $takeArr = [];
 
 foreach($decoded_json as $decoded){
     if($category){
-        if (strpos($decoded->cat, $category) !== false) {
-            $checkMatch = checkWords($decoded->video, $keyword);
-            if($checkMatch){
+        if (strpos(strtolower($decoded->cat), strtolower($category)) !== false) {
+            if($keyword == ''){
+                $takeArr[] = $decoded;
+            }
+            if (strpos(strtolower($decoded->video), strtolower($keyword)) !== false) {
                 $takeArr[] = $decoded;
             }
         }
     }else{
-        $checkMatch = checkWords($decoded->video, $keyword);
-        if($checkMatch){
+        if($keyword == ''){
+            $takeArr[] = $decoded;
+        }
+        if (strpos(strtolower($decoded->video), strtolower($keyword)) !== false) {
             $takeArr[] = $decoded;
         }
     }
 }
 
-function checkWords($video, $keyword){
-    try{
-        $keywords = explode("%20", $keyword);
-
-        if($keywords && count($keywords) > 0){
-            foreach($keywords as $word){
-                if (strpos($video, $word) !== false) {
-                    return true;
-                }
-            }
-        }
-    }catch (\Exception $e){
-        return true;
-    }
-    return false;
+$year = array();
+foreach ($takeArr as $key => $row)
+{
+    $year[$key] = $row->year;
 }
-
-
+array_multisort($year, $sort, $takeArr);
 
 echo json_encode(array_slice($takeArr, $offset, $limit), JSON_PRETTY_PRINT);
 
