@@ -1,5 +1,5 @@
 <?php
-//error_reporting(0);
+error_reporting(0);
 
 try{
     $keyword = ($_GET["keyword"]) ? $_GET["keyword"] : "";
@@ -10,6 +10,9 @@ try{
 }catch (\Exception $e){
 }
 
+if($limit & $limit > 100){
+    $limit = 100;
+}
 
 $data = get_web_page("https://jyotirmoy430.github.io/api/listn.json");
 $decoded_json = json_decode($data["content"], false);
