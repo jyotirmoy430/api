@@ -2,8 +2,8 @@
 error_reporting(0);
 
 try{
-    $keyword = ($_GET["keyword"]) ? $_GET["keyword"] : "";
-    $category = ($_GET["category"]) ? $_GET["category"] : "";
+    $keyword = ($_GET["keyword"]) ? str_replace(" ", "%20", $_GET["keyword"]) : "";
+    $category = ($_GET["category"] && $_GET["category"] !== ' ') ? $_GET["category"] : "";
     $offset = ($_GET["offset"]) ? $_GET["offset"] : 0;
     $limit = ($_GET["limit"]) ? $_GET["limit"] : 20;
     $sort = ($_GET["sort"] === 'asc') ? SORT_ASC : SORT_DESC;
