@@ -2,7 +2,7 @@
 error_reporting(0);
 
 $keyword = ($_GET["keyword"]) ? str_replace(" ", "%20", $_GET["keyword"]) : "";
-$data = get_web_page("https://www.google.com/search?source=lnms&sa=X&gbv=1&tbm=isch&q=".$keyword);
+$data = get_web_page("https://www.google.com/search?q=black+adam&rlz=1C5CHFA_enBD1014BD1014&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiNmufm_-T7AhX7TGwGHfsdBjgQ_AUoAnoECAIQBA&biw=1440&bih=260&dpr=2");
 $dom = new DomDocument();
 $dom->loadHTML($data["content"]);
 
