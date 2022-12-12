@@ -21,7 +21,7 @@ $takeArr = [];
 
 foreach($decoded_json as $decoded){
     if($category){
-        if (strpos(strtolower($decoded->cat), strtolower($category)) !== false) {
+        if (strpos(strtolower($decoded->cat), strtolower(str_replace(' ', '%20', $category))) !== false) {
             if($keyword == ''){
                 $takeArr[] = $decoded;
             }
