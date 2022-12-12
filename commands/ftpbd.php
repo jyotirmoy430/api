@@ -2,7 +2,7 @@
 
 function loopAndTake($parent, $payload, $data){
     try{
-        $HOST_ONLY = 'http://server3.ftpbd.net';
+        $HOST_ONLY = 'http://server2.ftpbd.net';
 
         if(
             strpos($parent, "/Tutorial") !== false ||
@@ -52,6 +52,10 @@ function loopAndTake($parent, $payload, $data){
                                     strpos($item->href, ".AVI") !== false ||
                                     strpos($item->href, ".MKV") !== false ||
                                     strpos($item->href, ".mkv") !== false)){
+                                echo "<pre>";
+                                print_r($HOST_ONLY.$item->href.":::".$item->size);
+                                echo "</pre>\n\n";
+
                                 array_push($data, $HOST_ONLY.$item->href.":::".$item->size);
 
 
@@ -70,9 +74,7 @@ function loopAndTake($parent, $payload, $data){
 
                                 $newData = array_merge($data, $newItems);
 
-                                echo "<pre>";
-                                print_r($newData);
-                                echo "</pre>\n\n\n";
+
                                 $data = array_unique($newData);
 
                             }
@@ -98,10 +100,10 @@ function loopAndTake($parent, $payload, $data){
 }
 
 function ftpbd(){
-    $HOST = 'http://server3.ftpbd.net/FTP-3/Bangla%20Collection/BANGLA/Web%20Series/Syndicate%20%28TV%20Series%29%202022/';
+    $HOST = 'http://server2.ftpbd.net/FTP-2/English%20Movies/';
 
     $parent = $HOST.'/';
-    $payloadHref = '/FTP-3/Bangla%20Collection/BANGLA/Web%20Series/Syndicate%20%28TV%20Series%29%202022/';
+    $payloadHref = '/FTP-2/English%20Movies/';
     $cat = 'Tv%20Show';
     $payload = '{"action":"get","items":{"href":"'.$payloadHref.'","what":1}}';
     $parent = str_replace(' ', '%20', $parent);
