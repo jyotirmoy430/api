@@ -2,7 +2,7 @@
 
 function loopAndTake($parent, $payload, $data){
     try{
-        $HOST_ONLY = 'http://server3.ftpbd.net/';
+        $HOST_ONLY = 'http://server3.ftpbd.net';
 
         if(
             strpos($parent, "/Tutorial") !== false ||
