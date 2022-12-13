@@ -22,7 +22,7 @@ foreach ($ftpbdMerged as $key => $row)
 {
     $year[$key] = $row->year;
 }
-array_multisort($year, SORT_ASC, $ftpbdMerged);
+array_multisort($year, SORT_DESC, $ftpbdMerged);
 
 
 
