@@ -2,11 +2,11 @@
 
 function loopAndTake($parent, $payload, $data){
     try{
-        $HOST_ONLY = 'http://server2.ftpbd.net';
+        $HOST_ONLY = 'http://server3.ftpbd.net';
 
-        if(count($data) > 7){
+        /*if(count($data) > 7){
             return $data;
-        }
+        }*/
         echo "<pre>";
         print_r("Length::".count($data));
         echo "</pre>\n\n";
@@ -108,11 +108,11 @@ function loopAndTake($parent, $payload, $data){
 }
 
 function ftpbd(){
-    $HOST = 'http://server2.ftpbd.net/FTP-2/English%20Movies/%281995%29%20%26%20Before/';
+    $HOST = 'http://server3.ftpbd.net/FTP-3/Bangla%20Collection/BANGLA/Web%20Series/Syndicate%20%28TV%20Series%29%202022/';
 
     $parent = $HOST.'/';
-    $payloadHref = '/FTP-2/English%20Movies/%281995%29%20%26%20Before/';
-    $cat = 'English';
+    $payloadHref = '/FTP-3/Bangla%20Collection/BANGLA/Web%20Series/Syndicate%20%28TV%20Series%29%202022/';
+    $cat = 'Tv%20Show';
     $payload = '{"action":"get","items":{"href":"'.$payloadHref.'","what":1}}';
     $parent = str_replace(' ', '%20', $parent);
     $payload = str_replace(' ', '%20', $payload);
