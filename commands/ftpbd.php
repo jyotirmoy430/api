@@ -108,11 +108,11 @@ function loopAndTake($parent, $payload, $data){
 }
 
 function ftpbd(){
-    $HOST = 'http://server3.ftpbd.net/FTP-3/Bangla%20Collection/BANGLA/Kolkata%20Bangla%20Movies/';
+    $HOST = 'http://server3.ftpbd.net/FTP-3/Hindi%20Movies/';
 
     $parent = $HOST.'/';
-    $payloadHref = '/FTP-3/Bangla%20Collection/BANGLA/Kolkata%20Bangla%20Movies/';
-    $cat = 'Bangla';
+    $payloadHref = '/FTP-3/Hindi%20Movies/';
+    $cat = 'Hindi';
     $payload = '{"action":"get","items":{"href":"'.$payloadHref.'","what":1}}';
     $parent = str_replace(' ', '%20', $parent);
     $payload = str_replace(' ', '%20', $payload);
