@@ -4,6 +4,14 @@ function loopAndTake($parent, $payload, $data){
     try{
         $HOST_ONLY = 'http://server2.ftpbd.net';
 
+        if(count($data) > 7){
+            return $data;
+        }
+        echo "<pre>";
+        print_r("Length::".count($data));
+        echo "</pre>\n\n";
+
+
         if(
             strpos($parent, "/Tutorial") !== false ||
             strpos($parent, "/E-Books") !== false ||
@@ -100,11 +108,11 @@ function loopAndTake($parent, $payload, $data){
 }
 
 function ftpbd(){
-    $HOST = 'http://server2.ftpbd.net/FTP-2/English%20Movies/';
+    $HOST = 'http://server2.ftpbd.net/FTP-2/English%20Movies/%281995%29%20%26%20Before/';
 
     $parent = $HOST.'/';
-    $payloadHref = '/FTP-2/English%20Movies/';
-    $cat = 'Tv%20Show';
+    $payloadHref = '/FTP-2/English%20Movies/%281995%29%20%26%20Before/';
+    $cat = 'English';
     $payload = '{"action":"get","items":{"href":"'.$payloadHref.'","what":1}}';
     $parent = str_replace(' ', '%20', $parent);
     $payload = str_replace(' ', '%20', $payload);
@@ -129,19 +137,19 @@ function ftpbd(){
 
 
 
-                if(strpos($final, "2022") !== false){
+                if(strpos($object->video, "2022") !== false){
                     $object->year = 2022;
-                } elseif(strpos($final, "2021") !== false){
+                } elseif(strpos($object->video, "2021") !== false){
                     $object->year = 2021;
-                } elseif(strpos($final, "2020") !== false){
+                } elseif(strpos($object->video, "2020") !== false){
                     $object->year = 2020;
-                } elseif(strpos($final, "2019") !== false){
+                } elseif(strpos($object->video, "2019") !== false){
                     $object->year = 2019;
-                } elseif(strpos($final, "2018") !== false){
+                } elseif(strpos($object->video, "2018") !== false){
                     $object->year = 2018;
-                } elseif(strpos($final, "2017") !== false){
+                } elseif(strpos($object->video, "2017") !== false){
                     $object->year = 2017;
-                } elseif(strpos($final, "2016") !== false){
+                } elseif(strpos($object->video, "2016") !== false){
                     $object->year = 2016;
                 } else{
                     $object->year = 0;
