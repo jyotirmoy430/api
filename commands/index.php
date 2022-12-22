@@ -60,7 +60,7 @@ function init(){
         'Tamil%20Movie',
         'South%20Indian%20(Hindi%20Dubbed)',
         'South%20Indian',
-        'Kolkata',
+        'Bangla/Kolkata',
     ];
 
 
@@ -190,7 +190,7 @@ function init(){
         } else{
             $object->year = 0;
         }
-        $object->cat = ($itemGet['cat'] == "Kolkata") ? "Bangla%20(Kolkata)" : $itemGet['cat'];
+        $object->cat = ($itemGet['cat'] == "Bangla/Kolkata") ? "Bangla%20(Kolkata)" : $itemGet['cat'];
 
         echo "<pre>";
         print_r($object);
