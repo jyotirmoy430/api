@@ -87,7 +87,7 @@ function loopAndTake($parent, $payload, $data){
 
                             }
 
-                            echo "Word Found!";
+                            echo "Word Found!   $parent   \n\n\n";
                         } else{
                             //echo "Word Not Found!";
 
@@ -108,10 +108,10 @@ function loopAndTake($parent, $payload, $data){
 }
 
 function ftpbd(){
-    $HOST = 'http://server3.ftpbd.net/FTP-3/Bangla%20Collection/BANGLA/Kolkata%20Bangla%20Movies/%282022%29/';
+    $HOST = 'http://server3.ftpbd.net/FTP-3/Bangla%20Collection/BANGLA/Web%20Series/';
 
     $parent = $HOST.'/';
-    $payloadHref = '/FTP-3/Bangla%20Collection/BANGLA/Kolkata%20Bangla%20Movies/%282022%29/';
+    $payloadHref = '/FTP-3/Bangla%20Collection/BANGLA/Web%20Series/';
     $cat = 'Bangla';
     $payload = '{"action":"get","items":{"href":"'.$payloadHref.'","what":1}}';
     $parent = str_replace(' ', '%20', $parent);
