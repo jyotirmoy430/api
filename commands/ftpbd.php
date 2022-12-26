@@ -1,6 +1,14 @@
 <?php
+$repeat = [];
 
 function loopAndTake($parent, $payload, $data, $alreadyParentChecked){
+    global $repeat;
+
+    echo "Count of repeat:::".count($repeat)."\n\n";
+
+    if(count($repeat) > 80)
+        return $data;
+
     try{
         $HOST_ONLY = 'http://server4.ftpbd.net';
 
@@ -113,7 +121,7 @@ function loopAndTake($parent, $payload, $data, $alreadyParentChecked){
 
         }
         if($parent == "http://server4.ftpbd.net/FTP-4/English%20%26%20Foreign%20TV%20Series//"){
-            echo "inside\n\n\n";
+            $repeat [] = "http://server4.ftpbd.net/FTP-4/English%20%26%20Foreign%20TV%20Series//";
             return $data;
         }else{
             return array_values($data);
