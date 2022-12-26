@@ -1,8 +1,8 @@
 <?php
 
-function loopAndTake($parent, $payload, $data){
+function loopAndTake($parent, $payload, $data, $alreadyParentChecked){
     try{
-        $HOST_ONLY = 'http://server3.ftpbd.net';
+        $HOST_ONLY = 'http://server4.ftpbd.net';
 
         /*if(count($data) > 7){
             return $data;
@@ -78,12 +78,24 @@ function loopAndTake($parent, $payload, $data){
 
                                 $newPayload = '{"action":"get","items":{"href":"'.$item->href.'","what":1}}';
 
-                                $newItems = loopAndTake($newParent, $newPayload, $data);
+                                if(in_array($newParent, $alreadyParentChecked)){
+                                    echo "already checked:: $newParent\n\n";
+                                    return array_values($data);
+                                }else{
+                                    $alreadyParentChecked[] = $newParent;
 
-                                $newData = array_merge($data, $newItems);
 
 
-                                $data = array_unique($newData);
+
+                                    $newItems = loopAndTake($newParent, $newPayload, $data, $alreadyParentChecked);
+
+                                    $newData = array_merge($data, $newItems);
+
+
+                                    $data = array_unique($newData);
+                                }
+
+
 
                             }
 
@@ -100,7 +112,14 @@ function loopAndTake($parent, $payload, $data){
 
 
         }
-        return array_values($data);
+        if($parent == "http://server4.ftpbd.net/FTP-4/English%20%26%20Foreign%20TV%20Series//"){
+            echo "inside\n\n\n";
+            return $data;
+        }else{
+            return array_values($data);
+        }
+
+
     }catch (\Exception $e){
         return $data;
     }
@@ -108,11 +127,11 @@ function loopAndTake($parent, $payload, $data){
 }
 
 function ftpbd(){
-    $HOST = 'http://server3.ftpbd.net/FTP-3/Bangla%20Collection/BANGLA/Web%20Series/';
+    $HOST = 'http://server4.ftpbd.net/FTP-4/English%20%26%20Foreign%20TV%20Series/';
 
     $parent = $HOST.'/';
-    $payloadHref = '/FTP-3/Bangla%20Collection/BANGLA/Web%20Series/';
-    $cat = 'Bangla';
+    $payloadHref = '/FTP-4/English%20%26%20Foreign%20TV%20Series/';
+    $cat = 'TV%20Series';
     $payload = '{"action":"get","items":{"href":"'.$payloadHref.'","what":1}}';
     $parent = str_replace(' ', '%20', $parent);
     $payload = str_replace(' ', '%20', $payload);
@@ -120,7 +139,7 @@ function ftpbd(){
 
 
 
-    $bigArr = loopAndTake($parent, $payload, []);
+    $bigArr = loopAndTake($parent, $payload, [], []);
 
     $FULL_FINAL = [];
 
