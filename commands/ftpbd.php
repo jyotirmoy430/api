@@ -135,10 +135,10 @@ function loopAndTake($parent, $payload, $data, $alreadyParentChecked){
 }
 
 function ftpbd(){
-    $HOST = 'http://server2.ftpbd.net/FTP-2/English%20Movies/2023/';
+    $HOST = 'http://server2.ftpbd.net/FTP-2/English%20Movies/2022/';
 
     $parent = $HOST.'/';
-    $payloadHref = '/FTP-2/English%20Movies/2023/';
+    $payloadHref = '/FTP-2/English%20Movies/2022/';
     $cat = 'English';
     $payload = '{"action":"get","items":{"href":"'.$payloadHref.'","what":1}}';
     $parent = str_replace(' ', '%20', $parent);
