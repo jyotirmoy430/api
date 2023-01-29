@@ -85,7 +85,8 @@ function series(){
     }
     $FULL_FINAL_LIST = [];
 
-    $FINAL_URL = addCustomS($FINAL_URL);
+    //$FINAL_URL = addCustomS($FINAL_URL);
+
 
     $OTHERS_FOLDERS = [];
 
@@ -256,7 +257,9 @@ function series(){
 
 
 
-        if(strpos($final, "2022") !== false){
+        if(strpos($final, "2023") !== false){
+            $object->year = 2023;
+        } elseif(strpos($final, "2022") !== false){
             $object->year = 2022;
         } elseif(strpos($final, "2021") !== false){
             $object->year = 2021;

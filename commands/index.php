@@ -173,7 +173,9 @@ function init(){
         $object->video = $final;
 
 
-        if(strpos($final, "2022") !== false){
+        if(strpos($final, "2023") !== false){
+            $object->year = 2023;
+        } elseif(strpos($final, "2022") !== false){
             $object->year = 2022;
         } elseif(strpos($final, "2021") !== false){
             $object->year = 2021;
