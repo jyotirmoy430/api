@@ -44,6 +44,7 @@ function series(){
     $CATEGORY = [
         'Bangla',
         'English',
+        'Hindi',
         'Bangla%20(BD)',
         'Bangla%20(Kolkata)',
         'Dual%20Audio',
