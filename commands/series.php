@@ -8,7 +8,8 @@ function series(){
         'http://10.16.100.202/ftps10',
         'http://10.16.100.212/iccftps12',
         'http://10.16.100.213/iccftps13',
-        'http://10.16.100.250'
+        'http://10.16.100.250',
+        'http://10.16.100.214'
     ];
 
     $TWO = [
@@ -19,6 +20,7 @@ function series(){
         'iccftps12sasd',
         'iccftps13sasd',
         'ftps10d',
+        'iccftps14sasd',
     ];
 
     $THREE=[
@@ -28,7 +30,8 @@ function series(){
         10,
         10,
         10,
-        2
+        2,
+        8,
     ];
 
     $MOVIE_FOLDER_URL = [
@@ -49,6 +52,9 @@ function series(){
         'Bangla%20(Kolkata)',
         'Dual%20Audio',
         'Animation',
+        'Serials%20(English)',
+        'Serials%20(Dual%20Audio)',
+        'Serials%20(Anime)',
     ];
 
 
