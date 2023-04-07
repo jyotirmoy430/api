@@ -12,7 +12,7 @@ function init(){
         'http://10.16.100.241',
         'http://10.16.100.241',
         'http://10.16.100.241',
-        'http://10.16.100.214',
+        'http://10.16.100.214/iccftps14',
     ];
 
     $TWO = [
@@ -46,6 +46,7 @@ function init(){
     $MOVIE_FOLDER_URL = [
         'Movies',
         '',
+        'Movies',
         'Movies',
         'Movies',
         'Movies',

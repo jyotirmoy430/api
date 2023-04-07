@@ -9,7 +9,7 @@ function series(){
         'http://10.16.100.212/iccftps12',
         'http://10.16.100.213/iccftps13',
         'http://10.16.100.250',
-        'http://10.16.100.214'
+        'http://10.16.100.214/iccftps14'
     ];
 
     $TWO = [
