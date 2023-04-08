@@ -3,7 +3,7 @@
 function init(){
     $ONE = [
         'http://10.16.100.245/ftps2d',
-        'http://10.16.100.245/ftps2d4/ftps6d2',
+        'http://10.16.100.245/ftps2d4',
         'http://10.16.100.206/ftps3',
         'http://10.16.100.202/ftps10',
         'http://10.16.100.212/iccftps12',
@@ -115,12 +115,24 @@ function init(){
 
 
     $itemCounter = 0;
+
     if($FINAL_URL){
         foreach($FINAL_URL as $key=>$itemGet){
             $final = $itemGet["url"];
-            echo "<pre>";
-            print_r($final);
-            echo "</pre>";
+
+            $dataFromTable = getDataFromTableUsingUrl($final.'/', $itemGet['cat']);
+
+
+            if(!empty($dataFromTable)){
+                $FULL_FINAL_LIST = array_merge($FULL_FINAL_LIST, $dataFromTable);
+                continue;
+            }
+
+
+
+
+
+
 
             $data = get_web_page($final);
 
@@ -165,6 +177,7 @@ function init(){
 
                             $FULL_FINAL_LIST[$itemCounter]['url'] = $fullFinalUrl;
                             $FULL_FINAL_LIST[$itemCounter]['cat'] = $itemGet['cat'];
+                            $FULL_FINAL_LIST[$itemCounter]['timestamp'] = 1396966731;
                             $itemCounter++;
                         }
                     }
@@ -187,6 +200,24 @@ function init(){
         $object = new stdClass();
         $object->id = $key;
         $object->video = $final;
+        $object->timestamp = $itemGet['timestamp'];
+
+
+        if($itemGet["size"]){
+            $size = gbToByte($itemGet["size"]);
+            if($size){
+                $object->size = gbToByte($itemGet["size"]);
+            }
+        }
+        if($itemGet["cat"]){
+            $object->cat = $itemGet["cat"];
+        }
+        if($itemGet["name"]){
+            $object->name = $itemGet["name"];
+        }
+        if($itemGet["date"]){
+            $object->date = $itemGet["date"];
+        }
 
 
         if(strpos($final, "2023") !== false){
@@ -210,9 +241,6 @@ function init(){
         }
         $object->cat = ($itemGet['cat'] == "Bangla/Kolkata") ? "Bangla%20(Kolkata)" : $itemGet['cat'];
 
-        echo "<pre>";
-        print_r($object);
-        echo "</pre>";
 
         $FULL_FINAL[] = $object;
 
@@ -222,6 +250,21 @@ function init(){
     //file_put_contents("../listn.json",json_encode($FULL_FINAL));
 
     return $FULL_FINAL;
+}
+
+function gbToByte($gb){
+    try{
+        if (strpos($gb, "gb") !== false) {
+            return $gb * 1073741824;
+        } elseif(strpos($gb, "mb") !== false) {
+            return $gb * 1048576;
+        } else{
+            return null;
+        }
+
+    }catch (\Exception $e){
+        return null;
+    }
 }
 
 

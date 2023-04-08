@@ -19,7 +19,7 @@ $finalItems = array_merge($items, $alifItems);
 $year = array();
 foreach ($finalItems as $key => $row)
 {
-    $year[$key] = $row->year;
+    $year[$key] = $row->timestamp;
 }
 array_multisort($year, SORT_DESC, $finalItems);
 

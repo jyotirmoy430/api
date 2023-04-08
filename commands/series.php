@@ -3,7 +3,7 @@
 function series(){
     $ONE = [
         'http://10.16.100.245/ftps2d',
-        'http://10.16.100.245/ftps2d4/ftps6d2',
+        'http://10.16.100.245/ftps2d4',
         'http://10.16.100.206/ftps3',
         'http://10.16.100.202/ftps10',
         'http://10.16.100.212/iccftps12',
@@ -235,6 +235,7 @@ function series(){
         $object = new stdClass();
         $object->id = $key;
         $object->video = $final;
+        $object->timestamp = 1396966731;
 
 
         $CATEGORY = [

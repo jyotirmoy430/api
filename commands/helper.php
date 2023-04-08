@@ -1,6 +1,6 @@
 <?php
 
-
+error_reporting(0);
 
 function startsWith ($string, $startString)
 {
@@ -56,8 +56,12 @@ function get_web_page( $url )
 
 function getDataFromTableUsingUrl($url, $category)
 {
+    echo "Generating from ".$url."\n\n";
     try{
         $html = file_get_contents($url);
+
+        if(!$html)
+            return [];
 
         // Create a new DOMDocument object and load the HTML
         $dom = new DOMDocument();
@@ -68,6 +72,9 @@ function getDataFromTableUsingUrl($url, $category)
 
         // Initialize an empty array to hold the table data
         $data = array();
+
+        if(!$table)
+            return [];
 
         // Loop through the rows in the table
         foreach ($table->getElementsByTagName('tr') as $row) {
@@ -111,8 +118,9 @@ function getDataFromTableUsingUrl($url, $category)
                 $takeArr[$counter]['date'] = $thisData[3];
                 $takeArr[$counter]['timestamp'] = strtotime($thisData[3]);
                 $takeArr[$counter]['name'] = $thisData[2];
-                $takeArr[$counter]['category'] = $category;
+                $takeArr[$counter]['cat'] = $category;
                 $takeArr[$counter]['year'] = date("Y", strtotime($thisData[3]));
+                $takeArr[$counter]['fromTable'] = 1;
                 $counter++;
             }catch (\Exception $e){
             }
