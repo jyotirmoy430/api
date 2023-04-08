@@ -195,7 +195,9 @@ function init(){
 
     $FULL_FINAL = [];
 
+
     foreach($FULL_FINAL_LIST as $key=>$itemGet){
+
         $final = $itemGet['url'];
         $object = new stdClass();
         $object->id = $key;
@@ -254,9 +256,9 @@ function init(){
 
 function gbToByte($gb){
     try{
-        if (strpos($gb, "gb") !== false) {
+        if (strpos(strtolower($gb), "g") !== false) {
             return $gb * 1073741824;
-        } elseif(strpos($gb, "mb") !== false) {
+        } elseif(strpos(strtolower($gb), "m") !== false) {
             return $gb * 1048576;
         } else{
             return null;
