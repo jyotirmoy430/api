@@ -51,3 +51,74 @@ function get_web_page( $url )
     $header['content'] = $content;
     return $header;
 }
+
+
+
+function getDataFromTableUsingUrl($url, $category)
+{
+    try{
+        $html = file_get_contents($url);
+
+        // Create a new DOMDocument object and load the HTML
+        $dom = new DOMDocument();
+        $dom->loadHTML($html);
+
+        // Find the table element
+        $table = $dom->getElementsByTagName('table')->item(0);
+
+        // Initialize an empty array to hold the table data
+        $data = array();
+
+        // Loop through the rows in the table
+        foreach ($table->getElementsByTagName('tr') as $row) {
+            // Initialize an empty array to hold the row data
+            $rowData = array();
+
+            // Loop through the cells in the row
+            foreach ($row->getElementsByTagName('td') as $key => $cell) {
+                // Add the cell data to the row data array
+                $hrefItems = $row->getElementsByTagName('a');
+                $href = '';
+                foreach ($hrefItems as $item) {
+                    //$output[] = $item->getAttribute('href');
+                    $href = $item->getAttribute('href');
+
+
+                }
+                $rowData[] = $cell->textContent;
+                if ($key === 0)
+                    $rowData[] = $url . $href;
+            }
+
+            // Add the row data to the table data array
+            $data[] = $rowData;
+        }
+
+        if(!$data){
+            return [];
+        }
+        $takeArr = [];
+        $counter = 0;
+
+        foreach($data as $thisData){
+            try{
+                if(!$thisData[1] || $thisData[1] == '' || ($thisData[2] && $thisData[2] == 'Parent Directory')){
+                    continue;
+                }
+
+                $takeArr[$counter]['url'] = $thisData[1];
+                $takeArr[$counter]['size'] = $thisData[4];
+                $takeArr[$counter]['date'] = $thisData[3];
+                $takeArr[$counter]['timestamp'] = strtotime($thisData[3]);
+                $takeArr[$counter]['name'] = $thisData[2];
+                $takeArr[$counter]['category'] = $category;
+                $takeArr[$counter]['year'] = date("Y", strtotime($thisData[3]));
+                $counter++;
+            }catch (\Exception $e){
+            }
+        }
+        return $takeArr;
+    }catch (\Exception $e){
+        return [];
+    }
+}
