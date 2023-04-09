@@ -123,12 +123,20 @@ function init(){
             $dataFromTable = getDataFromTableUsingUrl($final.'/', $itemGet['cat']);
 
 
-            if(!empty($dataFromTable)){
-                $FULL_FINAL_LIST = array_merge($FULL_FINAL_LIST, $dataFromTable);
+            if (!empty($dataFromTable)) {
+
+                foreach ($dataFromTable as $key => $hrefTable) {
+
+                    $href = $hrefTable["url"];
+                    $takeHref = explode(".", $href);
+
+                    if ($takeHref && (end($takeHref) == "mp4" || end($takeHref) == "MP4" || end($takeHref) == "mkv" || end($takeHref) == "MKV" || end($takeHref) == "avi")) {
+                        $FULL_FINAL_LIST[$itemCounter] = $hrefTable;
+                        $itemCounter++;
+                    }
+                }
                 continue;
             }
-
-
 
 
 
@@ -254,20 +262,7 @@ function init(){
     return $FULL_FINAL;
 }
 
-function gbToByte($gb){
-    try{
-        if (strpos(strtolower($gb), "g") !== false) {
-            return $gb * 1073741824;
-        } elseif(strpos(strtolower($gb), "m") !== false) {
-            return $gb * 1048576;
-        } else{
-            return null;
-        }
 
-    }catch (\Exception $e){
-        return null;
-    }
-}
 
 
 function addCustom( $urls ){

@@ -7,8 +7,8 @@ include 'series.php';
 $items = init();
 //$items = [];
 try{
-    $alifItems = [];
-    //$alifItems = series();
+    //$alifItems = [];
+    $alifItems = series();
 
 }catch (Exception $exception){
     $alifItems = [];

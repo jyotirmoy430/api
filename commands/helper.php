@@ -57,6 +57,7 @@ function get_web_page( $url )
 function getDataFromTableUsingUrl($url, $category)
 {
     echo "Generating from ".$url."\n\n";
+
     try{
         $html = file_get_contents($url);
 
@@ -128,5 +129,20 @@ function getDataFromTableUsingUrl($url, $category)
         return $takeArr;
     }catch (\Exception $e){
         return [];
+    }
+}
+
+function gbToByte($gb){
+    try{
+        if (strpos(strtolower($gb), "g") !== false) {
+            return $gb * 1073741824;
+        } elseif(strpos(strtolower($gb), "m") !== false) {
+            return $gb * 1048576;
+        } else{
+            return null;
+        }
+
+    }catch (\Exception $e){
+        return null;
     }
 }
