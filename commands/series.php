@@ -339,22 +339,31 @@ function series()
 
         if (strpos($final, "2023") !== false) {
             $object->year = 2023;
+            $object->timestamp = strtotime("2023-01-01 12:00:00");;
         } elseif (strpos($final, "2022") !== false) {
             $object->year = 2022;
+            $object->timestamp = strtotime("2022-01-01 12:00:00");;
         } elseif (strpos($final, "2021") !== false) {
             $object->year = 2021;
+            $object->timestamp = strtotime("2021-01-01 12:00:00");;
         } elseif (strpos($final, "2020") !== false) {
             $object->year = 2020;
+            $object->timestamp = strtotime("2020-01-01 12:00:00");;
         } elseif (strpos($final, "2019") !== false) {
             $object->year = 2019;
+            $object->timestamp = strtotime("2019-01-01 12:00:00");;
         } elseif (strpos($final, "2018") !== false) {
             $object->year = 2018;
+            $object->timestamp = strtotime("2018-01-01 12:00:00");;
         } elseif (strpos($final, "2017") !== false) {
             $object->year = 2017;
+            $object->timestamp = strtotime("2017-01-01 12:00:00");;
         } elseif (strpos($final, "2016") !== false) {
             $object->year = 2016;
+            $object->timestamp = strtotime("2016-01-01 12:00:00");;
         } else {
             $object->year = 0;
+            $object->timestamp = 1396966731;
         }
 
         $object->cat = ($itemGet['cat'] && $itemGet['cat'] == "Bangla/Kolkata") ? "Bangla%20(Kolkata)" : $itemGet['cat'];
