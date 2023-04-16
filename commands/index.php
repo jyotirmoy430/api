@@ -229,26 +229,36 @@ function init(){
             $object->date = $itemGet["date"];
         }
 
-
-        if(strpos($final, "2023") !== false){
+        
+        if (strpos($final, "2023") !== false) {
             $object->year = 2023;
-        } elseif(strpos($final, "2022") !== false){
+            $object->timestamp = strtotime("2023-01-01 12:00:00");;
+        } elseif (strpos($final, "2022") !== false) {
             $object->year = 2022;
-        } elseif(strpos($final, "2021") !== false){
+            $object->timestamp = strtotime("2022-01-01 12:00:00");;
+        } elseif (strpos($final, "2021") !== false) {
             $object->year = 2021;
-        } elseif(strpos($final, "2020") !== false){
+            $object->timestamp = strtotime("2021-01-01 12:00:00");;
+        } elseif (strpos($final, "2020") !== false) {
             $object->year = 2020;
-        } elseif(strpos($final, "2019") !== false){
+            $object->timestamp = strtotime("2020-01-01 12:00:00");;
+        } elseif (strpos($final, "2019") !== false) {
             $object->year = 2019;
-        } elseif(strpos($final, "2018") !== false){
+            $object->timestamp = strtotime("2019-01-01 12:00:00");;
+        } elseif (strpos($final, "2018") !== false) {
             $object->year = 2018;
-        } elseif(strpos($final, "2017") !== false){
+            $object->timestamp = strtotime("2018-01-01 12:00:00");;
+        } elseif (strpos($final, "2017") !== false) {
             $object->year = 2017;
-        } elseif(strpos($final, "2016") !== false){
+            $object->timestamp = strtotime("2017-01-01 12:00:00");;
+        } elseif (strpos($final, "2016") !== false) {
             $object->year = 2016;
-        } else{
+            $object->timestamp = strtotime("2016-01-01 12:00:00");;
+        } else {
             $object->year = 0;
+            $object->timestamp = 1396966731;
         }
+
         $object->cat = ($itemGet['cat'] == "Bangla/Kolkata") ? "Bangla%20(Kolkata)" : $itemGet['cat'];
 
 
