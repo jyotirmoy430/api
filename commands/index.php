@@ -1,6 +1,7 @@
 <?php
 
 function init(){
+    //
     $ONE = [
         'http://10.16.100.245/ftps2d',
         'http://10.16.100.245/ftps2d4',
@@ -64,6 +65,7 @@ function init(){
         'Anime',
         'Bangla%20(BD)',
         'Bangla%20(Kolkata)',
+        'Bangla/Kolkata',
         'Chinese',
         'Dual%20Audio',
         'English',
@@ -221,6 +223,9 @@ function init(){
         }
         if($itemGet["cat"]){
             $object->cat = $itemGet["cat"];
+            if($itemGet["cat"] == "Bangla/Kolkata"){
+                $object->cat = "Bangla%20(Kolkata)";
+            }
         }
         if($itemGet["name"]){
             $object->name = $itemGet["name"];
@@ -251,7 +256,7 @@ function init(){
         }
 
 
-        
+
         $object->cat = ($itemGet['cat'] == "Bangla/Kolkata") ? "Bangla%20(Kolkata)" : $itemGet['cat'];
 
 
