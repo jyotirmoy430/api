@@ -123,6 +123,13 @@ function getAnchor($url, $pattern='dood.yt')
         $href = $anchor->getAttribute('href');
 
         if (
+            (strpos($href, 'dooood.com') !== false)
+        )
+        {
+            $takeUrl['url'] = $href;
+            break;
+        }
+        if (
             (strpos($href, 'dood.yt') !== false)
         )
         {
