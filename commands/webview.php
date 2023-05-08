@@ -123,13 +123,6 @@ function getAnchor($url, $pattern='dood.yt')
         $href = $anchor->getAttribute('href');
 
         if (
-            (strpos($href, 'lvturbo.com') !== false)
-        )
-        {
-            $takeUrl['url'] = $href;
-            break;
-        }
-        if (
             (strpos($href, 'dood.yt') !== false)
         )
         {
@@ -143,6 +136,15 @@ function getAnchor($url, $pattern='dood.yt')
             $takeUrl['url'] = $href;
             break;
         }
+
+        if (
+            (strpos($href, 'lvturbo.com') !== false)
+        )
+        {
+            $takeUrl['url'] = $href;
+            break;
+        }
+
 
         if (
             (strpos($href, 'ok.ru') !== false)
