@@ -16,61 +16,91 @@ function webviewItems(){
         'Dual%20Audio'
     ];
 
+    $PAGES = [
+        7,
+        6,
+        13,
+        0,
+        0
+    ];
+
     $FULL_FINAL_LIST = [];
     $counter = 0;
 
     foreach($SITES as $key=>$site){
-        $videoSiteUrls = getDataFromArticleUsingUrl($site);
-
-        if($videoSiteUrls && !empty($videoSiteUrls)){
-
-            foreach($videoSiteUrls as $videoSiteUrl){
-                $movieUrlAndTimestamp = getAnchor($videoSiteUrl, 'dood.yt');
-
-                if($movieUrlAndTimestamp){
-                    echo "got movie url on :::".$movieUrlAndTimestamp['url']."\n\n";
-
-                    //"id":0,"video":"http:\/\/10.16.100.213\/iccftps13\/iccftps13sasd1\/Movies\/English\/Transformers%20Revenge%20of%20the%20Fallen%20(2009)%201080p%20BluRay.mp4","timestamp":1683449220,"size":3972844748.8,"cat":"English","name":"Transformers Revenge of the Fallen (2009) 1080p BluRay.mp4","date":"2023-05-07 08:47  ","year":0}
-                    $FULL_FINAL_LIST[$counter]["video"] = $videoSiteUrl;
-                    $FULL_FINAL_LIST[$counter]["webview"] = $movieUrlAndTimestamp['url'];
-                    $FULL_FINAL_LIST[$counter]["cat"] = $CATEGORY[$key];
+        $PAGE_FOR_SPECIFIC_CAT = $PAGES[$key];
 
 
-                    if(isset($movieUrlAndTimestamp['timestamp'])){
-                        $FULL_FINAL_LIST[$counter]["timestamp"] = $movieUrlAndTimestamp['timestamp'];
-                        $FULL_FINAL_LIST[$counter]['year'] = date("Y", $movieUrlAndTimestamp['timestamp']);
-                    }else{
-                        if(strpos($videoSiteUrl, "2023") !== false){
-                            $year = 2023;
-                        } elseif(strpos($videoSiteUrl, "2022") !== false){
-                            $year = 2022;
-                        } elseif(strpos($videoSiteUrl, "2021") !== false){
-                            $year = 2021;
-                        } elseif(strpos($videoSiteUrl, "2020") !== false){
-                            $year = 2020;
-                        } elseif(strpos($videoSiteUrl, "2019") !== false){
-                            $year = 2019;
-                        } elseif(strpos($videoSiteUrl, "2018") !== false){
-                            $year = 2018;
-                        } elseif(strpos($videoSiteUrl, "2017") !== false){
-                            $year = 2017;
-                        } elseif(strpos($videoSiteUrl, "2016") !== false){
-                            $year = 2016;
-                        } else{
-                            $year = 0;
+        for($i = 0; $i<=$PAGE_FOR_SPECIFIC_CAT; $i++){
+            $page = $i;
+
+            if($page == 1)
+                continue;
+
+            if($page == 0){
+                $siteTake = $site;
+            }else{
+                $siteTake = $site.'page/'.$page;
+            }
+
+
+
+            $videoSiteUrls = getDataFromArticleUsingUrl($siteTake);
+
+            if($videoSiteUrls && !empty($videoSiteUrls)){
+
+                foreach($videoSiteUrls as $videoSiteUrl){
+                    $movieUrlAndTimestamp = getAnchor($videoSiteUrl, 'dood.yt');
+
+                    if($movieUrlAndTimestamp){
+                        echo "got movie url on :::".$movieUrlAndTimestamp['url']."\n\n";
+
+                        //"id":0,"video":"http:\/\/10.16.100.213\/iccftps13\/iccftps13sasd1\/Movies\/English\/Transformers%20Revenge%20of%20the%20Fallen%20(2009)%201080p%20BluRay.mp4","timestamp":1683449220,"size":3972844748.8,"cat":"English","name":"Transformers Revenge of the Fallen (2009) 1080p BluRay.mp4","date":"2023-05-07 08:47  ","year":0}
+                        $FULL_FINAL_LIST[$counter]["video"] = $videoSiteUrl;
+                        $FULL_FINAL_LIST[$counter]["webview"] = $movieUrlAndTimestamp['url'];
+                        if($movieUrlAndTimestamp && $movieUrlAndTimestamp['poster']){
+                            $FULL_FINAL_LIST[$counter]["poster"] = $movieUrlAndTimestamp['poster'];
                         }
-                        $FULL_FINAL_LIST[$counter]["year"] = $year;
+                        $FULL_FINAL_LIST[$counter]["cat"] = $CATEGORY[$key];
+
+
+                        if(isset($movieUrlAndTimestamp['timestamp'])){
+                            $FULL_FINAL_LIST[$counter]["timestamp"] = $movieUrlAndTimestamp['timestamp'];
+                            $FULL_FINAL_LIST[$counter]['year'] = date("Y", $movieUrlAndTimestamp['timestamp']);
+                        }else{
+                            if(strpos($videoSiteUrl, "2023") !== false){
+                                $year = 2023;
+                            } elseif(strpos($videoSiteUrl, "2022") !== false){
+                                $year = 2022;
+                            } elseif(strpos($videoSiteUrl, "2021") !== false){
+                                $year = 2021;
+                            } elseif(strpos($videoSiteUrl, "2020") !== false){
+                                $year = 2020;
+                            } elseif(strpos($videoSiteUrl, "2019") !== false){
+                                $year = 2019;
+                            } elseif(strpos($videoSiteUrl, "2018") !== false){
+                                $year = 2018;
+                            } elseif(strpos($videoSiteUrl, "2017") !== false){
+                                $year = 2017;
+                            } elseif(strpos($videoSiteUrl, "2016") !== false){
+                                $year = 2016;
+                            } else{
+                                $year = 0;
+                            }
+                            $FULL_FINAL_LIST[$counter]["year"] = $year;
+                        }
+
+
+                        echo "$counter<pre>";
+                        print_r($FULL_FINAL_LIST[$counter]);
+                        echo "</pre>";
+                        $counter++;
+
                     }
-
-
-                    echo "$counter<pre>";
-                    print_r($FULL_FINAL_LIST[$counter]);
-                    echo "</pre>";
-                    $counter++;
-
                 }
             }
         }
+
     }
 
 
@@ -83,6 +113,9 @@ function webviewItems(){
         $object->timestamp = $itemGet['timestamp'];
         $object->year = $itemGet['year'];
         $object->cat = $itemGet['cat'];
+        if($itemGet && $itemGet['poster']){
+            $object->poster = $itemGet['poster'];
+        }
 
         $FULL_FINAL[] = $object;
 
@@ -107,6 +140,21 @@ function getAnchor($url, $pattern='dood.yt')
 
     $xpath = new DOMXPath($dom);
     $spanList = $xpath->query('//span[@itemprop="datePublished"]');
+    $images = $xpath->query('//img[contains(@class, "size-full")]');
+
+
+
+    if($images){
+        foreach ($images as $image) {
+            $src = $image->getAttribute('src');
+            if($src){
+                $takeUrl['poster'] = $src;
+            }
+        }
+    }
+
+
+
 
     foreach ($spanList as $span) {
         $datePublished = trim($span->nodeValue);
