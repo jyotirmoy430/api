@@ -1,19 +1,89 @@
 <?php
 
 function webviewItems(){
+
+    $jsonFilePath = 'listnwebview.json';
+
+    $jsonData = file_get_contents($jsonFilePath);
+
+    $decodedExisting = json_decode($jsonData);
+
+    $CHECK_EXISTING_URL_ARR = [];
+
+    $EXISTING = [];
+
+    if($decodedExisting){
+        foreach($decodedExisting as $decoded){
+            if($decoded && $decoded->webview){
+                $EXISTING[] = $decoded;
+                $CHECK_EXISTING_URL_ARR[] = $decoded->video;
+            }
+        }
+    }
+
+
+
     $SITES = [
         'https://mlsbd.vip/category/bengali/',
         'https://mlsbd.vip/category/tv-series/',
         'https://mlsbd.vip/category/hindi-dubbed/',
         'https://mlsbd.vip/category/hoichoi-originals/',
-        'https://mlsbd.vip/category/bengali-dubbed/'
+        'https://mlsbd.vip/category/bengali-dubbed/',
+        'https://mlsbd.vip/category/animation-movies/',
+        'https://mlsbd.vip/release/2022/',
+        'https://mlsbd.vip/release/2021/',
+        'https://mlsbd.vip/release/2020/',
+        'https://mlsbd.vip/release/2019/',
+        'https://mlsbd.vip/release/2018/',
+        'https://mlsbd.vip/release/2017/',
+        'https://mlsbd.vip/release/2016/',
+        'https://mlsbd.vip/release/2015/',
+        'https://mlsbd.vip/release/2014/',
+        'https://mlsbd.vip/release/2013/',
+        'https://mlsbd.vip/release/2012/',
+        'https://mlsbd.vip/release/2011/',
+        'https://mlsbd.vip/release/2010/',
+        'https://mlsbd.vip/release/2009/',
+        'https://mlsbd.vip/release/2008/',
+        'https://mlsbd.vip/release/2007/',
+        'https://mlsbd.vip/release/2006/',
+        'https://mlsbd.vip/release/2005/',
+        'https://mlsbd.vip/release/2004/',
+        'https://mlsbd.vip/release/2003/',
+        'https://mlsbd.vip/release/2002/',
+        'https://mlsbd.vip/release/2001/',
+        'https://mlsbd.vip/release/2000/',
     ];
     $CATEGORY = [
         'Bangla',
         'English',
         'Dual%20Audio',
         'Bangla',
-        'Dual%20Audio'
+        'Dual%20Audio',
+        'Animation',
+        'All',
+        'All',
+        'All',
+        'All',
+        'All',
+        'All',
+        'All',
+        'All',
+        'All',
+        'All',
+        'All',
+        'All',
+        'All',
+        'All',
+        'All',
+        'All',
+        'All',
+        'All',
+        'All',
+        'All',
+        'All',
+        'All',
+        'All',
     ];
 
     $PAGES = [
@@ -21,7 +91,30 @@ function webviewItems(){
         6,
         13,
         0,
-        0
+        0,
+        0,
+        18,
+        3,
+        2,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
     ];
 
     $FULL_FINAL_LIST = [];
@@ -50,9 +143,18 @@ function webviewItems(){
             if($videoSiteUrls && !empty($videoSiteUrls)){
 
                 foreach($videoSiteUrls as $videoSiteUrl){
+                    if(in_array($videoSiteUrl, $CHECK_EXISTING_URL_ARR)){
+                       echo "in array:::".$videoSiteUrl."\n\n";
+                       continue;
+                    }
                     $movieUrlAndTimestamp = getAnchor($videoSiteUrl, 'dood.yt');
 
-                    if($movieUrlAndTimestamp){
+                    if(
+                        $movieUrlAndTimestamp &&
+                        $movieUrlAndTimestamp['url'] &&
+                        $movieUrlAndTimestamp['url'] != ''
+                    )
+                    {
                         echo "got movie url on :::".$movieUrlAndTimestamp['url']."\n\n";
 
                         //"id":0,"video":"http:\/\/10.16.100.213\/iccftps13\/iccftps13sasd1\/Movies\/English\/Transformers%20Revenge%20of%20the%20Fallen%20(2009)%201080p%20BluRay.mp4","timestamp":1683449220,"size":3972844748.8,"cat":"English","name":"Transformers Revenge of the Fallen (2009) 1080p BluRay.mp4","date":"2023-05-07 08:47  ","year":0}
@@ -96,6 +198,8 @@ function webviewItems(){
                         echo "</pre>";
                         $counter++;
 
+                    }else{
+                        echo "already on file\n\n";
                     }
                 }
             }
@@ -117,10 +221,10 @@ function webviewItems(){
             $object->poster = $itemGet['poster'];
         }
 
-        $FULL_FINAL[] = $object;
+        $EXISTING[] = $object;
 
     }
-    return $FULL_FINAL;
+    return $EXISTING;
 
 
 }
@@ -186,6 +290,13 @@ function getAnchor($url, $pattern='dood.yt')
         }
         if (
             (strpos($href, 'dood.re') !== false)
+        )
+        {
+            $takeUrl['url'] = $href;
+            break;
+        }
+        if (
+            (strpos($href, 'dood.wf') !== false)
         )
         {
             $takeUrl['url'] = $href;
