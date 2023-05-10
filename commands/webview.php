@@ -163,7 +163,20 @@ function webviewItems(){
                         if($movieUrlAndTimestamp && $movieUrlAndTimestamp['poster']){
                             $FULL_FINAL_LIST[$counter]["poster"] = $movieUrlAndTimestamp['poster'];
                         }
+
                         $FULL_FINAL_LIST[$counter]["cat"] = $CATEGORY[$key];
+
+                        if(strpos(strtolower($videoSiteUrl), "bengali") !== false){
+                            $FULL_FINAL_LIST[$counter]["cat"] = 'Bangla';
+                        }
+
+                        if(strpos(strtolower($videoSiteUrl), "hindi") !== false){
+                            $FULL_FINAL_LIST[$counter]["cat"] = 'Hindi';
+                        }
+
+                        if(strpos(strtolower($videoSiteUrl), "english") !== false){
+                            $FULL_FINAL_LIST[$counter]["cat"] = 'English';
+                        }
 
 
                         if(isset($movieUrlAndTimestamp['timestamp'])){
