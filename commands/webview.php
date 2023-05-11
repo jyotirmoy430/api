@@ -119,6 +119,7 @@ function webviewItems(){
 
     $FULL_FINAL_LIST = [];
     $counter = 0;
+    $NEW_GENERATED_URLS = [];
 
     foreach($SITES as $key=>$site){
         $PAGE_FOR_SPECIFIC_CAT = $PAGES[$key];
@@ -147,6 +148,7 @@ function webviewItems(){
                        echo "in array:::".$videoSiteUrl."\n\n";
                        continue;
                     }
+
                     $movieUrlAndTimestamp = getAnchor($videoSiteUrl, 'dood.yt');
 
                     if(
@@ -155,6 +157,11 @@ function webviewItems(){
                         $movieUrlAndTimestamp['url'] != ''
                     )
                     {
+                        if(in_array($movieUrlAndTimestamp['url'], $NEW_GENERATED_URLS)){
+                            echo "in array:::".$videoSiteUrl."\n\n";
+                            continue;
+                        }
+
                         echo "got movie url on :::".$movieUrlAndTimestamp['url']."\n\n";
 
                         //"id":0,"video":"http:\/\/10.16.100.213\/iccftps13\/iccftps13sasd1\/Movies\/English\/Transformers%20Revenge%20of%20the%20Fallen%20(2009)%201080p%20BluRay.mp4","timestamp":1683449220,"size":3972844748.8,"cat":"English","name":"Transformers Revenge of the Fallen (2009) 1080p BluRay.mp4","date":"2023-05-07 08:47  ","year":0}
@@ -169,6 +176,9 @@ function webviewItems(){
                         if(strpos(strtolower($videoSiteUrl), "bengali") !== false){
                             $FULL_FINAL_LIST[$counter]["cat"] = 'Bangla';
                         }
+                        if(strpos(strtolower($videoSiteUrl), "bnegali") !== false){
+                            $FULL_FINAL_LIST[$counter]["cat"] = 'Bangla';
+                        }
 
                         if(strpos(strtolower($videoSiteUrl), "hindi") !== false){
                             $FULL_FINAL_LIST[$counter]["cat"] = 'Hindi';
@@ -176,6 +186,15 @@ function webviewItems(){
 
                         if(strpos(strtolower($videoSiteUrl), "english") !== false){
                             $FULL_FINAL_LIST[$counter]["cat"] = 'English';
+                        }
+
+
+                        if(strpos(strtolower($videoSiteUrl), "dubbed") !== false){
+                            $FULL_FINAL_LIST[$counter]["cat"] = 'Dual%20Audio';
+                        }
+
+                        if(strpos(strtolower($videoSiteUrl), "dual") !== false){
+                            $FULL_FINAL_LIST[$counter]["cat"] = 'Dual%20Audio';
                         }
 
 
@@ -210,6 +229,7 @@ function webviewItems(){
                         print_r($FULL_FINAL_LIST[$counter]);
                         echo "</pre>";
                         $counter++;
+                        $NEW_GENERATED_URLS[]=$movieUrlAndTimestamp['url'];
 
                     }else{
                         echo "already on file\n\n";

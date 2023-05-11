@@ -14,7 +14,7 @@ if($limit & $limit > 100){
     $limit = 100;
 }
 
-$data = get_web_page("https://jyotirmoy430.github.io/api/listn.json");
+$data = get_web_page("https://raw.githubusercontent.com/jyotirmoy430/api/main/listn.json");
 $decoded_json = json_decode($data["content"], false);
 
 $takeArr = [];
