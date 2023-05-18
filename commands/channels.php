@@ -55,7 +55,7 @@ function getChannelsFromUrl($siteUrl){
                 }
 
                 $object->title = formatTitle($explodedLink[1]);
-                $object->thumb = getThumbLink($divNodes);
+                $object->thumb = getThumbLink($divNode);
 
 
                 $takeArr[] = $object;
@@ -75,16 +75,16 @@ function formatTitle($slug)
     return ucwords(str_replace('-', ' ', str_replace("'", '', $slug)));
 }
 
-function getThumbLink($divNodes){
+function getThumbLink($divNode){
     global $URL;
-    foreach ($divNodes as $divNode) {
-        $imageTags = $divNode->getElementsByTagName('img');
-        foreach ($imageTags as $imageTag) {
-            $src = $imageTag->getAttribute('src');
-            if($src){
-                return $URL.$src;
-            }
+
+    $imageTags = $divNode->getElementsByTagName('img');
+    foreach ($imageTags as $imageTag) {
+        $src = $imageTag->getAttribute('src');
+        if($src){
+            return $URL.$src;
         }
     }
+
     return $src;
 }
