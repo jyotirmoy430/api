@@ -1,46 +1,90 @@
 <?php
-function init(){
-    $URL = 'http://bdiptv.net/';
-    getChannelsFromUrl($URL);
+$URL = 'http://bdiptv.net/';
 
+function init(){
+    global $URL;
+    return getChannelsFromUrl($URL);
 }
 
 
-function getChannelsFromUrl($url){
-    $html = file_get_contents($url);
+function getChannelsFromUrl($siteUrl){
+
+    $takeArr = [];
+    $counter = 0;
+
+    $html = file_get_contents($siteUrl);
 
     if(!$html)
         return [];
 
-    // Create a DOM document object
+
     $dom = new DOMDocument();
     libxml_use_internal_errors(true);  // Disable error reporting for invalid HTML
 
-// Load the HTML content into the DOM document
+
     $dom->loadHTML($html);
     libxml_clear_errors();  // Clear any parsing errors
 
-// Create a DOMXPath object to query the DOM document
+
     $xpath = new DOMXPath($dom);
 
-// Search for all div elements with the class name "item_content"
+
     $divClassName = "item_content";
     $divQuery = "//div[contains(@class, '$divClassName')]";
     $divNodes = $xpath->query($divQuery);
 
-// Iterate through the matched div nodes and find anchor tags within them
+
     foreach ($divNodes as $divNode) {
+        $object = new stdClass();
         $anchorTags = $divNode->getElementsByTagName('a');
 
-        // Iterate through the anchor tags and display their attributes or text
+
         foreach ($anchorTags as $anchorTag) {
-            // Display the anchor tag's attributes or text
             $href = $anchorTag->getAttribute('onclick');
             $text = $anchorTag->nodeValue;
             echo "Link: $href, Text: $text" . PHP_EOL;
+
+            $explodedLink = explode("tv.location.href='play.php?stream=", $href);
+
+            if($explodedLink && isset($explodedLink[1])){
+                $object->id = $counter;
+                if (strpos($explodedLink[1], "'") !== false) {
+                    $object->url = substr($explodedLink[1], 0, -1);
+                }else{
+                    $object->url = $explodedLink[1];
+                }
+
+                $object->title = formatTitle($explodedLink[1]);
+                $object->thumb = getThumbLink($divNodes);
+
+
+                $takeArr[] = $object;
+                $counter++;
+            }
         }
     }
 
-    exit;
+    return $takeArr;
 
+}
+
+function formatTitle($slug)
+{
+    if(!$slug || $slug == '')
+        return 'N/A';
+    return ucwords(str_replace('-', ' ', str_replace("'", '', $slug)));
+}
+
+function getThumbLink($divNodes){
+    global $URL;
+    foreach ($divNodes as $divNode) {
+        $imageTags = $divNode->getElementsByTagName('img');
+        foreach ($imageTags as $imageTag) {
+            $src = $imageTag->getAttribute('src');
+            if($src){
+                return $URL.$src;
+            }
+        }
+    }
+    return $src;
 }
