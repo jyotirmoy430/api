@@ -14,8 +14,14 @@ if($limit & $limit > 100){
     $limit = 100;
 }
 
-$data = get_web_page("https://raw.githubusercontent.com/jyotirmoy430/api/main/listnwebview.json");
-$decoded_json = json_decode($data["content"], false);
+//$data = file_get_contents("https://raw.githubusercontent.com/jyotirmoy430/api/main/listnwebview.json");
+$jsonFilePath = 'listnwebview.json';
+
+$jsonData = file_get_contents($jsonFilePath);
+
+$decoded_json = json_decode($jsonData);
+
+//$decoded_json = json_decode($data["content"], false);
 
 $takeArr = [];
 
