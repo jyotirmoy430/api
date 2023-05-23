@@ -2,10 +2,9 @@
 error_reporting(0);
 
 try{
-    $username = $_GET["u"];
     $password = $_GET["p"];
 
-    if(!$username || !$password || $username != 'jbapi' || $password != '!mR7NrjBK_PJCNpDDxAj'){
+    if(!$password || $password != 'mR7NrjBK_PJCNpDDxAj'){
         echo "no access";
         exit;
     }
