@@ -305,7 +305,7 @@ function series()
         $object->timestamp = $itemGet['timestamp'];
 
 
-        if (!$itemGet['cat']) {
+        /*if (!$itemGet['cat']) {
 
             if (strpos($final, "Tv%20Show") !== false) {
                 $object->cat = "Tv%20Show";
@@ -322,7 +322,8 @@ function series()
             } else {
                 $object->cat = "";
             }
-        }
+        }*/
+
 
 
         if ($itemGet["size"]) {
@@ -371,8 +372,9 @@ function series()
             $object->timestamp = 1396966731;
         }
 
-        $object->cat = ($itemGet['cat'] && $itemGet['cat'] == "Bangla/Kolkata") ? "Bangla%20(Kolkata)" : $itemGet['cat'];
+        //$object->cat = ($itemGet['cat'] && $itemGet['cat'] == "Bangla/Kolkata") ? "Bangla%20(Kolkata)" : $itemGet['cat'];
 
+        $object->cat = "Tv%20Show";
         echo "<pre>";
         print_r($object);
         echo "</pre>";
