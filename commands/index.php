@@ -208,6 +208,12 @@ function init(){
 
     foreach($FULL_FINAL_LIST as $key=>$itemGet){
 
+        if (strpos(strtolower($itemGet['url']), "wwe") !== false) {
+            echo "Substring found!";
+            continue;
+        }
+
+
         $final = $itemGet['url'];
         $object = new stdClass();
         $object->id = $key;

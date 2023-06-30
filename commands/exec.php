@@ -8,14 +8,14 @@ $items = init();
 //$items = [];
 try{
     //$alifItems = [];
-    $alifItems = series();
+    $allSeries = series();
 
 }catch (Exception $exception){
-    $alifItems = [];
+    $allSeries = [];
 }
 
 
-$finalItems = array_merge($items, $alifItems);
+$finalItems = array_merge($items, $allSeries);
 
 $year = array();
 foreach ($finalItems as $key => $row)
