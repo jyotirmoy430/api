@@ -10,7 +10,8 @@ function series()
         'http://10.16.100.212/iccftps12',
         'http://10.16.100.213/iccftps13',
         'http://10.16.100.250',
-        'http://10.16.100.214/iccftps14'
+        'http://10.16.100.214/iccftps14',
+        'http://10.16.100.246',
     ];
 
     $TWO = [
@@ -22,6 +23,7 @@ function series()
         'iccftps13sasd',
         'ftps10d',
         'iccftps14sasd',
+        'ftps4d4',
     ];
 
     $THREE = [
@@ -33,6 +35,7 @@ function series()
         10,
         2,
         8,
+        4,
     ];
 
     $MOVIE_FOLDER_URL = [
@@ -42,7 +45,9 @@ function series()
         'Tv%20Show',
         'Tv%20Show',
         'Tv%20Show',
-        'Tv%20Show'
+        'Tv%20Show',
+        'Tv%20Show',
+        'Tv%20Show',
     ];
 
     $CATEGORY = [

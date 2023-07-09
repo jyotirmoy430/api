@@ -14,6 +14,8 @@ function init(){
         'http://10.16.100.241',
         'http://10.16.100.241',
         'http://10.16.100.214/iccftps14',
+        'http://10.16.100.246',
+        'http://10.16.100.246',
     ];
 
     $TWO = [
@@ -28,6 +30,8 @@ function init(){
         'ftps3d',
         'ftps4d',
         'iccftps14sasd',
+        'ftps4d',
+        'ftps4d',
     ];
 
     $THREE=[
@@ -42,6 +46,8 @@ function init(){
         10,
         4,
         8,
+        4,
+        4,
     ];
 
     $MOVIE_FOLDER_URL = [
@@ -56,6 +62,8 @@ function init(){
         'Movies',
         'Movies',
         'Movies',
+        'Movies',
+        'Movie',
     ];
 
     $CATEGORY = [
