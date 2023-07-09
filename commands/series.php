@@ -77,12 +77,14 @@ function series()
                                 $urlWithLoop[] = $initialUrl.$i."/".'Tv%20Shows';
                                 $urlWithLoop[] = $initialUrl.$i."/".'TV%20Shows';
                 $urlWithLoop[] = $initialUrl . $i . "/" . 'TV%20Show';
+                $urlWithLoop[] = $initialUrl . $i . "/" . 'Tv%20Show';
             }
         } else {
                         $urlWithLoop[] = $initialUrl.$MOVIE_FOLDER_URL[$key];
                         $urlWithLoop[] = $initialUrl.'Tv%20Shows';
                         $urlWithLoop[] = $initialUrl.'TV%20Shows';
             $urlWithLoop[] = $initialUrl . 'TV%20Show';
+            $urlWithLoop[] = $initialUrl . 'Tv%20Show';
         }
 
     }
@@ -190,8 +192,13 @@ function series()
                             $itemCounter++;
                         } else {
 
+                            $explodedItemGet = explode("/", $itemGet["url"]);
+                            $newArray = array_slice($explodedItemGet, 0, -3);
+                            $implodeItemGet = implode("/", $newArray);
 
-                            $OTHERS_FOLDERS[$otherCounter]["url"] = $itemGet["url"] . "/" . $takeHref[0];
+
+
+                            $OTHERS_FOLDERS[$otherCounter]["url"] = $implodeItemGet . $takeHref[0];
                             $OTHERS_FOLDERS[$otherCounter]["cat"] = $itemGet['cat'];
                             $otherCounter++;
                         }
