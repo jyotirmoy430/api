@@ -23,7 +23,7 @@ function series()
         'iccftps13sasd',
         'ftps10d',
         'iccftps14sasd',
-        'ftps4d4',
+        'ftps4d',
     ];
 
     $THREE = [
