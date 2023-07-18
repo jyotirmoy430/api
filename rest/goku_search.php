@@ -5,20 +5,62 @@ $SITE_URL = "https://goku.sx";
 
 
 try{
-    $keyword = ($_GET["keyword"]) ? str_replace(" ", "%20", $_GET["keyword"]) : "a";
+    $keyword = ($_GET["keyword"]) ? str_replace(" ", "%20", $_GET["keyword"]) : "";
     $category = ($_GET["category"] && $_GET["category"] !== ' ') ? $_GET["category"] : "";
     $offset = ($_GET["offset"]) ? $_GET["offset"] : 0;
     $limit = ($_GET["limit"]) ? $_GET["limit"] : 20;
     $sort = ($_GET["sort"] === 'asc') ? SORT_ASC : SORT_DESC;
 }catch (\Exception $e){
 }
+if($limit & $limit > 100){
+    $limit = 100;
+}
 
-$searchUrl = "$SITE_URL/search?keyword=$keyword";
-$items = getSearchItems($searchUrl);
 
-$finalItems = ($items && count($items) > 0) ? array_values($items) : [];
+if(!$keyword || $keyword==''){
+    $data = get_web_page("https://raw.githubusercontent.com/jyotirmoy430/api/main/listngoku.json");
+    $decoded_json = json_decode($data["content"], false);
 
-echo json_encode(array_slice($finalItems, $offset, $limit), JSON_PRETTY_PRINT);
+    $takeArr = [];
+
+    foreach($decoded_json as $decoded){
+        if($category){
+            if (strpos(strtolower($decoded->cat), strtolower($category)) !== false) {
+                if($keyword == ''){
+                    $takeArr[] = $decoded;
+                }
+                if (strpos(strtolower($decoded->video), strtolower($keyword)) !== false) {
+                    $takeArr[] = $decoded;
+                }
+            }
+        }else{
+            if($keyword == ''){
+                $takeArr[] = $decoded;
+            }
+            if (strpos(strtolower($decoded->video), strtolower($keyword)) !== false) {
+                $takeArr[] = $decoded;
+            }
+        }
+    }
+
+    $year = array();
+    foreach ($takeArr as $key => $row)
+    {
+        $year[$key] = $row->year;
+    }
+    array_multisort($year, $sort, $takeArr);
+
+    echo json_encode(array_slice($takeArr, $offset, $limit), JSON_PRETTY_PRINT);
+
+}else{
+    $searchUrl = "$SITE_URL/search?keyword=$keyword";
+    $items = getSearchItems($searchUrl);
+
+    $finalItems = ($items && count($items) > 0) ? array_values($items) : [];
+
+    echo json_encode(array_slice($finalItems, $offset, $limit), JSON_PRETTY_PRINT);
+}
+
 
 function getSearchItems($url)
 {
@@ -40,11 +82,14 @@ function getSearchItems($url)
     foreach ($anchors as $index => $anchor) {
         $href = $anchor->getAttribute('href');
         $src = $images[$index]->getAttribute('src');
+        $title = $images[$index]->getAttribute('alt');
         $array[] = [
             'id'=>$index,
             'video' => $SITE_URL.str_replace("/movie", "/watch-movie", $href),
             'poster' => $src,
-            'goku' => 1
+            'title' => $title,
+            'goku' => 1,
+            'cat' => "all",
         ];
     }
 
