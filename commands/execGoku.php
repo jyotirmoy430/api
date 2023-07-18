@@ -51,7 +51,7 @@ function getSearchItems($url)
             if($exploded && isset($exploded[1])){
                 $array[] = [
                     'id'=>$index,
-                    'video' => $SITE_URL_APPEND.'/'.$exploded[1],
+                    'video' => $SITE_URL_APPEND.'/watch-movie/'.$exploded[1],
                     'title' => $title,
                     'poster' => $src,
                     'goku' => 1,
