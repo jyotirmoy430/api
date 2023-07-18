@@ -41,14 +41,26 @@ function getSearchItems($url)
         $href = $anchor->getAttribute('href');
         $src = $images[$index]->getAttribute('src');
         $title = $images[$index]->getAttribute('alt');
-        $array[] = [
-            'id'=>$index,
-            'video' => $SITE_URL.str_replace("/movie", "/watch-movie", $href),
-            'title' => $title,
-            'poster' => $src,
-            'goku' => 1,
-            'cat' => "all",
-        ];
+
+        if (strpos($href, "series") == false) {
+            $string = str_replace("/movie", "/watch-movie", $href);
+            $finalString = str_replace("/movie", "/watch-movie", $href);
+            $exploded = explode("/watch-movie/", $finalString);
+
+            if($exploded && isset($exploded[1])){
+                $array[] = [
+                    'id'=>$index,
+                    'video' => $SITE_URL.'/'.$exploded[1],
+                    'title' => $title,
+                    'poster' => $src,
+                    'goku' => 1,
+                    'cat' => "all",
+                ];
+            }
+
+        }
+
+
     }
 
     return $array;

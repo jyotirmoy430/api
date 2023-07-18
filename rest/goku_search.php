@@ -19,7 +19,8 @@ if($limit & $limit > 100){
 
 if(!$keyword || $keyword==''){
     $data = get_web_page("https://raw.githubusercontent.com/jyotirmoy430/api/main/listngoku.json");
-    $decoded_json = json_decode($data["content"], false);
+    $decoded_json = json_decode($data, false);
+
 
     $takeArr = [];
 
@@ -83,14 +84,23 @@ function getSearchItems($url)
         $href = $anchor->getAttribute('href');
         $src = $images[$index]->getAttribute('src');
         $title = $images[$index]->getAttribute('alt');
-        $array[] = [
-            'id'=>$index,
-            'video' => $SITE_URL.str_replace("/movie", "/watch-movie", $href),
-            'poster' => $src,
-            'title' => $title,
-            'goku' => 1,
-            'cat' => "all",
-        ];
+        if (strpos($href, "series") == false) {
+            $string = str_replace("/movie", "/watch-movie", $href);
+            $finalString = str_replace("/movie", "/watch-movie", $href);
+            $exploded = explode("/watch-movie/", $finalString);
+
+            if($exploded && isset($exploded[1])){
+                $array[] = [
+                    'id'=>$index,
+                    'video' => $SITE_URL.'/'.$exploded[1],
+                    'title' => $title,
+                    'poster' => $src,
+                    'goku' => 1,
+                    'cat' => "all",
+                ];
+            }
+
+        }
     }
 
     return $array;
