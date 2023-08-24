@@ -67,8 +67,6 @@ function init(){
     ];
 
     $CATEGORY = [
-        '3D/English',
-        '4K/English',
         'Animated',
         'Anime',
         'Bangla%20(BD)',
