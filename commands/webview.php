@@ -24,36 +24,36 @@ function webviewItems(){
 
 
     $SITES = [
-        'https://mlsbd.vip/category/bengali/',
-        /*'https://mlsbd.vip/category/hollywood-movies/',
-        'https://mlsbd.vip/category/tv-series/',
-        'https://mlsbd.vip/category/hindi-dubbed/',
-        'https://mlsbd.vip/category/hoichoi-originals/',
-        'https://mlsbd.vip/category/bengali-dubbed/',*/
-        /*'https://mlsbd.vip/release/2022/',
-        'https://mlsbd.vip/release/2021/',
-        'https://mlsbd.vip/release/2020/',
-        'https://mlsbd.vip/release/2019/',
-        'https://mlsbd.vip/release/2018/',
-        'https://mlsbd.vip/release/2017/',
-        'https://mlsbd.vip/release/2016/',
-        'https://mlsbd.vip/release/2015/',
-        'https://mlsbd.vip/release/2014/',
-        'https://mlsbd.vip/release/2013/',
-        'https://mlsbd.vip/release/2012/',
-        'https://mlsbd.vip/release/2011/',
-        'https://mlsbd.vip/release/2010/',
-        'https://mlsbd.vip/release/2009/',
-        'https://mlsbd.vip/release/2008/',
-        'https://mlsbd.vip/release/2007/',
-        'https://mlsbd.vip/release/2006/',
-        'https://mlsbd.vip/release/2005/',
-        'https://mlsbd.vip/release/2004/',
-        'https://mlsbd.vip/release/2003/',
-        'https://mlsbd.vip/release/2002/',
-        'https://mlsbd.vip/release/2001/',
-        'https://mlsbd.vip/release/2000/',*/
-        'https://mlsbd.vip/category/animation-movies/',
+        'https://ww1.mlsbd.vip/category/bengali/',
+        /*'https://ww1.mlsbd.vip/category/hollywood-movies/',
+        'https://ww1.mlsbd.vip/category/tv-series/',
+        'https://ww1.mlsbd.vip/category/hindi-dubbed/',
+        'https://ww1.mlsbd.vip/category/hoichoi-originals/',
+        'https://ww1.mlsbd.vip/category/bengali-dubbed/',*/
+        /*'https://ww1.mlsbd.vip/release/2022/',
+        'https://ww1.mlsbd.vip/release/2021/',
+        'https://ww1.mlsbd.vip/release/2020/',
+        'https://ww1.mlsbd.vip/release/2019/',
+        'https://ww1.mlsbd.vip/release/2018/',
+        'https://ww1.mlsbd.vip/release/2017/',
+        'https://ww1.mlsbd.vip/release/2016/',
+        'https://ww1.mlsbd.vip/release/2015/',
+        'https://ww1.mlsbd.vip/release/2014/',
+        'https://ww1.mlsbd.vip/release/2013/',
+        'https://ww1.mlsbd.vip/release/2012/',
+        'https://ww1.mlsbd.vip/release/2011/',
+        'https://ww1.mlsbd.vip/release/2010/',
+        'https://ww1.mlsbd.vip/release/2009/',
+        'https://ww1.mlsbd.vip/release/2008/',
+        'https://ww1.mlsbd.vip/release/2007/',
+        'https://ww1.mlsbd.vip/release/2006/',
+        'https://ww1.mlsbd.vip/release/2005/',
+        'https://ww1.mlsbd.vip/release/2004/',
+        'https://ww1.mlsbd.vip/release/2003/',
+        'https://ww1.mlsbd.vip/release/2002/',
+        'https://ww1.mlsbd.vip/release/2001/',
+        'https://ww1.mlsbd.vip/release/2000/',
+        'https://ww1.mlsbd.vip/category/animation-movies/',*/
     ];
     $CATEGORY = [
         'Bangla',
@@ -338,6 +338,13 @@ function getAnchor($url, $pattern='dood.yt')
             $takeUrl['url'] = $href;
             break;
         }
+        if (
+            (strpos($href, 'doods.pro') !== false)
+        )
+        {
+            $takeUrl['url'] = $href;
+            break;
+        }
 
         if (
             (strpos($href, 'lvturbo.com') !== false)
@@ -362,7 +369,7 @@ function getAnchor($url, $pattern='dood.yt')
 function getDataFromArticleUsingUrl($url){
     echo "Generating from site:::".$url."\n\n";
 
-    //return ['https://mlsbd.vip/pattathu-arasan-2022-hindi-dubbed/'];
+    //return ['https://ww1.mlsbd.vip/pattathu-arasan-2022-hindi-dubbed/'];
 
     $finalArr = [];
 
