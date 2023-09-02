@@ -25,12 +25,12 @@ function webviewItems(){
 
     $SITES = [
         'https://mlsbd.vip/category/bengali/',
+        /*'https://mlsbd.vip/category/hollywood-movies/',
         'https://mlsbd.vip/category/tv-series/',
         'https://mlsbd.vip/category/hindi-dubbed/',
         'https://mlsbd.vip/category/hoichoi-originals/',
-        'https://mlsbd.vip/category/bengali-dubbed/',
-        'https://mlsbd.vip/category/animation-movies/',
-        'https://mlsbd.vip/release/2022/',
+        'https://mlsbd.vip/category/bengali-dubbed/',*/
+        /*'https://mlsbd.vip/release/2022/',
         'https://mlsbd.vip/release/2021/',
         'https://mlsbd.vip/release/2020/',
         'https://mlsbd.vip/release/2019/',
@@ -52,15 +52,17 @@ function webviewItems(){
         'https://mlsbd.vip/release/2003/',
         'https://mlsbd.vip/release/2002/',
         'https://mlsbd.vip/release/2001/',
-        'https://mlsbd.vip/release/2000/',
+        'https://mlsbd.vip/release/2000/',*/
+        'https://mlsbd.vip/category/animation-movies/',
     ];
     $CATEGORY = [
         'Bangla',
+        /*'English',
         'English',
         'Dual%20Audio',
         'Bangla',
-        'Dual%20Audio',
-        'Animation',
+        'Dual%20Audio',*/
+        /*'All',
         'All',
         'All',
         'All',
@@ -83,17 +85,17 @@ function webviewItems(){
         'All',
         'All',
         'All',
-        'All',
+        'Animation',*/
     ];
 
     $PAGES = [
-        7,
+        1,
+       /* 10,
         6,
         13,
         0,
-        0,
-        0,
-        18,
+        0,*/
+        /*18,
         3,
         2,
         2,
@@ -114,6 +116,7 @@ function webviewItems(){
         0,
         0,
         0,
+        0,*/
         0,
     ];
 
@@ -365,6 +368,8 @@ function getDataFromArticleUsingUrl($url){
 
     try {
         $html = file_get_contents($url);
+
+
 
         if (!$html)
             return [];
