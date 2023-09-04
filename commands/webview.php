@@ -25,11 +25,11 @@ function webviewItems(){
 
     $SITES = [
         'https://ww1.mlsbd.vip/category/bengali/',
-        /*'https://ww1.mlsbd.vip/category/hollywood-movies/',
+        'https://ww1.mlsbd.vip/category/hollywood-movies/',
         'https://ww1.mlsbd.vip/category/tv-series/',
         'https://ww1.mlsbd.vip/category/hindi-dubbed/',
         'https://ww1.mlsbd.vip/category/hoichoi-originals/',
-        'https://ww1.mlsbd.vip/category/bengali-dubbed/',*/
+        'https://ww1.mlsbd.vip/category/bengali-dubbed/',
         /*'https://ww1.mlsbd.vip/release/2022/',
         'https://ww1.mlsbd.vip/release/2021/',
         'https://ww1.mlsbd.vip/release/2020/',
@@ -57,11 +57,11 @@ function webviewItems(){
     ];
     $CATEGORY = [
         'Bangla',
-        /*'English',
+        'English',
         'English',
         'Dual%20Audio',
         'Bangla',
-        'Dual%20Audio',*/
+        'Dual%20Audio',
         /*'All',
         'All',
         'All',
@@ -90,11 +90,11 @@ function webviewItems(){
 
     $PAGES = [
         1,
-       /* 10,
+        10,
         6,
         13,
         0,
-        0,*/
+        0,
         /*18,
         3,
         2,
