@@ -116,8 +116,8 @@ function webviewItems(){
         0,
         0,
         0,
-        0,*/
         0,
+        0,*/
     ];
 
     $FULL_FINAL_LIST = [];
@@ -142,13 +142,14 @@ function webviewItems(){
 
 
 
+
             $videoSiteUrls = getDataFromArticleUsingUrl($siteTake);
 
             if($videoSiteUrls && !empty($videoSiteUrls)){
 
                 foreach($videoSiteUrls as $videoSiteUrl){
                     if(in_array($videoSiteUrl, $CHECK_EXISTING_URL_ARR)){
-                       echo "in array:::".$videoSiteUrl."\n\n";
+                       echo "already in array:::".$videoSiteUrl."\n\n";
                        continue;
                     }
 
@@ -235,7 +236,7 @@ function webviewItems(){
                         $NEW_GENERATED_URLS[]=$movieUrlAndTimestamp['url'];
 
                     }else{
-                        echo "already on file\n\n";
+                        echo "No video found\n\n";
                     }
                 }
             }
@@ -271,6 +272,8 @@ function getAnchor($url, $pattern='dood.yt')
 {
     echo "Generating movie url from :::".$url."\n\n";
     $html = file_get_contents($url);
+
+
 
     $takeUrl = [];
 
@@ -362,7 +365,16 @@ function getAnchor($url, $pattern='dood.yt')
             $takeUrl['url'] = $href;
             break;
         }
+
+        if (
+            (strpos($href, 'noblocktape.com') !== false)
+        )
+        {
+            $takeUrl['url'] = $href;
+            break;
+        }
     }
+
     return $takeUrl;
 }
 
@@ -375,6 +387,7 @@ function getDataFromArticleUsingUrl($url){
 
     try {
         $html = file_get_contents($url);
+
 
 
 
@@ -395,6 +408,8 @@ function getDataFromArticleUsingUrl($url){
                     (strpos($href, 'featured') == false) &&
                     (strpos($href, 'genre') == false) &&
                     (strpos($href, '18-') == false) &&
+                    (strpos($href, 'fuck') == false) &&
+                    (strpos($href, 'xxx') == false) &&
                     (strpos($href, 'release') == false)
                 )
                 {
