@@ -153,6 +153,7 @@ function webviewItems(){
                        continue;
                     }
 
+                    $videoSiteUrl = str_replace("ww2", "ww1", $videoSiteUrl);
                     $movieUrlAndTimestamp = getAnchor($videoSiteUrl, 'dood.yt');
 
                     if(
@@ -312,7 +313,15 @@ function getAnchor($url, $pattern='dood.yt')
 
     foreach ($anchors as $anchor) {
         $href = $anchor->getAttribute('href');
-
+        if (
+            (strpos($href, 'hot') !== false) ||
+            (strpos($href, 'masala') !== false) ||
+            (strpos($href, 'adult') !== false) ||
+            (strpos($href, 'xxx') !== false) ||
+            (strpos($href, '18') !== false)
+        ){
+            continue;
+        }
         if (
             (strpos($href, 'dooood.com') !== false)
         )
