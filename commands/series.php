@@ -61,6 +61,7 @@ function series()
         'Serials%20(English)',
         'Serials%20(Dual%20Audio)',
         'Serials%20(Anime)',
+        'Serials%20(Others)/Spain',
     ];
 
 
@@ -110,11 +111,18 @@ function series()
     $itemCounter = 0;
     $otherCounter = 0;
 
+    //http://10.16.100.213/iccftps13/iccftps13sasd6/TV%20Show/Serials%20(Others)/Spain/Money%20Heist%20(La%20Casa%20De%20Papel)%20Season%2001%20(2017)%20Completed/Money%20Heist%20(La%20Casa%20De%20Papel)%20S01E01.mp4
+
 
     if ($FINAL_URL) {
         foreach ($FINAL_URL as $key => $itemGet) {
 
             $final = $itemGet["url"];
+
+
+            echo "final::<pre>";
+            print_r($final);
+            echo "</pre>\n\n";
 
 
             $data = get_web_page($final);
@@ -162,6 +170,11 @@ function series()
 
 
                             $fullFinalUrl = str_replace("http:/", "http://", $fullFinalUrl);
+
+
+                            echo "final::<pre>";
+                            print_r($fullFinalUrl);
+                            echo "</pre>\n\n";
 
 
                             if (!in_array($fullFinalUrl, $FULL_FINAL_LIST)) {
