@@ -79,6 +79,7 @@ function getDataFromTableUsingUrl($url, $category)
 
         // Loop through the rows in the table
         foreach ($table->getElementsByTagName('tr') as $row) {
+            echo "getElementsByTagName \n\n";
             // Initialize an empty array to hold the row data
             $rowData = array();
 

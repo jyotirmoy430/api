@@ -128,6 +128,12 @@ function init(){
         foreach($FINAL_URL as $key=>$itemGet){
             $final = $itemGet["url"];
 
+            echo "Final::<pre>";
+            print_r($final);
+            echo "</pre>\n\n";
+
+
+
             $dataFromTable = getDataFromTableUsingUrl($final.'/', $itemGet['cat']);
 
 
@@ -143,6 +149,7 @@ function init(){
                         $itemCounter++;
                     }
                 }
+                echo "empty\n\n";
                 continue;
             }
 
@@ -162,7 +169,7 @@ function init(){
 
                     echo "<pre>";
                     print_r($href);
-                    echo "</pre>";
+                    echo "</pre>\n\n";
 
                     if($href){
                         $takeHref = explode(".",$href);
@@ -190,7 +197,9 @@ function init(){
                             }
                             $fullFinalUrl = str_replace("http:/","http://",$fullFinalUrl);
 
-
+                            echo "fullFinalUrl<pre>";
+                            print_r($fullFinalUrl);
+                            echo "</pre>\n\n";
                             $FULL_FINAL_LIST[$itemCounter]['url'] = $fullFinalUrl;
                             $FULL_FINAL_LIST[$itemCounter]['cat'] = $itemGet['cat'];
                             $FULL_FINAL_LIST[$itemCounter]['timestamp'] = 1396966731;
@@ -203,11 +212,13 @@ function init(){
 
 
             }else{
+                echo "continuing ".$data["http_code"]."\n\n";
                 continue;
             }
 
         }
     }
+
 
     $FULL_FINAL = [];
 

@@ -73,16 +73,16 @@ function series()
         $loop = $THREE[$key];
         if ($loop !== 0) {
             for ($i = 1; $i <= (int)$loop; $i++) {
-                                $urlWithLoop[] = $initialUrl.$i."/".'Tv%20Show';
-                                $urlWithLoop[] = $initialUrl.$i."/".'Tv%20Shows';
-                                $urlWithLoop[] = $initialUrl.$i."/".'TV%20Shows';
+                $urlWithLoop[] = $initialUrl . $i . "/" . 'Tv%20Show';
+                $urlWithLoop[] = $initialUrl . $i . "/" . 'Tv%20Shows';
+                $urlWithLoop[] = $initialUrl . $i . "/" . 'TV%20Shows';
                 $urlWithLoop[] = $initialUrl . $i . "/" . 'TV%20Show';
                 $urlWithLoop[] = $initialUrl . $i . "/" . 'Tv%20Show';
             }
         } else {
-                        $urlWithLoop[] = $initialUrl.$MOVIE_FOLDER_URL[$key];
-                        $urlWithLoop[] = $initialUrl.'Tv%20Shows';
-                        $urlWithLoop[] = $initialUrl.'TV%20Shows';
+            $urlWithLoop[] = $initialUrl . $MOVIE_FOLDER_URL[$key];
+            $urlWithLoop[] = $initialUrl . 'Tv%20Shows';
+            $urlWithLoop[] = $initialUrl . 'TV%20Shows';
             $urlWithLoop[] = $initialUrl . 'TV%20Show';
             $urlWithLoop[] = $initialUrl . 'Tv%20Show';
         }
@@ -117,26 +117,6 @@ function series()
             $final = $itemGet["url"];
 
 
-            if (!empty($dataFromTable)) {
-
-                foreach ($dataFromTable as $key => $hrefTable) {
-
-                    $href = $hrefTable["url"];
-                    $takeHref = explode(".", $href);
-
-                    if ($takeHref && (end($takeHref) == "mp4" || end($takeHref) == "MP4" || end($takeHref) == "mkv" || end($takeHref) == "MKV" || end($takeHref) == "avi")) {
-                        $FULL_FINAL_LIST[$itemCounter] = $hrefTable;
-                        $itemCounter++;
-                    } else {
-                        $OTHERS_FOLDERS[$otherCounter]["url"] = $href;
-                        $OTHERS_FOLDERS[$otherCounter]["cat"] = $hrefTable["cat"];
-                        $otherCounter++;
-                    }
-                }
-                continue;
-            }
-
-
             $data = get_web_page($final);
 
 
@@ -148,9 +128,9 @@ function series()
                 foreach ($dom->getElementsByTagName('a') as $item) {
                     $href = $item->getAttribute('href');
 
-                    /*echo "<pre>";
-                    print_r($href);
-                    echo "</pre>";*/
+                    if (strpos($href, '?C=') !== false) {
+                        continue;
+                    }
 
 
                     if ($href) {
@@ -184,23 +164,23 @@ function series()
                             $fullFinalUrl = str_replace("http:/", "http://", $fullFinalUrl);
 
 
-                            $FULL_FINAL_LIST[$itemCounter]['url'] = $fullFinalUrl;
-                            $FULL_FINAL_LIST[$itemCounter]['cat'] = $itemGet['cat'];
-                            $FULL_FINAL_LIST[$itemCounter]['timestamp'] = 1396966731;
+                            if (!in_array($fullFinalUrl, $FULL_FINAL_LIST)) {
+                                $FULL_FINAL_LIST[$itemCounter]['url'] = $fullFinalUrl;
+                                $FULL_FINAL_LIST[$itemCounter]['cat'] = $itemGet['cat'];
+                                $FULL_FINAL_LIST[$itemCounter]['timestamp'] = 1396966731;
 
 
-                            $itemCounter++;
+                                $itemCounter++;
+                            }
+
                         } else {
+                            $fullUrlHere = $final . ((strpos($takeHref[0], '/') === 0) ? '' : "/") . $takeHref[0];
 
-                            $explodedItemGet = explode("/", $itemGet["url"]);
-                            $newArray = array_slice($explodedItemGet, 0, -3);
-                            $implodeItemGet = implode("/", $newArray);
-
-
-
-                            $OTHERS_FOLDERS[$otherCounter]["url"] = $implodeItemGet . $takeHref[0];
-                            $OTHERS_FOLDERS[$otherCounter]["cat"] = $itemGet['cat'];
-                            $otherCounter++;
+                            if (!in_array($fullUrlHere, $OTHERS_FOLDERS)) {
+                                $OTHERS_FOLDERS[$otherCounter]["url"] = $fullUrlHere;
+                                $OTHERS_FOLDERS[$otherCounter]["cat"] = $itemGet['cat'];
+                                $otherCounter++;
+                            }
                         }
                     }
 
@@ -337,7 +317,6 @@ function series()
         }*/
 
 
-
         if ($itemGet["size"]) {
             $size = gbToByte($itemGet["size"]);
             if ($size) {
@@ -394,7 +373,6 @@ function series()
         $FULL_FINAL[] = $object;
 
     }
-
 
 
     //file_put_contents("../listn.json",json_encode($FULL_FINAL));
