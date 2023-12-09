@@ -4,13 +4,11 @@ include 'index.php';
 include 'alif.php';
 include 'series.php';
 
-$allSeries = series();
 
-$items = [];
+
+$items = init();
 try{
-    //$alifItems = [];
-    $items = init();
-
+    $allSeries = series();
 }catch (Exception $exception){
     $items = [];
 }
