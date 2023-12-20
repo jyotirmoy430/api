@@ -65,6 +65,7 @@ if(!$keyword || $keyword==''){
 
 function getSearchItems($url)
 {
+    $url = ($url) ? str_replace(" ", "%20", $url) : "";
     global $SITE_URL;
     $html = get_web_page($url);
 
@@ -82,6 +83,8 @@ function getSearchItems($url)
     $array = [];
     foreach ($anchors as $index => $anchor) {
         $href = $anchor->getAttribute('href');
+
+
         $src = $images[$index]->getAttribute('src');
         $title = $images[$index]->getAttribute('alt');
         if (strpos($href, "series") == false) {
@@ -101,8 +104,27 @@ function getSearchItems($url)
             }
 
         }
-    }
 
+
+
+        if (strpos($href, "series") != false) {
+
+            $finalString = str_replace("/series", "/watch-series", $href);
+            $exploded = explode("/watch-series/", $finalString);
+
+            if($exploded && isset($exploded[1])){
+                $array[] = [
+                    'id'=>$index,
+                    'video' => $SITE_URL.'/watch-series/'.$exploded[1],
+                    'title' => $title,
+                    'poster' => $src,
+                    'goku' => 1,
+                    'cat' => "all",
+                ];
+            }
+
+        }
+    }
     return $array;
 }
 
