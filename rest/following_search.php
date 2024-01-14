@@ -16,74 +16,23 @@ if ($limit & $limit > 100) {
     $limit = 100;
 }
 
+$searchUrl = url_picker($category);
+
 
 if (!$keyword || $keyword == '') {
-    $searchUrl = "$SITE_URL";
-    $items = getSearchItems($searchUrl);
+    $items = getSearchItems($searchUrl, $category=='All' ? "" : 'video-thumb');
 
     $finalItems = ($items && count($items) > 0) ? array_values($items) : [];
 
     echo json_encode(array_slice($finalItems, $offset, $limit), JSON_PRETTY_PRINT);
-
-
 } else {
-    if ($keyword && $keyword == 'c=comedy') {
-        $searchUrl = "$SITE_URL/genre/comedy-7";
-        $items = getSearchItems($searchUrl);
 
-        $finalItems = ($items && count($items) > 0) ? array_values($items) : [];
-
-        echo json_encode(array_slice($finalItems, $offset, $limit), JSON_PRETTY_PRINT);
-    } else if ($keyword && $keyword == 'c=action') {
-        $searchUrl = "$SITE_URL/genre/action-10";
-        $items = getSearchItems($searchUrl);
-
-        $finalItems = ($items && count($items) > 0) ? array_values($items) : [];
-
-        echo json_encode(array_slice($finalItems, $offset, $limit), JSON_PRETTY_PRINT);
-    } else if ($keyword && $keyword == 'c=animation') {
-        $searchUrl = "$SITE_URL/genre/animation-3";
-        $items = getSearchItems($searchUrl);
-
-        $finalItems = ($items && count($items) > 0) ? array_values($items) : [];
-
-        echo json_encode(array_slice($finalItems, $offset, $limit), JSON_PRETTY_PRINT);
-    } else if ($keyword && ($keyword == 'c=scifi' || $keyword == 'c=sifi')) {
-        $searchUrl = "$SITE_URL/genre/sci-fi-fantasy-31";
-        $items = getSearchItems($searchUrl);
-
-        $finalItems = ($items && count($items) > 0) ? array_values($items) : [];
-
-        echo json_encode(array_slice($finalItems, $offset, $limit), JSON_PRETTY_PRINT);
-    } else if ($keyword && $keyword == 'c=kids') {
-        $searchUrl = "$SITE_URL/genre/kids-27";
-        $items = getSearchItems($searchUrl);
-
-        $finalItems = ($items && count($items) > 0) ? array_values($items) : [];
-
-        echo json_encode(array_slice($finalItems, $offset, $limit), JSON_PRETTY_PRINT);
-    } else if ($keyword && $keyword == 'c=fantasy') {
-        $searchUrl = "$SITE_URL/genre/fantasy-13";
-        $items = getSearchItems($searchUrl);
-
-        $finalItems = ($items && count($items) > 0) ? array_values($items) : [];
-
-        echo json_encode(array_slice($finalItems, $offset, $limit), JSON_PRETTY_PRINT);
-    } else if ($keyword && $keyword == 'c=horror') {
-        $searchUrl = "$SITE_URL/genre/horror-14";
-        $items = getSearchItems($searchUrl);
-
-        $finalItems = ($items && count($items) > 0) ? array_values($items) : [];
-
-        echo json_encode(array_slice($finalItems, $offset, $limit), JSON_PRETTY_PRINT);
-    } else {
         $searchUrl = "$SITE_URL"."search?keyword=$keyword";
         $items = getSearchItems($searchUrl, 'video-thumb');
 
         $finalItems = ($items && count($items) > 0) ? array_values($items) : [];
 
         echo json_encode(array_slice($finalItems, $offset, $limit), JSON_PRETTY_PRINT);
-    }
 
 }
 
@@ -122,6 +71,30 @@ function getSearchItems($url, $className='video-list-image')
         }
     }
     return $array;
+}
+
+function url_picker($key){
+    global $SITE_URL;
+
+    if($key === 'Animated'){
+        return $SITE_URL.'videos/category/7';
+    }
+    if($key === 'Tv show'){
+        return $SITE_URL.'videos/category/854';
+    }
+    if($key === 'Bangla'){
+        return $SITE_URL.'videos/category/1';
+    }
+    if($key === 'Hindi'){
+        return $SITE_URL.'videos/category/4';
+    }
+    if($key === 'Dual'){
+        return $SITE_URL.'videos/category/852';
+    }
+    if($key === 'English'){
+        return $SITE_URL.'videos/category/8';
+    }
+    return $SITE_URL;
 }
 
 
