@@ -1,17 +1,21 @@
 <?php
 error_reporting(0);
+$SITE_URL = "https://goku.sx";
 function getFinalURL($url) {
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-    curl_setopt($ch, CURLOPT_HEADER, true);
-    curl_setopt($ch, CURLOPT_NOBODY, true);
+    $headers = get_headers($url, 1);
 
-    $response = curl_exec($ch);
-    $headers = curl_getinfo($ch);
-    curl_close($ch);
-
-    return isset($headers['url']) ? $headers['url'] : $url;
+    // Check if "Location" header is present
+    if (isset($headers['Location'])) {
+        // If it's an array, use the last element as the final URL
+        if (is_array($headers['Location'])) {
+            return end($headers['Location']);
+        } else {
+            return $headers['Location'];
+        }
+    } else {
+        // If "Location" header is not present, use the original URL
+        return $url;
+    }
 }
 
 try{
@@ -21,5 +25,5 @@ try{
 
 if($url){
     $finalURL = getFinalURL($url);
-    echo $finalURL;
+    echo $SITE_URL.$finalURL;
 }
