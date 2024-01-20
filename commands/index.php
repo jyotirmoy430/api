@@ -75,7 +75,9 @@ function init(){
         'Chinese',
         'Dual%20Audio',
         'English',
-        'Full%20HD',
+        'Full%20HD/English',
+        'Exclusive%20Full-HD/English',
+        'Exclusive%20Full%20HD/English',
         'Hindi',
         'Japanese',
         'Korean',
@@ -281,11 +283,21 @@ function init(){
 
 
         $object->cat = ($itemGet['cat'] == "Bangla/Kolkata") ? "Bangla%20(Kolkata)" : $itemGet['cat'];
+        $object->cat = ($itemGet['cat'] == 'Full%20HD/English' ||
+                                            $itemGet['cat'] == 'Exclusive%20Full-HD/English' ||
+            $itemGet['cat'] == 'Exclusive%20Full%20HD/English'
+        ) ? "English" : $object->cat;
 
 
         $FULL_FINAL[] = $object;
 
     }
+
+
+    echo "<pre>";
+    print_r($FULL_FINAL);
+    echo "</pre>";
+
 
 
     //file_put_contents("../listn.json",json_encode($FULL_FINAL));
