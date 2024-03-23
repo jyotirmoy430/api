@@ -1,7 +1,7 @@
 <?php
 error_reporting(0);
 
-$url = "https://wdn.followingbook.com/watch/8xeULZ1tOyuopVI";
+$url = ($_GET["url"]) ? str_replace(" ", "%20", $_GET["url"]) : "";
 $finalURL = '';
 
 
