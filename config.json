@@ -1,0 +1,28 @@
+{
+  "apiUrl": "https://my-vercel-api-eta.vercel.app",
+  "screenList": [
+    {
+      "title": "Circle"
+    },
+    {
+      "title": "Wifi"
+    },
+    {
+      "title": "Mobile"
+    },
+    {
+      "title": "Goku"
+    },
+    {
+      "title": "Watch later",
+      "refresh": 1
+    },
+    {
+      "title": "History",
+      "refresh": 1
+    },
+    {
+      "title": "Helper"
+    }
+  ]
+}
