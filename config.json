@@ -1,28 +1,42 @@
 {
-  "apiUrl": "https://my-vercel-api-eta.vercel.app",
   "screenList": [
     {
-      "title": "Circle"
+      "title": "Circle",
+      "apiUrl": "https://new.circleftp.net:5000/api/posts",
+      "posterUrl": "https://new.circleftp.net:5000/uploads",
+      "component": "CircleScreen",
+      "searchUrl": "http://15.1.1.50:5000/api/posts"
     },
     {
-      "title": "Wifi"
+      "title": "Wifi",
+      "apiUrl": "https://my-vercel-api-eta.vercel.app/api/index",
+      "component": "IccScreen"
     },
     {
-      "title": "Mobile"
+      "title": "Mobile",
+      "apiUrl": "https://my-vercel-api-eta.vercel.app/api/following_search?",
+      "component": "FollowingbookScreen",
+      "searchUrl": "https://my-vercel-api-eta.vercel.app/api/following_get_video_url"
     },
     {
-      "title": "Goku"
+      "title": "Goku",
+      "apiUrl": "https://my-vercel-api-eta.vercel.app/api/goku_search",
+      "component": "GokuScreen",
+      "searchUrl": "https://my-vercel-api-eta.vercel.app/api/goku_get_video_url"
     },
     {
       "title": "Watch later",
-      "refresh": 1
+      "refresh": 1,
+      "component": "CircleScreen"
     },
     {
       "title": "History",
-      "refresh": 1
+      "refresh": 1,
+      "component": "CircleScreen"
     },
     {
-      "title": "Helper"
+      "title": "Helper",
+      "component": "CircleScreen"
     }
   ]
 }
