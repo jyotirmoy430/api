@@ -27,16 +27,16 @@
     {
       "title": "Watch later",
       "refresh": 1,
-      "component": "CircleScreen"
+      "component": "WatchLater"
     },
     {
       "title": "History",
       "refresh": 1,
-      "component": "CircleScreen"
+      "component": "History"
     },
     {
       "title": "Helper",
-      "component": "CircleScreen"
+      "component": "HelperScreen"
     }
   ]
 }
