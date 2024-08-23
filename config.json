@@ -40,5 +40,6 @@
     }
   ],
   "loadingImage": "https://jyotirmoy430.github.io/api/pleasewait.gif",
-  "playerPoster": "https://jyotirmoy430.github.io/api/index.jpg"
+  "playerPoster": "https://jyotirmoy430.github.io/api/index.jpg",
+  "moviePoster": "https://jyotirmoy430.github.io/api/unnamed.jpg"
 }
