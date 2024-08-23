@@ -39,5 +39,6 @@
       "component": "HelperScreen"
     }
   ],
-  "loadingImage": "https://jyotirmoy430.github.io/api/pleasewait.gif"
+  "loadingImage": "https://jyotirmoy430.github.io/api/pleasewait.gif",
+  "playerPoster": "https://jyotirmoy430.github.io/api/index.jpg"
 }
