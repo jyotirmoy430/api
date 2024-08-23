@@ -38,5 +38,6 @@
       "title": "Helper",
       "component": "HelperScreen"
     }
-  ]
+  ],
+  "loadingImage": "https://jyotirmoy430.github.io/api/pleasewait.gif"
 }
