@@ -14,7 +14,7 @@
     },
     {
       "title": "Mobile",
-      "apiUrl": "https://my-vercel-api-eta.vercel.app/api/following_search?",
+      "apiUrl": "https://my-vercel-api-eta.vercel.app/api/following_search",
       "component": "FollowingbookScreen",
       "searchUrl": "https://my-vercel-api-eta.vercel.app/api/following_get_video_url"
     },
