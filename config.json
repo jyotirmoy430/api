@@ -9,20 +9,20 @@
     },
     {
       "title": "Wifi",
-      "apiUrl": "https://my-vercel-api-eta.vercel.app/api/index",
+      "apiUrl": "http://jbmovies.rf.gd/icc.php",
       "component": "IccScreen"
     },
     {
       "title": "Mobile",
-      "apiUrl": "https://my-vercel-api-eta.vercel.app/api/following_search",
+      "apiUrl": "http://jbmovies.rf.gd/following_search.php",
       "component": "FollowingbookScreen",
       "searchUrl": "https://my-vercel-api-eta.vercel.app/api/following_get_video_url"
     },
     {
       "title": "Goku",
-      "apiUrl": "https://my-vercel-api-eta.vercel.app/api/goku_search",
+      "apiUrl": "http://jbmovies.rf.gd/goku_search.php",
       "component": "GokuScreen",
-      "searchUrl": "https://my-vercel-api-eta.vercel.app/api/goku_get_video_url"
+      "searchUrl": "http://jbmovies.rf.gd/goku_get_video_url.php"
     },
     {
       "title": "Watch later",
