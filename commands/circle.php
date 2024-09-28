@@ -60,6 +60,7 @@ function init(){
 
 
 
+
                     if (
                         strpos($href, ".mp4") !== false ||
                         strpos($href, ".MP4") !== false ||
@@ -68,10 +69,10 @@ function init(){
                         strpos($href, ".avi") !== false
                     ) {
                         $VIDEO_URLS[$counterInner]['name'] = $explode[5];
-                        $VIDEO_URLS[$counterInner]['url'] = $url . '/' . $explode[4] . '/' . $explode[5];
+                        $VIDEO_URLS[$counterInner]['url'] = $allUrl["url"] . '/' . $explode[5];
                         $VIDEO_URLS[$counterInner]['cat'] = $allUrl['cat'];
                         $VIDEO_URLS[$counterInner]['year'] = $allUrl['year'];
-                        echo "Found movie::".$explode[5]."\n\n";
+                        echo "Found movie::".$VIDEO_URLS[$counterInner]['url']."\n\n";
                         $counterInner++;
                     }
                 }
