@@ -116,124 +116,14 @@ function series()
 
     if ($FINAL_URL) {
         foreach ($FINAL_URL as $key => $itemGet) {
-
-            $final = $itemGet["url"];
-
-
-            echo "final::<pre>";
-            print_r($final);
-            echo "</pre>\n\n";
-
-
-            $data = get_web_page($final);
-
-
-            if ($data["http_code"] == 200) {
-                $dom = new DomDocument();
-                $dom->loadHTML($data["content"]);
-
-
-                foreach ($dom->getElementsByTagName('a') as $item) {
-                    $href = $item->getAttribute('href');
-
-                    if (strpos($href, '?C=') !== false) {
-                        continue;
-                    }
-
-
-                    if ($href) {
-                        $takeHref = explode(".", $href);
-                        if ($takeHref && (end($takeHref) == "mp4" || end($takeHref) == "MP4" || end($takeHref) == "mkv" || end($takeHref) == "MKV" || end($takeHref) == "avi")) {
-                            $implode = implode(".", $takeHref);
-
-
-                            $explodeFinal = explode("/", $final);
-                            $explodeImplode = explode("/", $implode);
-
-                            $makeFinal = [];
-                            foreach ($explodeFinal as $key => $ex) {
-
-                                if (!in_array($ex, $explodeImplode) && !in_array($ex, $makeFinal)) {
-                                    $makeFinal[] = $ex;
-                                }
-
-                            }
-
-                            $final = implode("/", $makeFinal);
-
-
-                            if (endsWith($final, "/") || startsWith($implode, "/")) {
-                                $fullFinalUrl = $final . $implode;
-                            } else {
-                                $fullFinalUrl = $final . "/" . $implode;
-                            }
-
-
-                            $fullFinalUrl = str_replace("http:/", "http://", $fullFinalUrl);
-
-
-                            echo "final::<pre>";
-                            print_r($fullFinalUrl);
-                            echo "</pre>\n\n";
-
-
-                            if (!in_array($fullFinalUrl, $FULL_FINAL_LIST)) {
-                                $FULL_FINAL_LIST[$itemCounter]['url'] = $fullFinalUrl;
-                                $FULL_FINAL_LIST[$itemCounter]['cat'] = $itemGet['cat'];
-                                $FULL_FINAL_LIST[$itemCounter]['timestamp'] = 1396966731;
-
-
-                                $itemCounter++;
-                            }
-
-                        } else {
-                            $fullUrlHere = $final . ((strpos($takeHref[0], '/') === 0) ? '' : "/") . $takeHref[0];
-
-                            if (!in_array($fullUrlHere, $OTHERS_FOLDERS)) {
-                                $OTHERS_FOLDERS[$otherCounter]["url"] = $fullUrlHere;
-                                $OTHERS_FOLDERS[$otherCounter]["cat"] = $itemGet['cat'];
-                                $otherCounter++;
-                            }
-                        }
-                    }
-
-
-                }
-
-
-            } else {
-                continue;
-            }
-
-        }
-    }
-
-
-    if ($OTHERS_FOLDERS && count($OTHERS_FOLDERS) > 0) {
-        $FINAL_URL = $OTHERS_FOLDERS;
-
-        if ($FINAL_URL) {
-            foreach ($FINAL_URL as $key => $itemGet) {
+            try {
 
                 $final = $itemGet["url"];
 
-                $dataFromTable = getDataFromTableUsingUrl($final, $itemGet['cat']);
 
-
-                if (!empty($dataFromTable)) {
-
-                    foreach ($dataFromTable as $key => $hrefTable) {
-
-                        $href = $hrefTable["url"];
-                        $takeHref = explode(".", $href);
-
-                        if ($takeHref && (end($takeHref) == "mp4" || end($takeHref) == "MP4" || end($takeHref) == "mkv" || end($takeHref) == "MKV" || end($takeHref) == "avi")) {
-                            $FULL_FINAL_LIST[$itemCounter] = $hrefTable;
-                            $itemCounter++;
-                        }
-                    }
-                    continue;
-                }
+                echo "final::<pre>";
+                print_r($final);
+                echo "</pre>\n\n";
 
 
                 $data = get_web_page($final);
@@ -245,14 +135,18 @@ function series()
 
 
                     foreach ($dom->getElementsByTagName('a') as $item) {
-                        //$output[] = $item->getAttribute('href');
                         $href = $item->getAttribute('href');
+
+                        if (strpos($href, '?C=') !== false) {
+                            continue;
+                        }
 
 
                         if ($href) {
                             $takeHref = explode(".", $href);
                             if ($takeHref && (end($takeHref) == "mp4" || end($takeHref) == "MP4" || end($takeHref) == "mkv" || end($takeHref) == "MKV" || end($takeHref) == "avi")) {
                                 $implode = implode(".", $takeHref);
+
 
                                 $explodeFinal = explode("/", $final);
                                 $explodeImplode = explode("/", $implode);
@@ -268,18 +162,39 @@ function series()
 
                                 $final = implode("/", $makeFinal);
 
+
                                 if (endsWith($final, "/") || startsWith($implode, "/")) {
                                     $fullFinalUrl = $final . $implode;
                                 } else {
                                     $fullFinalUrl = $final . "/" . $implode;
                                 }
+
+
                                 $fullFinalUrl = str_replace("http:/", "http://", $fullFinalUrl);
 
-                                $FULL_FINAL_LIST[$itemCounter]['url'] = $fullFinalUrl;
-                                $FULL_FINAL_LIST[$itemCounter]['cat'] = $itemGet['cat'];
-                                $FULL_FINAL_LIST[$itemCounter]['timestamp'] = 1396966731;
-                                $itemCounter++;
 
+                                echo "final::<pre>";
+                                print_r($fullFinalUrl);
+                                echo "</pre>\n\n";
+
+
+                                if (!in_array($fullFinalUrl, $FULL_FINAL_LIST)) {
+                                    $FULL_FINAL_LIST[$itemCounter]['url'] = $fullFinalUrl;
+                                    $FULL_FINAL_LIST[$itemCounter]['cat'] = $itemGet['cat'];
+                                    $FULL_FINAL_LIST[$itemCounter]['timestamp'] = 1396966731;
+
+
+                                    $itemCounter++;
+                                }
+
+                            } else {
+                                $fullUrlHere = $final . ((strpos($takeHref[0], '/') === 0) ? '' : "/") . $takeHref[0];
+
+                                if (!in_array($fullUrlHere, $OTHERS_FOLDERS)) {
+                                    $OTHERS_FOLDERS[$otherCounter]["url"] = $fullUrlHere;
+                                    $OTHERS_FOLDERS[$otherCounter]["cat"] = $itemGet['cat'];
+                                    $otherCounter++;
+                                }
                             }
                         }
 
@@ -290,6 +205,116 @@ function series()
                 } else {
                     continue;
                 }
+            } catch (Exception $e) {
+                echo "<pre>";
+                print_r($e->getMessage());
+                echo "</pre>";
+                continue;
+            }
+
+        }
+    }
+
+
+    if ($OTHERS_FOLDERS && count($OTHERS_FOLDERS) > 0) {
+        $FINAL_URL = $OTHERS_FOLDERS;
+
+        if ($FINAL_URL) {
+            foreach ($FINAL_URL as $key => $itemGet) {
+                try {
+
+                    $final = $itemGet["url"];
+
+                    $dataFromTable = getDataFromTableUsingUrl($final, $itemGet['cat']);
+
+
+                    if (!empty($dataFromTable)) {
+
+                        foreach ($dataFromTable as $key => $hrefTable) {
+
+                            $href = $hrefTable["url"];
+                            $takeHref = explode(".", $href);
+
+                            if ($takeHref && (end($takeHref) == "mp4" || end($takeHref) == "MP4" || end($takeHref) == "mkv" || end($takeHref) == "MKV" || end($takeHref) == "avi")) {
+                                $FULL_FINAL_LIST[$itemCounter] = $hrefTable;
+                                $itemCounter++;
+                            }
+                        }
+                        continue;
+                    }
+
+
+                    $data = get_web_page($final);
+
+
+                    if ($data["http_code"] == 200) {
+                        $dom = new DomDocument();
+                        $dom->loadHTML($data["content"]);
+
+
+                        foreach ($dom->getElementsByTagName('a') as $item) {
+
+
+                            try {
+//$output[] = $item->getAttribute('href');
+                                $href = $item->getAttribute('href');
+
+
+                                if ($href) {
+                                    $takeHref = explode(".", $href);
+                                    if ($takeHref && (end($takeHref) == "mp4" || end($takeHref) == "MP4" || end($takeHref) == "mkv" || end($takeHref) == "MKV" || end($takeHref) == "avi")) {
+                                        $implode = implode(".", $takeHref);
+
+                                        $explodeFinal = explode("/", $final);
+                                        $explodeImplode = explode("/", $implode);
+
+                                        $makeFinal = [];
+                                        foreach ($explodeFinal as $key => $ex) {
+
+                                            if (!in_array($ex, $explodeImplode) && !in_array($ex, $makeFinal)) {
+                                                $makeFinal[] = $ex;
+                                            }
+
+                                        }
+
+                                        $final = implode("/", $makeFinal);
+
+                                        if (endsWith($final, "/") || startsWith($implode, "/")) {
+                                            $fullFinalUrl = $final . $implode;
+                                        } else {
+                                            $fullFinalUrl = $final . "/" . $implode;
+                                        }
+                                        $fullFinalUrl = str_replace("http:/", "http://", $fullFinalUrl);
+
+                                        $FULL_FINAL_LIST[$itemCounter]['url'] = $fullFinalUrl;
+                                        $FULL_FINAL_LIST[$itemCounter]['cat'] = $itemGet['cat'];
+                                        $FULL_FINAL_LIST[$itemCounter]['timestamp'] = 1396966731;
+                                        $itemCounter++;
+
+                                    }
+                                }
+                            } catch (Exception $e) {
+                                echo "<pre>";
+                                print_r($e->getMessage());
+                                echo "</pre>";
+                                continue;
+
+                            }
+
+
+                        }
+
+
+                    } else {
+                        continue;
+                    }
+                } catch (Exception $e) {
+                    echo "<pre>";
+                    print_r($e->getMessage());
+                    echo "</pre>";
+                    continue;
+
+                }
 
             }
         }
@@ -298,95 +323,101 @@ function series()
 
 
     foreach ($FULL_FINAL_LIST as $key => $itemGet) {
-        if (strpos(strtolower($itemGet['url']), "wwe") !== false) {
-            echo "Substring found!";
+        try{
+            if (strpos(strtolower($itemGet['url']), "wwe") !== false) {
+                echo "Substring found!";
+                continue;
+            }
+
+            $final = $itemGet['url'];
+            $object = new stdClass();
+            $object->id = $key;
+            $object->video = $final;
+            $object->timestamp = $itemGet['timestamp'];
+
+
+            /*if (!$itemGet['cat']) {
+
+                if (strpos($final, "Tv%20Show") !== false) {
+                    $object->cat = "Tv%20Show";
+                } elseif (strpos($final, "TV%20Show") !== false) {
+                    $object->cat = "Tv%20Show";
+                } elseif (strpos($final, "Bangla") !== false) {
+                    $object->cat = "Bangla";
+                } elseif (strpos($final, "English") !== false) {
+                    $object->cat = "English";
+                } elseif (strpos($final, "Dual") !== false) {
+                    $object->cat = "Dual";
+                } elseif (strpos($final, "Animation") !== false) {
+                    $object->cat = "Animation";
+                } else {
+                    $object->cat = "";
+                }
+            }*/
+
+
+            if ($itemGet["size"]) {
+                $size = gbToByte($itemGet["size"]);
+                if ($size) {
+                    $object->size = gbToByte($itemGet["size"]);
+                }
+            }
+            if ($itemGet["cat"]) {
+                $object->cat = $itemGet["cat"];
+            }
+            if ($itemGet["name"]) {
+                $object->name = $itemGet["name"];
+            }
+            if ($itemGet["date"]) {
+                $object->date = trim($itemGet["date"]);
+            }
+
+
+            if (strpos($final, "2023") !== false) {
+                $object->year = 2023;
+                $object->timestamp = strtotime("2023-01-01 12:00:00");;
+            } elseif (strpos($final, "2022") !== false) {
+                $object->year = 2022;
+                $object->timestamp = strtotime("2022-01-01 12:00:00");;
+            } elseif (strpos($final, "2021") !== false) {
+                $object->year = 2021;
+                $object->timestamp = strtotime("2021-01-01 12:00:00");;
+            } elseif (strpos($final, "2020") !== false) {
+                $object->year = 2020;
+                $object->timestamp = strtotime("2020-01-01 12:00:00");;
+            } elseif (strpos($final, "2019") !== false) {
+                $object->year = 2019;
+                $object->timestamp = strtotime("2019-01-01 12:00:00");;
+            } elseif (strpos($final, "2018") !== false) {
+                $object->year = 2018;
+                $object->timestamp = strtotime("2018-01-01 12:00:00");;
+            } elseif (strpos($final, "2017") !== false) {
+                $object->year = 2017;
+                $object->timestamp = strtotime("2017-01-01 12:00:00");;
+            } elseif (strpos($final, "2016") !== false) {
+                $object->year = 2016;
+                $object->timestamp = strtotime("2016-01-01 12:00:00");;
+            } else {
+                $object->year = 0;
+                $object->timestamp = 1396966731;
+            }
+
+            //$object->cat = ($itemGet['cat'] && $itemGet['cat'] == "Bangla/Kolkata") ? "Bangla%20(Kolkata)" : $itemGet['cat'];
+
+            $object->cat = "Tv%20Show";
+            echo "<pre>";
+            print_r($object);
+            echo "</pre>";
+
+            $FULL_FINAL[] = $object;
+        }catch (Exception $e){
+            echo "<pre>";
+            print_r($e->getMessage());
+            echo "</pre>";
+
             continue;
         }
-
-        $final = $itemGet['url'];
-        $object = new stdClass();
-        $object->id = $key;
-        $object->video = $final;
-        $object->timestamp = $itemGet['timestamp'];
-
-
-        /*if (!$itemGet['cat']) {
-
-            if (strpos($final, "Tv%20Show") !== false) {
-                $object->cat = "Tv%20Show";
-            } elseif (strpos($final, "TV%20Show") !== false) {
-                $object->cat = "Tv%20Show";
-            } elseif (strpos($final, "Bangla") !== false) {
-                $object->cat = "Bangla";
-            } elseif (strpos($final, "English") !== false) {
-                $object->cat = "English";
-            } elseif (strpos($final, "Dual") !== false) {
-                $object->cat = "Dual";
-            } elseif (strpos($final, "Animation") !== false) {
-                $object->cat = "Animation";
-            } else {
-                $object->cat = "";
-            }
-        }*/
-
-
-        if ($itemGet["size"]) {
-            $size = gbToByte($itemGet["size"]);
-            if ($size) {
-                $object->size = gbToByte($itemGet["size"]);
-            }
-        }
-        if ($itemGet["cat"]) {
-            $object->cat = $itemGet["cat"];
-        }
-        if ($itemGet["name"]) {
-            $object->name = $itemGet["name"];
-        }
-        if ($itemGet["date"]) {
-            $object->date = $itemGet["date"];
-        }
-
-
-        if (strpos($final, "2023") !== false) {
-            $object->year = 2023;
-            $object->timestamp = strtotime("2023-01-01 12:00:00");;
-        } elseif (strpos($final, "2022") !== false) {
-            $object->year = 2022;
-            $object->timestamp = strtotime("2022-01-01 12:00:00");;
-        } elseif (strpos($final, "2021") !== false) {
-            $object->year = 2021;
-            $object->timestamp = strtotime("2021-01-01 12:00:00");;
-        } elseif (strpos($final, "2020") !== false) {
-            $object->year = 2020;
-            $object->timestamp = strtotime("2020-01-01 12:00:00");;
-        } elseif (strpos($final, "2019") !== false) {
-            $object->year = 2019;
-            $object->timestamp = strtotime("2019-01-01 12:00:00");;
-        } elseif (strpos($final, "2018") !== false) {
-            $object->year = 2018;
-            $object->timestamp = strtotime("2018-01-01 12:00:00");;
-        } elseif (strpos($final, "2017") !== false) {
-            $object->year = 2017;
-            $object->timestamp = strtotime("2017-01-01 12:00:00");;
-        } elseif (strpos($final, "2016") !== false) {
-            $object->year = 2016;
-            $object->timestamp = strtotime("2016-01-01 12:00:00");;
-        } else {
-            $object->year = 0;
-            $object->timestamp = 1396966731;
-        }
-
-        //$object->cat = ($itemGet['cat'] && $itemGet['cat'] == "Bangla/Kolkata") ? "Bangla%20(Kolkata)" : $itemGet['cat'];
-
-        $object->cat = "Tv%20Show";
-        echo "<pre>";
-        print_r($object);
-        echo "</pre>";
-
-        $FULL_FINAL[] = $object;
-
     }
-
 
     //file_put_contents("../listn.json",json_encode($FULL_FINAL));
 
