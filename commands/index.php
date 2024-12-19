@@ -193,7 +193,10 @@ function init()
             }
 
 
-            if (strpos($final, "2023") !== false) {
+            if (strpos($final, "2024") !== false) {
+                $object->year = 2024;
+            }
+            else if (strpos($final, "2023") !== false) {
                 $object->year = 2023;
             } elseif (strpos($final, "2022") !== false) {
                 $object->year = 2022;
