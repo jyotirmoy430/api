@@ -33,7 +33,7 @@ foreach($finalItems as $key=>$ff){
 }
 
 
-file_put_contents("listn.json",json_encode($finalArrFull , JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+file_put_contents("listn.json",json_encode($finalArrFull , JSON_UNESCAPED_SLASHES));
 
 echo "completed";
 exit;
