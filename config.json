@@ -16,13 +16,13 @@
       "title": "Mobile",
       "apiUrl": "http://jbmovies.rf.gd/following_search.php",
       "component": "FollowingbookScreen",
-      "searchUrl": "http://jbmovies.rf.gd/following_search.php"
+      "searchUrl": "http://jbmovies.rf.gd/following_get_video_url.php"
     },
     {
       "title": "Goku",
       "apiUrl": "http://jbmovies.rf.gd/goku_search.php",
       "component": "GokuScreen",
-      "searchUrl": "http://jbmovies.rf.gd/goku_search.php"
+      "searchUrl": "http://jbmovies.rf.gd/goku_get_video_url.php"
     },
     {
       "title": "Watch later",
