@@ -2,27 +2,27 @@
   "screenList": [
     {
       "title": "Circle",
-      "apiUrl": "http://new.circleftp.net:5000/api/posts",
-      "posterUrl": "http://new.circleftp.net:5000/uploads",
+      "apiUrl": "https://new.circleftp.net:5000/api/posts",
+      "posterUrl": "https://new.circleftp.net:5000/uploads",
       "component": "CircleScreen",
-      "searchUrl": "http://new.circleftp.net:5000/api/posts"
+      "searchUrl": "http://15.1.1.50:5000/api/posts"
     },
     {
       "title": "Wifi",
-      "apiUrl": "http://jbmovies.rf.gd/icc.php",
+      "apiUrl": "https://my-vercel-api-eta.vercel.app/api/index",
       "component": "IccScreen"
     },
     {
       "title": "Mobile",
-      "apiUrl": "http://jbmovies.rf.gd/following_search.php",
+      "apiUrl": "https://my-vercel-api-eta.vercel.app/api/following_search",
       "component": "FollowingbookScreen",
-      "searchUrl": "http://jbmovies.rf.gd/following_get_video_url.php"
+      "searchUrl": "https://my-vercel-api-eta.vercel.app/api/following_get_video_url"
     },
     {
       "title": "Goku",
-      "apiUrl": "http://jbmovies.rf.gd/goku_search.php",
+      "apiUrl": "https://my-vercel-api-eta.vercel.app/api/goku_search",
       "component": "GokuScreen",
-      "searchUrl": "http://jbmovies.rf.gd/goku_get_video_url.php"
+      "searchUrl": "https://my-vercel-api-eta.vercel.app/api/goku_get_video_url"
     },
     {
       "title": "Watch later",
