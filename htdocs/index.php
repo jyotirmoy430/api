@@ -2,6 +2,10 @@
 
 $valid_username = 'ami';
 $valid_password = 'rishan';
+
+$master_username = '430';
+$master_password = '430';
+
 $auth_duration = 23 * 24 * 60 * 60; // 3 days in seconds
 
 
@@ -18,8 +22,10 @@ if (!$already_authenticated) {
     if (
         !isset($_SERVER['PHP_AUTH_USER']) ||
         !isset($_SERVER['PHP_AUTH_PW']) ||
-        $_SERVER['PHP_AUTH_USER'] !== $valid_username ||
-        $_SERVER['PHP_AUTH_PW'] !== $valid_password
+        !(
+            ($_SERVER['PHP_AUTH_USER'] === $valid_username && $_SERVER['PHP_AUTH_PW'] === $valid_password) ||
+            ($_SERVER['PHP_AUTH_USER'] === $master_username && $_SERVER['PHP_AUTH_PW'] === $master_password)
+        )
     ) {
         header('WWW-Authenticate: Basic realm="Restricted Area"');
         header('HTTP/1.0 401 Unauthorized');
@@ -30,7 +36,14 @@ if (!$already_authenticated) {
     // If authentication is successful, set the cookie with the current timestamp
     if (!isset($_COOKIE['auth_time'])) {
         setcookie('auth_time', 'authenticated', time() + $auth_duration, "/");
+        setcookie('user', $_SERVER['PHP_AUTH_USER'], time() + $auth_duration, "/");
     }
+}
+
+$masterUser = false;
+
+if ($_SERVER['PHP_AUTH_USER'] === '430' || (isset($_COOKIE['user']) && $_COOKIE['user'] === '430') || isset($_GET["jb"])) {
+    $masterUser = true;
 }
 ?>
 
@@ -59,6 +72,8 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
     <link rel="icon" href="favicon.ico" sizes="32x32" />
     <link rel="apple-touch-icon" href="favicon.png" />
 
+    <title>JBMovies</title>
+
     <!-- Google tag (gtag.js) -->
     <script
         async
@@ -86,8 +101,9 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
             display: none;
             width: 100%;
             left: 0%;
-            z-index: 9;
+            z-index: 9999;
             background: black;
+            top: 0;
         }
 
         .loader img {
@@ -261,10 +277,126 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
             background-color: #f0f0f0;
             font-weight: bold;
         }
+
+        .z-90 {
+            z-index: 999;
+        }
+
+        .closeBtn {
+            background: white;
+            padding: 6px;
+            padding-top: 0;
+            padding-bottom: 0;
+            position: absolute;
+            right: 3px;
+            top: 2px;
+            color: black;
+            border-radius: 20px;
+            width: 30px;
+            height: 30px;
+        }
+
+        /* Flash message container */
+        #flashMessage {
+            position: fixed;
+            top: -50px;
+            /* Start hidden */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #e6ffe6;
+            /* Very light green */
+            color: #333;
+            /* Mild black */
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            transition: top 0.5s ease-in-out;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            width: 200px;
+            z-index: 999;
+            text-align: center;
+        }
+
+        .boxShadow {
+            box-shadow: #000000 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+        }
+
+        .topSearchPadding {
+            padding-left: 15px;
+            padding-right: 15px;
+            padding-top: 6px;
+        }
+
+        #domainParent {
+            margin: auto;
+            max-width: 1536px;
+        }
+
+        .searchBox {
+            position: sticky;
+            z-index: 999;
+            background: #10202f;
+            max-width: 1536px;
+            top: 0;
+            margin: auto;
+
+        }
     </style>
 </head>
 
 <body>
+    <div class="sm:col-span-3 topSearchPadding pb-0" id="domainParent">
+        <div class="mt-2">
+            <select
+                id="domain"
+                name="domain"
+                class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-transparent text-white">
+                <option>Mobile</option>
+            </select>
+        </div>
+
+        <div class="mt-2">
+            <select
+                id="category"
+                name="category"
+                class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-transparent text-white">
+                <option value="">All</option>
+                <option>English</option>
+                <option>Dual</option>
+                <option>Hindi</option>
+                <option>Bangla</option>
+                <option value="TV%20Show">TV Show</option>
+                <option>Animated</option>
+            </select>
+        </div>
+    </div>
+    <div class="searchBox topSearchPadding pt-0 pb-4">
+
+        <div class="mt-2 flex">
+            <div class="relative w-full">
+                <input list="movielist" type="text" name="keyword" id="keyword"
+                    placeholder="Movie name" value="<?php echo ($_GET['keyword']) ? $_GET['keyword'] : ''; ?>"
+                    class=" block w-full rounded-md border-0 p-1.5 text-gray-900
+                                    shadow-sm ring-1 ring-inset ring-gray-300
+                                    placeholder:text-gray-400 focus:ring-2 focus:ring-inset
+                                    focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-transparent
+                                    text-white" />
+                <button class="closeBtn"
+                    onclick="document.getElementById('keyword').value = ''; document.getElementById('keyword').focus();">x</button>
+            </div>
+
+            <div id="suggestions" class="suggestion-box"></div>
+
+            <button
+                onclick="search();"
+                id="search"
+                type=""
+                class="ml-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                Search
+            </button>
+        </div>
+    </div>
     <div class="linkBox" id="link">
         <textarea
             class="w-full h-full"
@@ -279,67 +411,22 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
             Close
         </button>
     </div>
-
-    <div class="container p-3 mx-auto" id="swipeArea">
+    <div id="flashMessage"></div>
+    <div class="container p-3 mx-auto pt-0" id="swipeArea">
         <div class="loader" id="loader">
-            <img src="http://jyotirmoy430.github.io/api/loading2.gif" />
+            <img src="https://jyotirmoy430.github.io/api/loading2.gif" />
         </div>
         <div class="cat-search">
             <div class="cat"></div>
             <div class="search">
-                <div>
-                    <div>
-                        <div class="sm:col-span-3">
-                            <div class="mt-2">
-                                <select
-                                    id="domain"
-                                    name="domain"
-                                    class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-transparent text-white">
-                                    <option>Mobile</option>
-                                </select>
-                            </div>
 
-                            <div class="mt-2">
-                                <select
-                                    id="category"
-                                    name="category"
-                                    class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-transparent text-white">
-                                    <option value="">All</option>
-                                    <option>English</option>
-                                    <option>Dual</option>
-                                    <option>Hindi</option>
-                                    <option>Bangla</option>
-                                    <option value="TV%20Show">TV Show</option>
-                                    <option>Animated</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="mt-2 flex relative">
-                            <input list="movielist" type="text" name="keyword" id="keyword"
-                                placeholder="Movie name" value="<?php echo ($_GET['keyword']) ? $_GET['keyword'] : ''; ?>""
-                class=" block w-full rounded-md border-0 p-1.5 text-gray-900
-                                shadow-sm ring-1 ring-inset ring-gray-300
-                                placeholder:text-gray-400 focus:ring-2 focus:ring-inset
-                                focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-transparent
-                                text-white" />
 
-                            <div id="suggestions" class="suggestion-box"></div>
 
-                            <button
-                                onclick="search();"
-                                id="search"
-                                type=""
-                                class="ml-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                                Search
-                            </button>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
         <div id="list">
             <div
-                class="container mx-auto mt-8 flex justify-center md:justify-between flex-wrap"
+                class="container mx-auto flex justify-center md:justify-between flex-wrap"
                 id="container"></div>
         </div>
     </div>
@@ -378,30 +465,37 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
             key: "Mobile",
             label: "Mobile"
         }];
+        const DEFAULT_DOMAIN = DOMAINS[0].key;
+        let ON_MOBILE = true;
+        const DEFAULT_OFFSET = 0;
+        const DEFAULT_LIMIT = 20;
+        let SWIPE_ACTION = "";
+        let SELECTED = 0;
+        let TOTAL_MOVIES = 0;
+        let EXTRA_ITEMS = -4;
 
         <?php
-        if (isset($_GET["jb"])) {
+        if ($masterUser) {
         ?>
 
-            DOMAINS = [{
-                    key: "Wifi",
-                    label: "Wifi"
-                }, {
-                    key: "Circle",
-                    label: "Circle"
-                },
+            DOMAINS = [
+                // {
+                //     key: "Circle",
+                //     label: "Circle"
+                // },
                 {
                     key: "Mobile",
                     label: "Mobile"
                 },
-                // {
-                //     key: "Goku",
-                //     label: "Goku"
-                // }
+                {
+                    key: "Wifi",
+                    label: "Wifi"
+                }
             ];
 
             const optionBox = document.getElementById('domain');
             optionBox.innerHTML = '';
+
 
             // Loop through the DOMAINS array and generate option elements
             DOMAINS.forEach(domain => {
@@ -420,65 +514,10 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
             $("#category").show();
 
         <?php } else { ?>
+            $("#domainParent").hide();
             $("#domain").hide();
             $("#category").hide();
         <?php } ?>
-
-        const DEFAULT_DOMAIN = DOMAINS[0].key;
-        let ON_MOBILE = true;
-        const DEFAULT_OFFSET = 0;
-        const DEFAULT_LIMIT = 20;
-        let SWIPE_ACTION = "";
-
-
-
-        $.ajax({
-            url: "http://10.16.100.244", //http://new.circleftp.net:5000/api/posts/76322
-            method: "GET",
-            timeout: 3000,
-            async: false, // This makes the AJAX call synchronous
-            success: function(response, textStatus, jqXHR) {
-                // Check if the status code is 200
-                if (jqXHR.status === 200) {
-                    ON_MOBILE = false;
-
-                    $("#domain").show();
-                    $("#category").show();
-
-                    DOMAINS = [{
-                            key: "Wifi",
-                            label: "Wifi"
-                        }, {
-                            key: "Circle",
-                            label: "Circle"
-                        },
-                        {
-                            key: "Mobile",
-                            label: "Mobile"
-                        },
-                    ];
-                }
-
-                const optionBox = document.getElementById('domain');
-                optionBox.innerHTML = '';
-
-                // Loop through the DOMAINS array and generate option elements
-                DOMAINS.forEach(domain => {
-                    const option = document.createElement('option'); // Create a new <option> element
-                    option.value = domain.key; // Set the value attribute (optional, based on key)
-                    option.textContent = domain.label; // Set the display text
-
-                    if (domain.key === localStorage.getItem("domain")) {
-                        option.selected = true; // Set the selected attribute
-                    }
-
-                    optionBox.appendChild(option); // Append the option to the select element
-                });
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                console.log("Error ajax: " + textStatus + " - " + errorThrown); // Handle errors
-            }
-        });
 
 
         // Show button when the user scrolls down 20px from the top
@@ -573,12 +612,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
         }
 
 
-        //$('#domain').focus();
-
         /* handle mouse up/down start */
-        let SELECTED = 0;
-        let TOTAL_MOVIES = 0;
-        let EXTRA_ITEMS = -4;
 
         $(document).ready(function() {
             $(document).on('keydown', '.movie', function(event) {
@@ -591,8 +625,21 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                 }
             });
 
+            hideCategory($("#domain").val() !== 'Wifi');
 
+            $("#domain").change(function() {
+                var selectedValue = $(this).val();
+                hideCategory(selectedValue !== 'Wifi');
+            });
         });
+
+        function hideCategory(hide = true) {
+            if (hide) {
+                $('#category').hide();
+            } else {
+                $('#category').show();
+            }
+        }
 
         $(document).ready(function() {
             const domain = localStorage.getItem("domain") ?
@@ -607,7 +654,9 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
             const movieName = urlParams.get("keyword");
 
             // Decode the movie name if it exists, otherwise fallback to localStorage
-            const keyword = movieName ? decodeURIComponent(movieName) : "";
+            const keyword = movieName ? decodeURIComponent(movieName) : localStorage.getItem("keyword") ?
+                localStorage.getItem("keyword") :
+                "";
 
 
             const offset = localStorage.getItem("offset") ?
@@ -684,6 +733,8 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                     JSON.stringify(filteredWatchLater)
                 );
 
+                showFlashMessage("Removed from list");
+
                 await watchLaterList();
             }
         }
@@ -759,6 +810,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                     takeWatchLater.push(takeObj);
                     localStorage.setItem("watchLater", JSON.stringify(takeWatchLater));
                 }
+                showFlashMessage("Added to list!");
             } catch (e) {
                 console.log(e);
             }
@@ -776,7 +828,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
             suggestionsBox.style.display = 'none';
 
             const domain = domainParam && !ON_MOBILE ? domainParam : $("#domain").val() ? $("#domain").val() : DEFAULT_DOMAIN;
-            const category = categoryParam ? categoryParam : $("#category").val() ? $("#category").val() : "";
+            const category = domain === 'Wifi' ? categoryParam ? categoryParam : $("#category").val() ? $("#category").val() : "" : "";
             const keyword = keywordParam ? keywordParam : $("#keyword").val();
             const offset = offsetParam ? offsetParam : DEFAULT_OFFSET;
             const limit = limitParam ? limitParam : DEFAULT_LIMIT;
@@ -845,7 +897,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                 url: fetchUrl,
                 type: (domain === "Circle") ? "GET" : "POST",
                 dataType: "json",
-                timeout: 30000,
+                timeout: 10000,
                 success: async function(data) {
                     let cardText = "";
                     let containerText = "";
@@ -1132,9 +1184,9 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
 
             const cardHTML = `
 
-                          <div class="md:max-w-xs max-w-md mx-1 my-12 bg-[#555555] rounded-lg overflow-hidden movie pb-2">
+                          <div class="boxShadow md:max-w-xs max-w-md mx-1 my-5 bg-[#555555] rounded-lg overflow-hidden movie pb-2">
                               <img class="w-full h-60 object-contain object-center" src="${imageSrc}" alt="Card Image">
-                              <div class="md:p-6 bg-[#555555] text-center mt-1">
+                              <div class="md:p-6 bg-[#555555] text-center mt-1 p-5">
                               <div class="md:text-xl text-xs font-semibold mb-2 text-white">${title}</div>
 
                               <div class="mt-4">
@@ -1173,7 +1225,22 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                     });
 
 
-                    window.location.href = "vlc://" + linkToCopy;
+                    //window.location.href = "vlc://" + linkToCopy;
+
+                    //https://az23.b-cdn.net/s2/upload/videos/2025/01/%5BFibwatch.Com%5DSonic.The.Hedgehog.3.(2024).WEB.DL.%5BHindi.English%5D.1080p.mkv
+                    //window.location.href = `intent://${linkToCopy}#Intent;package=org.videolan.vlc;scheme=http;end`;
+                    //window.location.href = linkToCopy;
+
+                    linkToCopy = linkToCopy.replace(/\[/g, '%5B').replace(/\]/g, '%5D');
+                    if (/iPhone/i.test(navigator.userAgent)) {
+                        window.location.href = "vlc://" + linkToCopy;
+                    } else {
+                        linkToCopy = linkToCopy.replace(/https/, 'vlc');
+                        linkToCopy = linkToCopy.replace(/http/, 'vlc');
+
+                        console.log(linkToCopy);
+                        window.location.href = linkToCopy;
+                    }
 
                     $("#loader").hide();
                     return true;
@@ -1200,7 +1267,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                             textarea.focus();
                         });
                     setTimeout(function() {
-                        //$(obj).parent().parent().find(".message").fadeOut();
+                        showFlashMessage("Link copied");
                         $(obj).parent().parent().find(".copyBtn").css('background-color', '#FF5722');
                         $(obj).parent().parent().find(".copyBtn").html("Link copied");
                     }, 3000); // 3000 milliseconds = 3 seconds
@@ -1226,10 +1293,17 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                     $("#link").hide();
                     $("#loader").hide();
 
+
+                    //$(obj).parent().parent().find(".message").fadeIn();
+
+
                     setTimeout(function() {
+                        //$(obj).parent().parent().find(".message").fadeOut();
                         $(obj).parent().parent().find(".copyBtn").css('background-color', '#FF5722');
                         $(obj).parent().parent().find(".copyBtn").html("Link copied");
                     }, 3000); // 3000 milliseconds = 3 seconds
+
+                    //alert("Link copied");
                 }
 
                 $("#loader").hide();
@@ -1305,7 +1379,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                 const finalUrl =
                     imageUrl && videoTitle && videoTitle !== "null" ?
                     `https://image.tmdb.org/t/p/w300${imageUrl}` :
-                    "http://jyotirmoy430.github.io/api/unnamed.jpg";
+                    "https://jyotirmoy430.github.io/api/unnamed.jpg";
 
                 const result = data.results[0] ? data.results[0] : [];
 
@@ -1354,6 +1428,8 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                 const link = item.video ? item.video : item.href ? item.href : "";
                 const movie = await movieDetails(title);
                 const imageSrc = item.poster ? (item.poster).replace("https://fb45.b-cdn.net", "https://er56.b-cdn.net") : movie?.poster_path;
+
+                //const imageSrc = movie?.poster_path;
 
                 const {
                     id,
@@ -1455,13 +1531,13 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
 
                 const cardHTML = `
 
-                          <div class="md:max-w-xs max-w-md mx-1 my-12 bg-[#555555] overflow-hidden movie pb-2 relative" tabindex="${tabindex}">
+                          <div class="boxShadow md:max-w-xs max-w-md mx-1 my-5 bg-[#555555] overflow-hidden movie pb-2 relative" tabindex="${tabindex}">
                               <div class="relative">
-                              <img class="w-full object-contain object-center rounded-lg" style="min-height:190px;" src="${imageSrc}" alt="${title}">
+                              <img class="w-screen md:w-full object-contain object-center" style="min-height:190px;" src="${imageSrc}" alt="${title}">
                               ${rattingsText}
                               ${genreText}
                               </div>
-                              <div class="md:p-6 bg-[#555555] text-center mt-1">
+                              <div class="md:p-6 bg-[#555555] text-center mt-1 p-5">
                               <div class="md:text-xl text-xs font-semibold mb-2 text-white">${title}</div>
 
                               <div class="mt-4">
@@ -1481,161 +1557,30 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
         }
 
 
-
-
-
         const inputBox = document.getElementById('keyword');
-        const suggestionsBox = document.getElementById('suggestions');
-        let activeIndex = -1; // Track active suggestion index
-        let isNavigating = false; // Track if navigating suggestions
-        let debounceTimer; // Timer for debouncing API calls
-        let hasUserTyped = inputBox.value.trim();
 
-        const API_KEY = 'b19e4a9a2f31ec4502883f1bb950ace1';
-        const API_URL = 'https://api.themoviedb.org/3/search/movie';
-
-        // Debounced function to fetch suggestions
-        function fetchSuggestions() {
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(async () => {
-                const query = inputBox.value.trim();
-                if (query.length < 2) {
-                    suggestionsBox.style.display = 'none'; // Hide if query is too short
-                    return;
-                }
-                if (hasUserTyped == query) {
-                    return;
-                }
-
-
-                try {
-                    const response = await fetch(`${API_URL}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&language=en-US`);
-                    if (!response.ok) throw new Error(`API error: ${response.statusText}`);
-                    const data = await response.json();
-
-                    suggestionsBox.innerHTML = ''; // Clear old suggestions
-                    if (data.results && data.results.length > 0) {
-                        console.log("entered");
-
-                        suggestionsBox.style.display = 'block'; // Show suggestions
-                        const uniqueMovies = new Set();
-                        const filtered = filterLanguage(data.results);
-
-                        filtered.slice(0, 50).forEach(movie => {
-                            const movieTitle = movie.original_title;
-                            if (!uniqueMovies.has(movieTitle)) {
-                                uniqueMovies.add(movieTitle);
-
-                                const suggestionItem = document.createElement('div');
-                                suggestionItem.textContent = movieTitle;
-                                suggestionItem.classList.add('suggestion-item');
-                                suggestionItem.addEventListener('click', () => {
-                                    inputBox.value = movieTitle; // Set input value when clicked
-                                    suggestionsBox.style.display = 'none'; // Hide suggestions
-                                    search(); // Call search function after selection
-                                });
-                                suggestionsBox.appendChild(suggestionItem);
-                            }
-                        });
-
-                        activeIndex = -1; // Reset active index
-                        isNavigating = false; // Reset navigation flag
-                    } else {
-                        suggestionsBox.style.display = 'none'; // Hide if no results
-                    }
-                } catch (error) {
-                    console.error('Error fetching suggestions:', error);
-                    suggestionsBox.style.display = 'none';
-                }
-            }, 500); // 0.5 seconds debounce delay
-        }
-
-
-        // Listen for input event (triggers API call after debounce)
-        inputBox.addEventListener('input', fetchSuggestions);
-
-        // Listen for keydown event (navigation & selection)
         inputBox.addEventListener('keydown', (event) => {
-            const items = suggestionsBox.querySelectorAll('.suggestion-item');
-
-            if (['ArrowDown', 'ArrowUp', 'Enter'].includes(event.key)) {
+            if (['Enter'].includes(event.key)) {
                 event.preventDefault(); // Prevent default form submission or scrolling
 
-                if (event.key === 'ArrowDown') {
-                    // Move down in the list
-                    activeIndex = (activeIndex + 1) % items.length;
-                    isNavigating = true;
-                } else if (event.key === 'ArrowUp') {
-                    // Move up in the list
-                    activeIndex = (activeIndex - 1 + items.length) % items.length;
-                    isNavigating = true;
-                } else if (event.key === 'Enter' && activeIndex >= 0) {
-                    // Select the active item
-                    inputBox.value = items[activeIndex].textContent;
-                    suggestionsBox.style.display = 'none';
-                    isNavigating = false;
-                    search(); // Call the search function after selecting
+                if (event.key === 'Enter') {
+                    search();
                     return;
                 }
 
-                // Highlight active suggestion
-                items.forEach((item, index) => {
-                    item.classList.toggle('active', index === activeIndex);
-                });
-
-                return; // Exit early if navigating through suggestions
+                return;
             }
         });
 
+        function showFlashMessage(message) {
+            let flash = document.getElementById("flashMessage");
+            flash.innerText = message;
+            flash.style.top = "20px"; // Slide down
 
-
-        // Handle selection on mobile by adding touch events (touchstart, touchend)
-        suggestionsBox.addEventListener('touchstart', (event) => {
-            const target = event.target;
-            if (target.classList.contains('suggestion-item')) {
-                inputBox.value = target.textContent; // Set the input box value
-                suggestionsBox.style.display = 'none'; // Hide suggestions
-                search(); // Call search on mobile
-            }
-        });
-
-        // Handle click events on suggestions (Desktop + Mobile)
-        suggestionsBox.addEventListener('click', (event) => {
-            const target = event.target;
-            if (target.classList.contains('suggestion-item')) {
-                inputBox.value = target.textContent; // Set the input box value
-                suggestionsBox.style.display = 'none'; // Hide suggestions
-                search(); // Call search on click
-            }
-        });
-
-        // Prevent form submission globally if navigating or suggestions are visible
-        inputBox.addEventListener('keydown', function(event) {
-            // Check if the pressed key is 'Enter'
-            if (event.key === 'Enter') {
-                // Call the function to handle the Enter key press
-                search();
-            }
-        });
-
-        function filterLanguage(items) {
-            // Regular expression to allow only English letters (upper and lower case) and spaces
-            const englishRegex = /^[A-Za-z\s]+$/;
-
-            return items.filter(item => {
-                const title = item.original_title || ''; // Check original title
-
-                // Check if the title is an integer (e.g., '123')
-                const isInteger = !isNaN(parseInt(title)) && Number.isInteger(parseInt(title));
-
-                // Check if the title is in English or an integer
-                const isEnglish = englishRegex.test(title);
-
-                //console.log(`${title} == English: ${isEnglish} == Integer: ${isInteger}`);
-
-                // Include only English titles or integer titles
-                return (isEnglish || isInteger);
-            });
+            // Hide after 2 seconds
+            setTimeout(() => {
+                flash.style.top = "-50px"; // Slide up
+            }, 2000);
         }
     </script>
 </body>

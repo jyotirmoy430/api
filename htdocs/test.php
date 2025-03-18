@@ -414,7 +414,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
     <div id="flashMessage"></div>
     <div class="container p-3 mx-auto pt-0" id="swipeArea">
         <div class="loader" id="loader">
-            <img src="http://jyotirmoy430.github.io/api/loading2.gif" />
+            <img src="https://jyotirmoy430.github.io/api/loading2.gif" />
         </div>
         <div class="cat-search">
             <div class="cat"></div>
@@ -478,17 +478,19 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
         if ($masterUser) {
         ?>
 
-            DOMAINS = [{
-                    key: "Wifi",
-                    label: "Wifi"
-                }, {
-                    key: "Circle",
-                    label: "Circle"
-                },
+            DOMAINS = [
+                // {
+                //     key: "Circle",
+                //     label: "Circle"
+                // },
                 {
                     key: "Mobile",
                     label: "Mobile"
                 },
+                {
+                    key: "Wifi",
+                    label: "Wifi"
+                }
             ];
 
             const optionBox = document.getElementById('domain');
@@ -516,55 +518,6 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
             $("#domain").hide();
             $("#category").hide();
         <?php } ?>
-
-
-        $.ajax({
-            url: "http://10.16.100.244", //http://new.circleftp.net:5000/api/posts/76322
-            method: "GET",
-            timeout: 3000,
-            async: false, // This makes the AJAX call synchronous
-            success: function(response, textStatus, jqXHR) {
-                // Check if the status code is 200
-                if (jqXHR.status === 200) {
-                    ON_MOBILE = false;
-
-                    $("#domain").show();
-                    $("#category").show();
-
-                    DOMAINS = [{
-                            key: "Wifi",
-                            label: "Wifi"
-                        }, {
-                            key: "Circle",
-                            label: "Circle"
-                        },
-                        {
-                            key: "Mobile",
-                            label: "Mobile"
-                        },
-                    ];
-                }
-
-                const optionBox = document.getElementById('domain');
-                optionBox.innerHTML = '';
-
-                // Loop through the DOMAINS array and generate option elements
-                DOMAINS.forEach(domain => {
-                    const option = document.createElement('option'); // Create a new <option> element
-                    option.value = domain.key; // Set the value attribute (optional, based on key)
-                    option.textContent = domain.label; // Set the display text
-
-                    if (domain.key === localStorage.getItem("domain")) {
-                        option.selected = true; // Set the selected attribute
-                    }
-
-                    optionBox.appendChild(option); // Append the option to the select element
-                });
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                console.log("Error ajax: " + textStatus + " - " + errorThrown); // Handle errors
-            }
-        });
 
 
         // Show button when the user scrolls down 20px from the top
@@ -672,8 +625,21 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                 }
             });
 
+            hideCategory($("#domain").val() !== 'Wifi');
 
+            $("#domain").change(function() {
+                var selectedValue = $(this).val();
+                hideCategory(selectedValue !== 'Wifi');
+            });
         });
+
+        function hideCategory(hide = true) {
+            if (hide) {
+                $('#category').hide();
+            } else {
+                $('#category').show();
+            }
+        }
 
         $(document).ready(function() {
             const domain = localStorage.getItem("domain") ?
@@ -862,7 +828,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
             suggestionsBox.style.display = 'none';
 
             const domain = domainParam && !ON_MOBILE ? domainParam : $("#domain").val() ? $("#domain").val() : DEFAULT_DOMAIN;
-            const category = categoryParam ? categoryParam : $("#category").val() ? $("#category").val() : "";
+            const category = domain === 'Wifi' ? categoryParam ? categoryParam : $("#category").val() ? $("#category").val() : "" : "";
             const keyword = keywordParam ? keywordParam : $("#keyword").val();
             const offset = offsetParam ? offsetParam : DEFAULT_OFFSET;
             const limit = limitParam ? limitParam : DEFAULT_LIMIT;
@@ -1413,7 +1379,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                 const finalUrl =
                     imageUrl && videoTitle && videoTitle !== "null" ?
                     `https://image.tmdb.org/t/p/w300${imageUrl}` :
-                    "http://jyotirmoy430.github.io/api/unnamed.jpg";
+                    "https://jyotirmoy430.github.io/api/unnamed.jpg";
 
                 const result = data.results[0] ? data.results[0] : [];
 
