@@ -3,13 +3,55 @@
 function init()
 {
     //
-    $ONE = ['http://10.16.100.245/ftps2d', 'http://10.16.100.245/ftps2d4', 'http://10.16.100.206/ftps3', 'http://10.16.100.202/ftps10', 'http://10.16.100.212/iccftps12', 'http://10.16.100.213/iccftps13', 'http://10.16.100.250', 'http://10.16.100.241', 'http://10.16.100.241', 'http://10.16.100.241', 'http://10.16.100.214/iccftps14', 'http://10.16.100.246', 'http://10.16.100.246',];
+    $ONE = [
+        'http://10.16.100.245/ftps2d',
+        'http://10.16.100.245/ftps2d4',
+        //'http://10.16.100.206/ftps3',
+        'http://10.16.100.202/ftps10',
+        'http://10.16.100.212/iccftps12',
+        'http://10.16.100.213/iccftps13',
+        'http://10.16.100.250',
+        'http://10.16.100.241',
+        'http://10.16.100.241',
+        'http://10.16.100.241',
+        'http://10.16.100.214/iccftps14',
+        'http://10.16.100.246',
+        'http://10.16.100.246'
+    ];
 
-    $TWO = ['', '', 'ftps3d', 'iccftps10sasd', 'iccftps12sasd', 'iccftps13sasd', 'ftps10d', 'ftps2d', 'ftps3d', 'ftps4d', 'iccftps14sasd', 'ftps4d', 'ftps4d',];
+    $TWO = [
+        '',
+        '',
+        //'ftps3d',
+        'iccftps10sasd',
+        'iccftps12sasd',
+        'iccftps13sasd',
+        'ftps10d',
+        'ftps2d',
+        'ftps3d',
+        'ftps4d',
+        'iccftps14sasd',
+        'ftps4d',
+        'ftps4d'
+    ];
 
-    $THREE = [4, 0, 8, 10, 10, 10, 2, 4, 10, 4, 8, 4, 4,];
+    $THREE = [
+        4,
+        0,
+        //8,
+        10,
+        10,
+        10,
+        2,
+        4,
+        10,
+        4,
+        8,
+        4,
+        4
+    ];
 
-    $MOVIE_FOLDER_URL = ['Movies', '', 'Movies', 'Movies', 'Movies', 'Movies', 'Movies', 'Movies', 'Movies', 'Movies', 'Movies', 'Movies', 'Movie',];
+    $MOVIE_FOLDER_URL = ['Movies', '', 'Movies', 'Movies', 'Movies', 'Movies', 'Movies', 'Movies', 'Movies', 'Movies', 'Movies', 'Movie',];
 
     $CATEGORY = ['Animated', 'Anime', 'Bangla%20(BD)', 'Bangla%20(Kolkata)', 'Bangla/Kolkata', 'Chinese', 'Dual%20Audio', 'English', 'Full%20HD/English', 'Exclusive%20Full-HD/English', 'Exclusive%20Full%20HD/English', 'Hindi', 'Japanese', 'Korean', 'Other%20Foreign', 'Punjabi', 'Tamil%20Movie', 'South%20Indian%20(Hindi%20Dubbed)', 'South%20Indian', 'Bangla/Kolkata',];
 
