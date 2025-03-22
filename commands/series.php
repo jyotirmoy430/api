@@ -369,9 +369,12 @@ function series()
             }
 
 
-            if (strpos($final, "2024") !== false) {
+            if (strpos($final, "2025") !== false) {
+                $object->year = 2025;
+                $object->timestamp = strtotime("2025-01-01 12:00:00");;
+            }else if (strpos($final, "2024") !== false) {
                 $object->year = 2024;
-                $object->timestamp = strtotime("2024-01-01 12:00:00");;
+                $object->timestamp = strtotime("2023-01-01 12:00:00");;
             }else if (strpos($final, "2023") !== false) {
                 $object->year = 2023;
                 $object->timestamp = strtotime("2023-01-01 12:00:00");;

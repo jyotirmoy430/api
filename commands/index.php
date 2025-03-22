@@ -235,12 +235,15 @@ function init()
             }
 
 
-            if (strpos($final, "2024") !== false) {
-                $object->year = 2024;
+            if (strpos($final, "2025") !== false) {
+                $object->year = 2025;
             }
-            else if (strpos($final, "2023") !== false) {
+            else if (strpos($final, "2024") !== false) {
+                $object->year = 2024;
+            }else if (strpos($final, "2023") !== false) {
                 $object->year = 2023;
-            } elseif (strpos($final, "2022") !== false) {
+            }
+            elseif (strpos($final, "2022") !== false) {
                 $object->year = 2022;
             } elseif (strpos($final, "2021") !== false) {
                 $object->year = 2021;
