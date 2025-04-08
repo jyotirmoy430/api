@@ -96,18 +96,49 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
         }
 
         .loader {
+            border: 16px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            border-top: 16px solid #e50914;
+            /* Netflix red */
+            border-right: 16px solid #f5c518;
+            /* IMDb yellow */
+            border-bottom: 16px solid #1f80e0;
+            /* Disney+ blue */
+            border-left: 16px solid #00ff99;
+            /* Cyber green */
+            width: 120px;
+            height: 120px;
+            animation: spin 1.5s linear infinite;
+            margin: auto;
+            box-shadow: 0px 0px 25px rgba(255, 0, 0, 0.8),
+                0px 0px 50px rgba(255, 204, 0, 0.8);
+            /* Neon glow effect */
+            margin-top: 10px;
+            z-index: 999;
             position: fixed;
-            height: 100vh;
-            display: none;
-            width: 100%;
-            left: 0%;
-            z-index: 9999;
-            background: black;
-            top: 0;
+            top: calc(50% - 60px);
+            left: calc(50% - 60px);
         }
 
-        .loader img {
-            margin: auto;
+        /* Safari */
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .text-white {
@@ -299,7 +330,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
         /* Flash message container */
         #flashMessage {
             position: fixed;
-            top: -50px;
+            top: -100px;
             /* Start hidden */
             left: 50%;
             transform: translateX(-50%);
@@ -313,7 +344,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
             transition: top 0.5s ease-in-out;
             font-family: Arial, sans-serif;
             font-size: 16px;
-            width: 200px;
+            width: 350px;
             z-index: 999;
             text-align: center;
         }
@@ -389,7 +420,12 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
             <div id="suggestions" class="suggestion-box"></div>
 
             <button
+                <?php if ($masterUser) { ?>
+                onclick="searchMaster();"
+                <?php } else { ?>
                 onclick="search();"
+                <?php } ?>
+
                 id="search"
                 type=""
                 class="ml-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
@@ -414,7 +450,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
     <div id="flashMessage"></div>
     <div class="container p-3 mx-auto pt-0" id="swipeArea">
         <div class="loader" id="loader">
-            <img src="https://jyotirmoy430.github.io/api/loading2.gif" />
+
         </div>
         <div class="cat-search">
             <div class="cat"></div>
@@ -434,7 +470,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
         &#8682;
     </button>
 
-    <div class="text-center mb-10 pb-16">
+    <div class="text-center mb-10 pb-16 mt-10">
         <button
             onclick="loadMore();"
             id="loadMore"
@@ -446,7 +482,11 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
     <div class="footer">
         <div class="">
             <button
+                <?php if ($masterUser) { ?>
+                onclick="searchMaster();"
+                <?php } else { ?>
                 onclick="search();"
+                <?php } ?>
                 type=""
                 class="ml-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                 &#9776;
@@ -609,6 +649,8 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                 SWIPE_ACTION = previousDomain;
                 search();
             }
+
+            hideCategory($("#domain").val() !== 'Wifi');
         }
 
 
@@ -659,14 +701,22 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                 "";
 
 
-            const offset = localStorage.getItem("offset") ?
-                localStorage.getItem("offset") :
-                "";
+            // const offset = localStorage.getItem("offset") ?
+            //     localStorage.getItem("offset") :
+            //     "";
+            const offset = 0;
+
             const limit = localStorage.getItem("limit") ?
                 localStorage.getItem("limit") :
                 "";
 
-            search(domain, category, keyword, offset, limit);
+
+
+            <?php if ($masterUser) { ?>
+                searchMaster(domain, category, keyword, offset, limit);
+            <?php } else { ?>
+                search(domain, category, keyword, offset, limit);
+            <?php } ?>
         });
 
         function loadMore() {
@@ -682,7 +732,13 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                 parseInt(localStorage.getItem("offset")) + limit :
                 0;
 
-            search(domain, category, keyword, offset, limit, true);
+
+
+            <?php if ($masterUser) { ?>
+                searchMaster(domain, category, keyword, offset, limit, true);
+            <?php } else { ?>
+                search(domain, category, keyword, offset, limit, true);
+            <?php } ?>
         }
 
         async function watchLaterList() {
@@ -816,6 +872,119 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
             }
         }
 
+        function searchMaster(
+            domainParam = "",
+            categoryParam = "",
+            keywordParam = "",
+            offsetParam = "",
+            limitParam = "",
+            loadMore = false
+        ) {
+            console.log("searchMaster");
+
+            const suggestionsBox = document.getElementById('suggestions');
+            suggestionsBox.style.display = 'none';
+
+            const domain = domainParam && !ON_MOBILE ? domainParam : $("#domain").val() ? $("#domain").val() : DEFAULT_DOMAIN;
+            const category = domain === 'Wifi' ? categoryParam ? categoryParam : $("#category").val() ? $("#category").val() : "" : "";
+            const keyword = keywordParam ? keywordParam : $("#keyword").val();
+            const offset = offsetParam ? offsetParam : DEFAULT_OFFSET;
+            const limit = limitParam ? limitParam : DEFAULT_LIMIT;
+
+
+            console.log("domain", domain)
+
+            //set all values in local storage
+            localStorage.setItem("category", category);
+            localStorage.setItem("keyword", keyword);
+            localStorage.setItem("offset", offset);
+            localStorage.setItem("limit", limit);
+
+            $("#category").val(category);
+            $("#keyword").val(keyword);
+
+
+            const fetchUrlWifi = generateFetchUrl(
+                "Wifi",
+                category,
+                keyword,
+                offset,
+                limit
+            );
+
+            const fetchUrlMobile = generateFetchUrl(
+                "Mobile",
+                category,
+                keyword,
+                offset,
+                limit
+            );
+
+            $("#loader").show();
+
+            if (!loadMore) {
+                $("#container").html("");
+            }
+
+            $.when(
+                $.ajax({
+                    url: fetchUrlMobile,
+                    method: 'POST',
+                    dataType: "json",
+                    timeout: 10000,
+                    crossDomain: true
+                }),
+                $.ajax({
+                    url: fetchUrlWifi,
+                    method: 'POST',
+                    dataType: "json",
+                    timeout: 10000,
+                    crossDomain: true
+                })
+            ).done(async function(response1 = [], response2 = []) {
+                let data = response2[0]
+
+                if (domain !== 'Wifi') {
+                    console.log("inside");
+                    data = response1[0].concat(response2[0]);
+                }
+
+                console.log(data);
+                console.log("outside domain:", domain);
+
+
+                let cardText = "";
+                let containerText = "";
+                if (data && (data.length || domain === "Circle")) {
+                    let takeData = data;
+                    if (domain === "Circle") {
+                        takeData = prepareList(data);
+                    }
+
+                    for (let i = 0; i < takeData.length; i++) {
+                        const item = takeData[i];
+                        cardText = await createCard(item, domain);
+                        containerText += cardText;
+                        $("#container").append(cardText);
+                        $("#loader").hide();
+                    }
+
+                    if (domain) {
+                        localStorage.setItem(domain, containerText);
+                        localStorage.setItem(domain + "_KEYWORD", keyword);
+                        localStorage.setItem(domain + "_CATEGORY", category);
+                    }
+                } else {
+                    //$("#container").html("<strong>No movies</strong>");
+                    $("#loader").hide();
+                }
+            }).fail(function() {
+                console.error('One or both AJAX calls failed.');
+                $("#loader").hide();
+            });
+
+        }
+
         function search(
             domainParam = "",
             categoryParam = "",
@@ -888,6 +1057,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                 offset,
                 limit
             );
+
 
             if (!loadMore) {
                 $("#container").html("");
@@ -1152,7 +1322,15 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
             const title = item.title ? item.title : "n/a";
 
             const movie = await movieDetails(title);
-            const imageSrc = item.poster ? item.poster : movie?.poster_path;
+            //const imageSrc = item.poster ? item.poster : movie?.poster_path;
+
+            let itemPoster = movie?.poster_path;
+
+            if (item.poster) {
+                itemPoster = replaceImageDomain(item.poster);
+            }
+
+            const imageSrc = itemPoster;
 
             const link = item.video ? item.video : '';
 
@@ -1207,9 +1385,9 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
 
                 $(obj).parent().parent().find(".copyBtn").html("Processing...");
 
-                if (open) {
-                    $("#loader").show();
-                }
+
+                $("#loader").show();
+
 
                 let linkToCopy =
                     (domain === "Goku" || domain === "Mobile" || domain === "Circle") && !direct ?
@@ -1232,6 +1410,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                     //window.location.href = linkToCopy;
 
                     linkToCopy = linkToCopy.replace(/\[/g, '%5B').replace(/\]/g, '%5D');
+                    $("#loader").hide();
                     if (/iPhone/i.test(navigator.userAgent)) {
                         window.location.href = "vlc://" + linkToCopy;
                     } else {
@@ -1242,7 +1421,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                         window.location.href = linkToCopy;
                     }
 
-                    $("#loader").hide();
+
                     return true;
                 }
 
@@ -1260,16 +1439,17 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                         .catch((err) => {
                             $("#linkInput").val(linkToCopy);
                             $("#link").show();
-                            $("#loader").hide();
+
 
                             var textarea = document.getElementById("linkInput");
                             textarea.setSelectionRange(0, textarea.value.length);
                             textarea.focus();
                         });
                     setTimeout(function() {
-                        showFlashMessage("Link copied");
+                        showFlashMessage("If VLC is installed, click play to stream the video.");
                         $(obj).parent().parent().find(".copyBtn").css('background-color', '#FF5722');
                         $(obj).parent().parent().find(".copyBtn").html("Link copied");
+                        $("#loader").hide();
                     }, 3000); // 3000 milliseconds = 3 seconds
 
                 } catch (e) {
@@ -1283,7 +1463,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
 
                     $("#linkInput").val(linkToCopy);
                     $("#link").show();
-                    $("#loader").hide();
+
 
                     var textarea = document.getElementById("linkInput");
                     textarea.setSelectionRange(0, textarea.value.length);
@@ -1291,7 +1471,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                     document.execCommand('copy');
 
                     $("#link").hide();
-                    $("#loader").hide();
+
 
 
                     //$(obj).parent().parent().find(".message").fadeIn();
@@ -1301,12 +1481,13 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                         //$(obj).parent().parent().find(".message").fadeOut();
                         $(obj).parent().parent().find(".copyBtn").css('background-color', '#FF5722');
                         $(obj).parent().parent().find(".copyBtn").html("Link copied");
+                        $("#loader").hide();
                     }, 3000); // 3000 milliseconds = 3 seconds
 
                     //alert("Link copied");
                 }
 
-                $("#loader").hide();
+
             } catch (e) {
                 gtag('event', 'error', {
                     'event_category': 'JavaScript Errors', // Group errors under this category
@@ -1422,12 +1603,34 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
             }
         }
 
+        function replaceImageDomain(url) {
+            // let oldDomain = new URL(url).host;
+            // let newDomain = "er56.b-cdn.net";
+
+            let itemPoster = url.replace("https://fb45.b-cdn.net", "https://er56.b-cdn.net")
+            itemPoster = itemPoster.replace("https://thn45.b-cdn.net", "https://er56.b-cdn.net")
+
+            return itemPoster;
+        }
+
         async function createCard(item, domain, action = false) {
             try {
                 const title = prepareTitle(item.title ? item.title : item.video);
+
+                console.log(item);
+
                 const link = item.video ? item.video : item.href ? item.href : "";
                 const movie = await movieDetails(title);
-                const imageSrc = item.poster ? (item.poster).replace("https://fb45.b-cdn.net", "https://er56.b-cdn.net") : movie?.poster_path;
+
+                console.log(movie)
+
+                let itemPoster = movie?.poster_path;
+
+                if (item.poster) {
+                    itemPoster = replaceImageDomain(item.poster);
+                }
+
+                const imageSrc = itemPoster;
 
                 //const imageSrc = movie?.poster_path;
 
@@ -1579,8 +1782,8 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
 
             // Hide after 2 seconds
             setTimeout(() => {
-                flash.style.top = "-50px"; // Slide up
-            }, 2000);
+                flash.style.top = "-100px"; // Slide up
+            }, 4000);
         }
     </script>
 </body>
