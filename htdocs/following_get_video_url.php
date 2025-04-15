@@ -45,7 +45,17 @@ function getFinalURL($url) {
     if ($videoTags->length > 0) {
         $videoSource = $videoTags->item(0)->getAttribute('src');
     }
-    return str_replace("https://fb45.b-cdn.net", "https://er56.b-cdn.net", $videoSource);
+    
+    $final = str_replace("https://fb45.b-cdn.net", "https://er56.b-cdn.net", $videoSource);
+    $final = str_replace("https://thn45.b-cdn.net", "https://er56.b-cdn.net", $final);
+
+    return $final;
+
+    // $oldDomain = parse_url($videoSource, PHP_URL_HOST);
+    // $newDomain = "er56.b-cdn.net";
+    // $newUrl = str_replace($oldDomain, $newDomain, $videoSource);
+
+    // return $newUrl;
 }
 try{
     $url = ($_GET["url"]) ? str_replace(" ", "%20", $_GET["url"]) : "";

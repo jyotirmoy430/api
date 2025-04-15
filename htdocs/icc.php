@@ -44,6 +44,7 @@ $decoded_json = json_decode($data["content"], false);
 $takeArr = [];
 
 foreach($decoded_json as $decoded){
+    $decoded->domain = 'Wifi';
     if($category){
         if (strpos(strtolower($decoded->cat), strtolower($category)) !== false) {
             if (strpos(strtolower($decoded->video), strtolower($keyword)) !== false) {

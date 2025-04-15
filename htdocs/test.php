@@ -949,6 +949,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                     data = response1[0].concat(response2[0]);
                 }
 
+                
                 console.log(data);
                 console.log("outside domain:", domain);
 
@@ -1334,6 +1335,10 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
 
             const link = item.video ? item.video : '';
 
+            if (item.domain) {
+                    domain = item.domain;
+                }
+
             const playBtnText = `<button
 
                                       onclick="copyOrPlayLink('${decodeURIComponent(title).replace(/'/g, "\\'")}', '${link}', '${domain}', true, true, this);"
@@ -1654,6 +1659,10 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
 
                 if (goku === "1") {
                     domain = "Goku";
+                }
+
+                if (item.domain) {
+                    domain = item.domain;
                 }
 
                 const playBtnText = `<button
