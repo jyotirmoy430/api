@@ -403,7 +403,6 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
         </div>
     </div>
     <div class="searchBox topSearchPadding pt-0 pb-4">
-
         <div class="mt-2 flex">
             <div class="relative w-full">
                 <input list="movielist" type="text" name="keyword" id="keyword"
@@ -425,7 +424,6 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                 <?php } else { ?>
                 onclick="search();"
                 <?php } ?>
-
                 id="search"
                 type=""
                 class="ml-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
@@ -448,18 +446,8 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
         </button>
     </div>
     <div id="flashMessage"></div>
-    <div class="container p-3 mx-auto pt-0" id="swipeArea">
-        <div class="loader" id="loader">
-
-        </div>
-        <div class="cat-search">
-            <div class="cat"></div>
-            <div class="search">
-
-
-
-            </div>
-        </div>
+    <div class="container p-3 mx-auto pt-0">
+        <div class="loader" id="loader"></div>
         <div id="list">
             <div
                 class="container mx-auto flex justify-center md:justify-between flex-wrap"
@@ -509,21 +497,11 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
         let ON_MOBILE = true;
         const DEFAULT_OFFSET = 0;
         const DEFAULT_LIMIT = 20;
-        let SWIPE_ACTION = "";
-        let SELECTED = 0;
-        let TOTAL_MOVIES = 0;
-        let EXTRA_ITEMS = -4;
 
         <?php
         if ($masterUser) {
         ?>
-
-            DOMAINS = [
-                // {
-                //     key: "Circle",
-                //     label: "Circle"
-                // },
-                {
+            DOMAINS = [{
                     key: "Mobile",
                     label: "Mobile"
                 },
@@ -583,90 +561,13 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
         });
 
 
-
-        const swipeArea = document.getElementById("swipeArea");
-        let startX, startY;
-
-        swipeArea.addEventListener("touchstart", handleTouchStart, false);
-        swipeArea.addEventListener("touchend", handleTouchEnd, false);
-
-
-        function handleTouchStart(event) {
-            startX = event.touches[0].clientX;
-            startY = event.touches[0].clientY;
-        }
-
-        function handleTouchEnd(event) {
-            let endX = event.changedTouches[0].clientX;
-            let endY = event.changedTouches[0].clientY;
-            let deltaX = endX - startX;
-            let deltaY = endY - startY;
-
-            if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                if (deltaX > 110) {
-                    searchOnSwipe("previous");
-                } else if (deltaX < -110) {
-                    searchOnSwipe("next");
-                }
-            }
-        }
-
         function hideLinkBox() {
             $("#link").hide();
         }
 
-        function searchOnSwipe(action = "") {
-            if (!action) {
-                return true;
-            }
-
-            const domains = document.getElementById("domain");
-            const currentIndex = domains.selectedIndex;
-            const currentDomain = domains.options[currentIndex].text;
-
-            let previousDomain, nextDomain;
-
-            if (currentIndex > 0) {
-                previousDomain = domains.options[currentIndex - 1].text;
-            } else {
-                previousDomain = null; // No previous option
-            }
-
-            if (currentIndex < domains.options.length - 1) {
-                nextDomain = domains.options[currentIndex + 1].text;
-            } else {
-                nextDomain = null; // No next option
-            }
-
-            if (action === "next" && nextDomain) {
-                $("#domain").val(nextDomain);
-                SWIPE_ACTION = nextDomain;
-                search();
-            }
-
-            if (action === "previous" && previousDomain) {
-                $("#domain").val(previousDomain);
-                SWIPE_ACTION = previousDomain;
-                search();
-            }
-
-            hideCategory($("#domain").val() !== 'Wifi');
-        }
-
-
         /* handle mouse up/down start */
 
         $(document).ready(function() {
-            $(document).on('keydown', '.movie', function(event) {
-                if (event.key === 'Enter' && SELECTED >= 0) {
-                    if ($("#domain").val() === 'Goku') {
-                        $(this).find('.copyBtn').click();
-                    } else {
-                        $(this).find('.playBtn').click();
-                    }
-                }
-            });
-
             hideCategory($("#domain").val() !== 'Wifi');
 
             $("#domain").change(function() {
@@ -700,10 +601,6 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                 localStorage.getItem("keyword") :
                 "";
 
-
-            // const offset = localStorage.getItem("offset") ?
-            //     localStorage.getItem("offset") :
-            //     "";
             const offset = 0;
 
             const limit = localStorage.getItem("limit") ?
@@ -747,13 +644,11 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
             if (watchLaterJson) {
                 const data = JSON.parse(watchLaterJson);
 
-
-
                 if (data && data.length) {
                     $("#container").html("");
                     for (let i = 0; i < data.length; i++) {
                         const item = data[i];
-                        let domain = item.circle ? "Circle" : (item.following ? "Mobile" : "Goku");
+                        let domain = item.circle ? "Circle" : (item.following ? "Mobile" : "Wifi");
 
                         const cardText = await createCard(item, domain, true);
 
@@ -802,7 +697,6 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
             video,
             poster,
             cat,
-            goku,
             following,
             circle,
             type = 0
@@ -815,7 +709,6 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                     poster: poster !== "undefined" ? poster : null,
                     cat: cat !== "undefined" ? cat : null,
                     href: href !== "undefined" ? href : null,
-                    goku: goku !== "undefined" ? goku : null,
                     following: following !== "undefined" ? following : null,
                     circle: circle !== "undefined" ? circle : null,
                 };
@@ -880,8 +773,6 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
             limitParam = "",
             loadMore = false
         ) {
-            console.log("searchMaster");
-
             const suggestionsBox = document.getElementById('suggestions');
             suggestionsBox.style.display = 'none';
 
@@ -890,9 +781,6 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
             const keyword = keywordParam ? keywordParam : $("#keyword").val();
             const offset = offsetParam ? offsetParam : DEFAULT_OFFSET;
             const limit = limitParam ? limitParam : DEFAULT_LIMIT;
-
-
-            console.log("domain", domain)
 
             //set all values in local storage
             localStorage.setItem("category", category);
@@ -945,13 +833,8 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                 let data = response2[0]
 
                 if (domain !== 'Wifi') {
-                    console.log("inside");
                     data = response1[0].concat(response2[0]);
                 }
-
-                
-                console.log(data);
-                console.log("outside domain:", domain);
 
 
                 let cardText = "";
@@ -1035,21 +918,6 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
             const currentCardText = $("#container").html();
 
             $("#loader").show();
-
-            if (domain && !loadMore) {
-                const swipeItems = localStorage.getItem(domain);
-
-                if (
-                    swipeItems &&
-                    keyword === localStorage.getItem(domain + "_KEYWORD") &&
-                    category === localStorage.getItem(domain + "_CATEGORY")
-                ) {
-                    $("#container").html(swipeItems);
-                    $("#loader").hide();
-
-                    return true;
-                }
-            }
 
             const fetchUrl = generateFetchUrl(
                 domain,
@@ -1190,8 +1058,6 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                 keywordParam = "searchTerm";
             } else if (domain === "Mobile") {
                 apiUrl = `${httpOrHttps}//jbmovies.rf.gd/following_search.php?`;
-            } else if (domain === "Goku") {
-                apiUrl = `${httpOrHttps}//jbmovies.rf.gd/goku_search.php?`;
             }
 
             return (
@@ -1246,9 +1112,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
 
             let apiUrl = `${httpOrHttps}//jbmovies.rf.gd`;
 
-            if (domain === "Goku") {
-                apiUrl += "/goku_get_video_url.php";
-            } else if (domain === "Mobile") {
+            if (domain === "Mobile") {
                 apiUrl += "/following_get_video_url.php";
             } else if (domain === "Circle") {
                 apiUrl = 'http://new.circleftp.net:5000/api/posts/' + link;
@@ -1282,7 +1146,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                 $("#loader").show();
 
                 const linkToCopy =
-                    domain === "Goku" || domain === "Mobile" || domain === "Circle" ?
+                    domain === "Mobile" || domain === "Circle" ?
                     await getLinkFromWeb(link, domain) :
                     link;
 
@@ -1336,8 +1200,8 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
             const link = item.video ? item.video : '';
 
             if (item.domain) {
-                    domain = item.domain;
-                }
+                domain = item.domain;
+            }
 
             const playBtnText = `<button
 
@@ -1395,7 +1259,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
 
 
                 let linkToCopy =
-                    (domain === "Goku" || domain === "Mobile" || domain === "Circle") && !direct ?
+                    (domain === "Mobile" || domain === "Circle") && !direct ?
                     await getLinkFromWeb(link, domain) :
                     link;
 
@@ -1408,12 +1272,6 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                     });
 
 
-                    //window.location.href = "vlc://" + linkToCopy;
-
-                    //https://az23.b-cdn.net/s2/upload/videos/2025/01/%5BFibwatch.Com%5DSonic.The.Hedgehog.3.(2024).WEB.DL.%5BHindi.English%5D.1080p.mkv
-                    //window.location.href = `intent://${linkToCopy}#Intent;package=org.videolan.vlc;scheme=http;end`;
-                    //window.location.href = linkToCopy;
-
                     linkToCopy = linkToCopy.replace(/\[/g, '%5B').replace(/\]/g, '%5D');
                     $("#loader").hide();
                     if (/iPhone/i.test(navigator.userAgent)) {
@@ -1421,8 +1279,6 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                     } else {
                         linkToCopy = linkToCopy.replace(/https/, 'vlc');
                         linkToCopy = linkToCopy.replace(/http/, 'vlc');
-
-                        console.log(linkToCopy);
                         window.location.href = linkToCopy;
                     }
 
@@ -1609,9 +1465,6 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
         }
 
         function replaceImageDomain(url) {
-            // let oldDomain = new URL(url).host;
-            // let newDomain = "er56.b-cdn.net";
-
             let itemPoster = url.replace("https://fb45.b-cdn.net", "https://er56.b-cdn.net")
             itemPoster = itemPoster.replace("https://thn45.b-cdn.net", "https://er56.b-cdn.net")
 
@@ -1621,13 +1474,8 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
         async function createCard(item, domain, action = false) {
             try {
                 const title = prepareTitle(item.title ? item.title : item.video);
-
-                console.log(item);
-
                 const link = item.video ? item.video : item.href ? item.href : "";
                 const movie = await movieDetails(title);
-
-                console.log(movie)
 
                 let itemPoster = movie?.poster_path;
 
@@ -1643,22 +1491,14 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                     id,
                     video,
                     poster,
-                    goku,
                     cat,
                     href,
                     following,
                     circle
                 } = item;
 
-                const tabindex = id + 4;
-                //console.log(itemString.toString());
-
                 if (following === "1") {
                     domain = "Mobile";
-                }
-
-                if (goku === "1") {
-                    domain = "Goku";
                 }
 
                 if (item.domain) {
@@ -1688,7 +1528,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
 
                 const watchLaterBtnText = `<button
 
-                                      onclick="addToWatchLaterList('${id}', '${decodeURIComponent(title)}', '${href}', '${video}', '${poster}','${cat}', '${goku}', '${following}', '${circle}', '${item.type ? item.type : 0}')"
+                                      onclick="addToWatchLaterList('${id}', '${decodeURIComponent(title)}', '${href}', '${video}', '${poster}','${cat}', '${following}', '${circle}', '${item.type ? item.type : 0}')"
                                       type=""
                                       class="rounded-md bg-indigo-600 p-2 md:px-3 md:py-2 md:text-sm text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                       >
@@ -1743,7 +1583,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
 
                 const cardHTML = `
 
-                          <div class="boxShadow md:max-w-xs max-w-md mx-1 my-5 bg-[#555555] overflow-hidden movie pb-2 relative" tabindex="${tabindex}">
+                          <div class="boxShadow md:max-w-xs max-w-md mx-1 my-5 bg-[#555555] overflow-hidden movie pb-2 relative">
                               <div class="relative">
                               <img class="w-screen md:w-full object-contain object-center" style="min-height:190px;" src="${imageSrc}" alt="${title}">
                               ${rattingsText}
@@ -1760,7 +1600,6 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                           </div>
 
                       `;
-                //', '${video}', '${poster}','${cat}', '${href}', '${goku}', '${following}, '${circle}
                 return cardHTML;
             } catch (e) {
                 console.log(e);

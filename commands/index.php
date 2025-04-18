@@ -6,7 +6,7 @@ function init()
     $ONE = [
         'http://10.16.100.245/ftps2d',
         'http://10.16.100.245/ftps2d4',
-        //'http://10.16.100.206/ftps3',
+        'http://10.16.100.206/ftps3',
         'http://10.16.100.202/ftps10',
         'http://10.16.100.212/iccftps12',
         'http://10.16.100.213/iccftps13',
@@ -22,7 +22,7 @@ function init()
     $TWO = [
         '',
         '',
-        //'ftps3d',
+        'ftps3d',
         'iccftps10sasd',
         'iccftps12sasd',
         'iccftps13sasd',
@@ -38,7 +38,7 @@ function init()
     $THREE = [
         4,
         0,
-        //8,
+        8,
         10,
         10,
         10,
