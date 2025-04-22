@@ -33,6 +33,34 @@ if (!$already_authenticated) {
         exit;
     }
 
+    /* check country start */
+    $country = '';
+    if (isset($_COOKIE['user_country'])) {
+        $country = $_COOKIE['user_country'];
+    } else {
+        $ip = $_SERVER['REMOTE_ADDR'];
+        $response = @file_get_contents("http://ip-api.com/json/{$ip}");
+        $data = json_decode($response);
+        if ($data && $data->status === 'success') {
+            $country = $data->country;
+            setcookie('user_country', $country, time() + $authDuration, "/");
+        } else {
+            $country = "Unknown";
+        }
+    }
+
+    if ($country != 'Bangladesh') {
+
+        header('WWW-Authenticate: Basic realm="Restricted Area"');
+        header('HTTP/1.0 401 Unauthorized');
+        echo 'Authorization Required.';
+        exit;
+    }
+    /* check country end */
+
+    // Check if already authenticated via cookie and country is Bangladesh
+    $authenticated = isset($_COOKIE['auth_time']) && (time() - $_COOKIE['auth_time']) < $authDuration && $country === "Bangladesh";
+
     // If authentication is successful, set the cookie with the current timestamp
     if (!isset($_COOKIE['auth_time'])) {
         setcookie('auth_time', 'authenticated', time() + $auth_duration, "/");
@@ -55,6 +83,8 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS"); // Allo
 header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization"); // Allow specific headers
 
 ?>
+
+
 
 <!DOCTYPE html>
 <html>
@@ -173,68 +203,8 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
             height: 400px;
         }
 
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 34px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            -webkit-transition: 0.4s;
-            transition: 0.4s;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            -webkit-transition: 0.4s;
-            transition: 0.4s;
-        }
-
-        input:checked+.slider {
-            background-color: #2196f3;
-        }
-
-        input:focus+.slider {
-            box-shadow: 0 0 1px #2196f3;
-        }
-
-        input:checked+.slider:before {
-            -webkit-transform: translateX(26px);
-            -ms-transform: translateX(26px);
-            transform: translateX(26px);
-        }
-
-        /* Rounded sliders */
-        .slider.round {
-            border-radius: 34px;
-        }
-
-        .slider.round:before {
-            border-radius: 50%;
-        }
-
         /* Style for the Go to Top button */
-        #topBtn {
+        #goToTopBtn {
             position: fixed;
             bottom: 80px;
             right: 10px;
@@ -250,7 +220,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
             transition: opacity 0.3s;
         }
 
-        #topBtn:hover {
+        #goToTopBtn:hover {
             background-color: #a03232;
         }
 
@@ -284,29 +254,6 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
 
         .message {
             display: none;
-        }
-
-        .suggestion-box {
-            position: absolute;
-            border: 1px solid #ccc;
-            background-color: #fff;
-            color: #000000;
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 1000;
-            width: 300px;
-            display: none;
-            top: 36px;
-        }
-
-        .suggestion-box .suggestion-item {
-            padding: 10px;
-            cursor: pointer;
-        }
-
-        .suggestion-box .suggestion-item.active {
-            background-color: #f0f0f0;
-            font-weight: bold;
         }
 
         .z-90 {
@@ -417,8 +364,6 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                     onclick="document.getElementById('keyword').value = ''; document.getElementById('keyword').focus();">x</button>
             </div>
 
-            <div id="suggestions" class="suggestion-box"></div>
-
             <button
                 <?php if ($masterUser) { ?>
                 onclick="searchMaster();"
@@ -448,16 +393,13 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
         </button>
     </div>
     <div id="flashMessage"></div>
-    <div class="container p-3 mx-auto pt-0" id="swipeArea">
+    <div class="container p-3 mx-auto pt-0">
         <div class="loader" id="loader">
 
         </div>
         <div class="cat-search">
             <div class="cat"></div>
             <div class="search">
-
-
-
             </div>
         </div>
         <div id="list">
@@ -466,7 +408,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                 id="container"></div>
         </div>
     </div>
-    <button onclick="scrollToTop()" id="topBtn" title="Go to Top">
+    <button onclick="scrollToTop()" id="goToTopBtn" title="Go to Top">
         &#8682;
     </button>
 
@@ -509,7 +451,6 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
         let ON_MOBILE = true;
         const DEFAULT_OFFSET = 0;
         const DEFAULT_LIMIT = 20;
-        let SWIPE_ACTION = "";
         let SELECTED = 0;
         let TOTAL_MOVIES = 0;
         let EXTRA_ITEMS = -4;
@@ -562,11 +503,11 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
 
         // Show button when the user scrolls down 20px from the top
         window.onscroll = function() {
-            const topBtn = document.getElementById("topBtn");
+            const goToTopBtn = document.getElementById("goToTopBtn");
             if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-                topBtn.style.display = "block";
+                goToTopBtn.style.display = "block";
             } else {
-                topBtn.style.display = "none";
+                goToTopBtn.style.display = "none";
             }
         };
 
@@ -583,75 +524,10 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
         });
 
 
-
-        const swipeArea = document.getElementById("swipeArea");
-        let startX, startY;
-
-        swipeArea.addEventListener("touchstart", handleTouchStart, false);
-        swipeArea.addEventListener("touchend", handleTouchEnd, false);
-
-
-        function handleTouchStart(event) {
-            startX = event.touches[0].clientX;
-            startY = event.touches[0].clientY;
-        }
-
-        function handleTouchEnd(event) {
-            let endX = event.changedTouches[0].clientX;
-            let endY = event.changedTouches[0].clientY;
-            let deltaX = endX - startX;
-            let deltaY = endY - startY;
-
-            if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                if (deltaX > 110) {
-                    searchOnSwipe("previous");
-                } else if (deltaX < -110) {
-                    searchOnSwipe("next");
-                }
-            }
-        }
-
         function hideLinkBox() {
             $("#link").hide();
         }
 
-        function searchOnSwipe(action = "") {
-            if (!action) {
-                return true;
-            }
-
-            const domains = document.getElementById("domain");
-            const currentIndex = domains.selectedIndex;
-            const currentDomain = domains.options[currentIndex].text;
-
-            let previousDomain, nextDomain;
-
-            if (currentIndex > 0) {
-                previousDomain = domains.options[currentIndex - 1].text;
-            } else {
-                previousDomain = null; // No previous option
-            }
-
-            if (currentIndex < domains.options.length - 1) {
-                nextDomain = domains.options[currentIndex + 1].text;
-            } else {
-                nextDomain = null; // No next option
-            }
-
-            if (action === "next" && nextDomain) {
-                $("#domain").val(nextDomain);
-                SWIPE_ACTION = nextDomain;
-                search();
-            }
-
-            if (action === "previous" && previousDomain) {
-                $("#domain").val(previousDomain);
-                SWIPE_ACTION = previousDomain;
-                search();
-            }
-
-            hideCategory($("#domain").val() !== 'Wifi');
-        }
 
 
         /* handle mouse up/down start */
@@ -659,11 +535,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
         $(document).ready(function() {
             $(document).on('keydown', '.movie', function(event) {
                 if (event.key === 'Enter' && SELECTED >= 0) {
-                    if ($("#domain").val() === 'Goku') {
-                        $(this).find('.copyBtn').click();
-                    } else {
-                        $(this).find('.playBtn').click();
-                    }
+                    $(this).find('.playBtn').click();
                 }
             });
 
@@ -753,7 +625,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                     $("#container").html("");
                     for (let i = 0; i < data.length; i++) {
                         const item = data[i];
-                        let domain = item.circle ? "Circle" : (item.following ? "Mobile" : "Goku");
+                        let domain = item.circle ? "Circle" : (item.following ? "Mobile" : "Wifi");
 
                         const cardText = await createCard(item, domain, true);
 
@@ -802,7 +674,6 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
             video,
             poster,
             cat,
-            goku,
             following,
             circle,
             type = 0
@@ -815,7 +686,6 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                     poster: poster !== "undefined" ? poster : null,
                     cat: cat !== "undefined" ? cat : null,
                     href: href !== "undefined" ? href : null,
-                    goku: goku !== "undefined" ? goku : null,
                     following: following !== "undefined" ? following : null,
                     circle: circle !== "undefined" ? circle : null,
                 };
@@ -882,9 +752,6 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
         ) {
             console.log("searchMaster");
 
-            const suggestionsBox = document.getElementById('suggestions');
-            suggestionsBox.style.display = 'none';
-
             const domain = domainParam && !ON_MOBILE ? domainParam : $("#domain").val() ? $("#domain").val() : DEFAULT_DOMAIN;
             const category = domain === 'Wifi' ? categoryParam ? categoryParam : $("#category").val() ? $("#category").val() : "" : "";
             const keyword = keywordParam ? keywordParam : $("#keyword").val();
@@ -949,7 +816,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                     data = response1[0].concat(response2[0]);
                 }
 
-                
+
                 console.log(data);
                 console.log("outside domain:", domain);
 
@@ -994,9 +861,6 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
             limitParam = "",
             loadMore = false
         ) {
-            const suggestionsBox = document.getElementById('suggestions');
-            suggestionsBox.style.display = 'none';
-
             const domain = domainParam && !ON_MOBILE ? domainParam : $("#domain").val() ? $("#domain").val() : DEFAULT_DOMAIN;
             const category = domain === 'Wifi' ? categoryParam ? categoryParam : $("#category").val() ? $("#category").val() : "" : "";
             const keyword = keywordParam ? keywordParam : $("#keyword").val();
@@ -1037,14 +901,14 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
             $("#loader").show();
 
             if (domain && !loadMore) {
-                const swipeItems = localStorage.getItem(domain);
+                const movieItems = localStorage.getItem(domain);
 
                 if (
-                    swipeItems &&
+                    movieItems &&
                     keyword === localStorage.getItem(domain + "_KEYWORD") &&
                     category === localStorage.getItem(domain + "_CATEGORY")
                 ) {
-                    $("#container").html(swipeItems);
+                    $("#container").html(movieItems);
                     $("#loader").hide();
 
                     return true;
@@ -1190,8 +1054,6 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                 keywordParam = "searchTerm";
             } else if (domain === "Mobile") {
                 apiUrl = `${httpOrHttps}//jbmovies.rf.gd/following_search.php?`;
-            } else if (domain === "Goku") {
-                apiUrl = `${httpOrHttps}//jbmovies.rf.gd/goku_search.php?`;
             }
 
             return (
@@ -1246,9 +1108,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
 
             let apiUrl = `${httpOrHttps}//jbmovies.rf.gd`;
 
-            if (domain === "Goku") {
-                apiUrl += "/goku_get_video_url.php";
-            } else if (domain === "Mobile") {
+            if (domain === "Mobile") {
                 apiUrl += "/following_get_video_url.php";
             } else if (domain === "Circle") {
                 apiUrl = 'http://new.circleftp.net:5000/api/posts/' + link;
@@ -1282,7 +1142,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                 $("#loader").show();
 
                 const linkToCopy =
-                    domain === "Goku" || domain === "Mobile" || domain === "Circle" ?
+                    domain === "Mobile" || domain === "Circle" ?
                     await getLinkFromWeb(link, domain) :
                     link;
 
@@ -1336,8 +1196,8 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
             const link = item.video ? item.video : '';
 
             if (item.domain) {
-                    domain = item.domain;
-                }
+                domain = item.domain;
+            }
 
             const playBtnText = `<button
 
@@ -1395,7 +1255,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
 
 
                 let linkToCopy =
-                    (domain === "Goku" || domain === "Mobile" || domain === "Circle") && !direct ?
+                    (domain === "Mobile" || domain === "Circle") && !direct ?
                     await getLinkFromWeb(link, domain) :
                     link;
 
@@ -1643,7 +1503,6 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                     id,
                     video,
                     poster,
-                    goku,
                     cat,
                     href,
                     following,
@@ -1655,10 +1514,6 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
 
                 if (following === "1") {
                     domain = "Mobile";
-                }
-
-                if (goku === "1") {
-                    domain = "Goku";
                 }
 
                 if (item.domain) {
@@ -1688,7 +1543,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
 
                 const watchLaterBtnText = `<button
 
-                                      onclick="addToWatchLaterList('${id}', '${decodeURIComponent(title)}', '${href}', '${video}', '${poster}','${cat}', '${goku}', '${following}', '${circle}', '${item.type ? item.type : 0}')"
+                                      onclick="addToWatchLaterList('${id}', '${decodeURIComponent(title)}', '${href}', '${video}', '${poster}','${cat}', '${following}', '${circle}', '${item.type ? item.type : 0}')"
                                       type=""
                                       class="rounded-md bg-indigo-600 p-2 md:px-3 md:py-2 md:text-sm text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                       >
@@ -1760,7 +1615,6 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                           </div>
 
                       `;
-                //', '${video}', '${poster}','${cat}', '${href}', '${goku}', '${following}, '${circle}
                 return cardHTML;
             } catch (e) {
                 console.log(e);
