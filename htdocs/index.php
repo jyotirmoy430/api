@@ -4,10 +4,10 @@ try{
     session_start();
 
     // Database credentials
-    $host = 'sql110.infinityfree.com';
-    $db   = 'if0_36287848_jbmovies';
-    $user = 'if0_36287848';
-    $pass = 'XL9tpY7pDr6jAV';
+    $host = '';
+    $db   = '';
+    $user = '';
+    $pass = '';
     $port = 3306;
 
     // Auth duration
