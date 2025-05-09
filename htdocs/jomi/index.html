@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Page Title</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <div class="w-full mx-auto">
+      <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <div class="mb-4">
+          <label
+            class="block text-gray-700 text-sm font-bold mb-2"
+            for="length"
+          >
+            Length
+          </label>
+          <input
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="length"
+            type="text"
+            placeholder="Length"
+            value="10"
+          />
+        </div>
+        <div class="mb-6">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="width">
+            Width
+          </label>
+          <input
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="width"
+            type="text"
+            placeholder="Width"
+            value="10"
+          />
+        </div>
+        <div class="mb-6">
+          <label
+            class="block text-gray-700 text-sm font-bold mb-2"
+            for="height"
+          >
+            Height
+          </label>
+          <input
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="height"
+            type="text"
+            placeholder="Height"
+            value="10"
+          />
+          <!-- <p class="text-red-500 text-xs italic">Please choose a height.</p> -->
+        </div>
+
+        <div class="mb-6">&nbsp;</div>
+        <div class="mb-4">
+          <label
+            class="block text-gray-700 text-sm font-bold mb-2"
+            for="brickPrice"
+          >
+            Brick price
+          </label>
+          <input
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="brickPrice"
+            type="text"
+            placeholder="Brick Price"
+            value="18"
+          />
+        </div>
+
+        <div class="mb-4 mt-24">
+          <label
+            class="block text-gray-700 text-sm font-bold mb-2"
+            for="brickLength"
+          >
+            Brick Length
+          </label>
+          <input
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="brickLength"
+            type="text"
+            placeholder="Brick Length"
+            value="10"
+          />
+        </div>
+        <div class="mb-6">
+          <label
+            class="block text-gray-700 text-sm font-bold mb-2"
+            for="brickWidth"
+          >
+            Brick Width
+          </label>
+          <input
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="brickWidth"
+            type="text"
+            placeholder="Brick Width"
+            value="5"
+          />
+        </div>
+        <div class="mb-6">
+          <label
+            class="block text-gray-700 text-sm font-bold mb-2"
+            for="brickHeight"
+          >
+            Brick Height
+          </label>
+          <input
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="brickHeight"
+            type="text"
+            placeholder="Brick Height"
+            value="3"
+          />
+          <!-- <p class="text-red-500 text-xs italic">Please choose a height.</p> -->
+        </div>
+        <div class="flex items-center justify-between">
+          <button
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            type="button"
+            onclick="findArea();"
+          >
+            Calculate
+          </button>
+        </div>
+      </form>
+    </div>
+  </body>
+
+  <script type="text/javascript">
+    const UNIT = 12;
+    function findArea() {
+      const length = document.getElementById("length").value;
+      const height = document.getElementById("height").value;
+      const width = document.getElementById("width").value;
+
+      if (!isValid(length) || !isValid(height) || !isValid(width)) {
+        alert("Invalid input");
+        return;
+      }
+      const landArea = length * (height / UNIT) * width;
+
+      console.log(length, height, width);
+      console.log(landArea);
+
+      const brickLength = document.getElementById("brickLength").value;
+      const brickHeight = document.getElementById("brickHeight").value;
+      const brickWidth = document.getElementById("brickWidth").value;
+      const brickPrice = document.getElementById("brickPrice").value;
+
+      if (
+        !isValid(brickLength) ||
+        !isValid(brickHeight) ||
+        !isValid(brickWidth)
+      ) {
+        alert("Invalid input");
+        return;
+      }
+      const brickArea =
+        (brickLength / UNIT) * (brickHeight / UNIT) * (brickWidth / UNIT);
+
+      console.log(brickLength, brickHeight, brickWidth);
+      console.log(brickArea);
+
+      const numberOfBricks = Math.ceil(landArea / brickArea);
+      alert(
+        "Total brick needed::" +
+          numberOfBricks +
+          "++++++++" +
+          "Total money for brick needed::" +
+          numberOfBricks * brickPrice
+      );
+    }
+
+    function isValid(input) {
+      if (input === null || input === undefined || input === "") {
+        return false;
+      }
+
+      // Check if input is a valid number
+      return !isNaN(input) && input !== "";
+    }
+  </script>
+</html>

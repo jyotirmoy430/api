@@ -1,6 +1,8 @@
 <?php
 error_reporting(0);
 
+session_start();
+
 $allowed_origins = ["http://jbmovies.rf.gd", "https://jbmovies.rf.gd"];
 
 // Check the Origin header
@@ -31,7 +33,20 @@ $finalURL = '';
 if($url){
     $finalURL = getFinalURL($url);
 }
+
 echo $finalURL;
+
+
+try{
+    //add log - movie url
+    if($finalURL){
+        $parts = explode('[Fibwatch.Com]', $finalURL);
+        $filename = end($parts);
+        logInfo('watched -> '.$filename);
+    }
+}catch (\Exception $e){
+}
+
 
 function getFinalURL($url) {
     $html = file_get_contents($url);
@@ -60,4 +75,17 @@ function getFinalURL($url) {
 try{
     $url = ($_GET["url"]) ? str_replace(" ", "%20", $_GET["url"]) : "";
 }catch (\Exception $e){
+}
+
+
+
+function logInfo($message = '', $fileName = 'log.txt')
+{
+    try{
+        $dt = new DateTime("now", new DateTimeZone("Asia/Dhaka"));
+        $time = $dt->format("d M Y H:i:s"); // Format: 05 May 2025 14:10:59
+        $mapLink = 'https://www.google.com/maps/@'.$_SESSION['lat'].','.$_SESSION['lon'];
+        $formattedMsg = $time. ' -> '. $_SERVER['REMOTE_ADDR'] . ' -> ' . $_SESSION['isp'] . ' -> '.$_SESSION['user']. ' -> '. $_SESSION['country']. ' -> ' . $mapLink . (($message) ? ' -> '. $message : '');
+        file_put_contents($fileName, $formattedMsg . "\n\n", FILE_APPEND);
+    }catch(\Exception $e){}
 }

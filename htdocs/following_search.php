@@ -3,34 +3,34 @@ error_reporting(0);
 
 $allowed_origins = ["http://jbmovies.rf.gd", "https://jbmovies.rf.gd"];
 
-// Check the Origin header
 if (isset($_SERVER['HTTP_ORIGIN'])) {
     $origin = $_SERVER['HTTP_ORIGIN'];
     
-    // Allow only requests from http://jbmovies.rf.gd
     if(in_array($origin, $allowed_origins)){
         header("Access-Control-Allow-Origin: $origin");
         header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
         header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization");
     } else {
-        // If the request comes from an unauthorized origin, block it
         header("HTTP/1.1 403 Forbidden");
         echo json_encode(['error' => 'Unauthorized origin']);
         exit;
     }
 } else {
-    // Block requests with no Origin header
     header("HTTP/1.1 403 Forbidden");
     echo json_encode(['error' => '403 Forbidden']);
     exit;
 }
 
 //$SITE_URL = "https://wa.atoztipsntricks.com/";
-$SITE_URL = "https://fibwatch.info/"; //https://fibwatch.online/
+//$SITE_URL_LATEST = "https://fibwatch.life/videos/latest"; //https://fibwatch.online/
+//$SITE_URL = "https://fibwatch.info/"; //https://fibwatch.online/
 
+
+$SITE_URL_LATEST = "https://fibwatch.cfd/videos/latest"; //https://fibwatch.online/
+$SITE_URL = "https://fibwatch.cfd/"; //https://fibwatch.online/
 
 try {
-    $keyword = ($_REQUEST["keyword"]) ? str_replace(" ", "%20", $_REQUEST["keyword"]) : "2024";
+    $keyword = ($_REQUEST["keyword"]) ? str_replace(" ", "%20", $_REQUEST["keyword"]) : "";
     $category = ($_REQUEST["category"] && $_REQUEST["category"] !== ' ') ? $_REQUEST["category"] : "";
     $offset = ($_REQUEST["offset"]) ? $_REQUEST["offset"] : 0;
     $limit = ($_REQUEST["limit"]) ? $_REQUEST["limit"] : 100;
@@ -45,11 +45,21 @@ $searchUrl = url_picker($category);
 
 
 if (!$keyword || $keyword == '') {
+    if ($offset < 20) {
+            // No page_id if offset is 0
+            $page_id = "";
+        } else {
+            // Calculate page_id based on offset
+            $page_id = "?page_id=".($offset / 20) + 1;
+        }
+
+        $searchUrl = "$SITE_URL_LATEST".$page_id;
+
     $items = getSearchItems($searchUrl, $category=='All' ? "" : 'video-thumb');
 
     $finalItems = ($items && count($items) > 0) ? array_values($items) : [];
 
-    echo json_encode(array_slice($finalItems, $offset, $limit), JSON_PRETTY_PRINT);
+    echo json_encode(array_slice($finalItems, 0, $limit), JSON_PRETTY_PRINT);
 } else {
 
         if ($offset < 20) {
@@ -75,6 +85,8 @@ function getSearchItems($url, $className='video-list-image')
 {
     $url = ($url) ? str_replace(" ", "%20", $url) : "";
     $html = get_web_page($url);
+    usleep(500000); 
+    $html = get_web_page($url);
 
     $dom = new DOMDocument();
     $dom->loadHTML($html);
@@ -93,7 +105,6 @@ function getSearchItems($url, $className='video-list-image')
 
 
         if ($href) {
-
             $array[] = [
                 'id' => $index,
                 'video' => $href,
@@ -101,6 +112,7 @@ function getSearchItems($url, $className='video-list-image')
                 'poster' => $src,
                 'following' => 1,
                 'cat' => "all",
+                'domain' => "Mobile",
             ];
         }
     }

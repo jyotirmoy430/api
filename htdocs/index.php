@@ -1,88 +1,130 @@
 <?php
 
-$valid_username = 'ami';
-$valid_password = 'rishan';
+try{
+    session_start();
 
-$master_username = '430';
-$master_password = '430';
+    // Database credentials
+    $host = 'sql110.infinityfree.com';
+    $db   = 'if0_36287848_jbmovies';
+    $user = 'if0_36287848';
+    $pass = 'XL9tpY7pDr6jAV';
+    $port = 3306;
 
-$auth_duration = 23 * 24 * 60 * 60; // 3 days in seconds
+    // Auth duration
+    $auth_duration = 3 * 24 * 60 * 60; // 3 days in seconds
+    $already_authenticated = false;
+    $masterUser = false;
 
+    // Get HTTP Basic Auth credentials
+    $username = $_SERVER['PHP_AUTH_USER'] ?? '';
+    $password = isset($_SERVER['PHP_AUTH_PW']) ? md5($_SERVER['PHP_AUTH_PW']) : '';
 
-$already_authenticated = false;
-
-// Check if the cookie 'auth_time' is set and validate its time
-if (isset($_COOKIE['auth_time'])) {
-    // User authenticated within the last 3 days, no need to authenticate again
-    $already_authenticated = true;
-}
-
-// If the cookie is not set or the time has expired, request authentication
-if (!$already_authenticated) {
+    // Check session for authentication
     if (
-        !isset($_SERVER['PHP_AUTH_USER']) ||
-        !isset($_SERVER['PHP_AUTH_PW']) ||
-        !(
-            ($_SERVER['PHP_AUTH_USER'] === $valid_username && $_SERVER['PHP_AUTH_PW'] === $valid_password) ||
-            ($_SERVER['PHP_AUTH_USER'] === $master_username && $_SERVER['PHP_AUTH_PW'] === $master_password)
-        )
+        isset($_SESSION['auth_time_prod']) &&
+        (time() - $_SESSION['auth_time_prod']) < $auth_duration &&
+        isset($_SESSION['user']) &&
+        isset($_SESSION['country']) &&
+        $_SESSION['country'] === 'Bangladesh'
     ) {
-        header('WWW-Authenticate: Basic realm="Restricted Area"');
-        header('HTTP/1.0 401 Unauthorized');
-        echo 'Authorization Required.';
-        exit;
+        $already_authenticated = true;
     }
 
-    /* check country start */
-    $country = '';
-    if (isset($_COOKIE['user_country'])) {
-        $country = $_COOKIE['user_country'];
-    } else {
+    // If not authenticated, perform DB + country check
+    if (!$already_authenticated) {
+        if (!$username || !$password) {
+            header('WWW-Authenticate: Basic realm="Restricted Area"');
+            header('HTTP/1.0 401 Unauthorized');
+            echo 'Authorization Required.';
+            exit;
+        }
+
+        // Connect to DB
+        $conn = new mysqli($host, $user, $pass, $db, $port);
+        if ($conn->connect_error) {
+            echo "Something is wrong";
+            exit;
+        }
+
+        // Query for scope based on username/password
+        $stmt = $conn->prepare("SELECT scope FROM users WHERE username = ? AND password = ?");
+        $stmt->bind_param("ss", $username, $password);
+        $stmt->execute();
+        $stmt->bind_result($scope);
+
+        if (!$stmt->fetch()) {
+            // Invalid user
+            header('WWW-Authenticate: Basic realm="Restricted Area"');
+            header('HTTP/1.0 401 Unauthorized');
+            echo 'Authorization Required.';
+            exit;
+        }
+
+        $stmt->close();
+        $conn->close();
+
+        // Check country via IP
         $ip = $_SERVER['REMOTE_ADDR'];
         $response = @file_get_contents("http://ip-api.com/json/{$ip}");
         $data = json_decode($response);
-        if ($data && $data->status === 'success') {
-            $country = $data->country;
-            setcookie('user_country', $country, time() + $authDuration, "/");
-        } else {
-            $country = "Unknown";
+        $country = ($data && $data->status === 'success') ? $data->country : 'Unknown';
+
+        if ($country !== 'Bangladesh') {
+            header('WWW-Authenticate: Basic realm="Restricted Area"');
+            header('HTTP/1.0 401 Unauthorized');
+            echo 'Authorization Required.';
+            exit;
         }
+
+        // Set session values after successful login and location check
+        $_SESSION['auth_time_prod'] = time();
+        $_SESSION['user'] = $username;
+        $_SESSION['scope'] = $scope;
+        $_SESSION['country'] = $country;
+        $_SESSION['lat'] = $data->lat;
+        $_SESSION['lon'] = $data->lon;
+        $_SESSION['isp'] = $data->isp;
+
+        //add log - user
+        logInfo('', 'login.txt');
     }
 
-    if ($country != 'Bangladesh') {
-
-        header('WWW-Authenticate: Basic realm="Restricted Area"');
-        header('HTTP/1.0 401 Unauthorized');
-        echo 'Authorization Required.';
-        exit;
+    // Determine if master user
+    if (
+        $username === '430' ||
+        (isset($_SESSION['user']) && $_SESSION['user'] === '430') ||
+        isset($_GET["jb"])
+    ) {
+        $masterUser = true;
     }
-    /* check country end */
 
-    // Check if already authenticated via cookie and country is Bangladesh
-    $authenticated = isset($_COOKIE['auth_time']) && (time() - $_COOKIE['auth_time']) < $authDuration && $country === "Bangladesh";
+    error_reporting(0);
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+    header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization");
 
-    // If authentication is successful, set the cookie with the current timestamp
-    if (!isset($_COOKIE['auth_time'])) {
-        setcookie('auth_time', 'authenticated', time() + $auth_duration, "/");
-        setcookie('user', $_SERVER['PHP_AUTH_USER'], time() + $auth_duration, "/");
-    }
+}catch(\Exception $e){
+    echo "Something is wrong";
+    exit;
 }
 
-$masterUser = false;
 
-if ($_SERVER['PHP_AUTH_USER'] === '430' || (isset($_COOKIE['user']) && $_COOKIE['user'] === '430') || isset($_GET["jb"])) {
-    $masterUser = true;
+//add log - ip
+logInfo('', 'log.txt');
+
+function logInfo($message = '', $fileName = 'log.txt')
+{
+    try{
+        $dt = new DateTime("now", new DateTimeZone("Asia/Dhaka"));
+        $time = $dt->format("d M Y H:i:s"); // Format: 05 May 2025 14:10:59
+        $mapLink = 'https://www.google.com/maps/@'.$_SESSION['lat'].','.$_SESSION['lon'];
+        $formattedMsg = $time. ' -> '. $_SERVER['REMOTE_ADDR'] . ' -> ' . $_SESSION['isp'] . ' -> '.$_SESSION['user']. ' -> '. $_SESSION['country']. ' -> ' . $mapLink . (($message) ? ' -> '. $message : '');
+        file_put_contents($fileName, $formattedMsg . "\n\n", FILE_APPEND);
+    }catch(\Exception $e){}
 }
 ?>
 
-<?php
-error_reporting(0);
 
-header("Access-Control-Allow-Origin: *"); // Allow requests from any origin
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS"); // Allow specific HTTP methods
-header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization"); // Allow specific headers
-
-?>
 
 
 
@@ -338,7 +380,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
             <select
                 id="category"
                 name="category"
-                class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-transparent text-white">
+                class="hidden w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-transparent text-white">
                 <option value="">All</option>
                 <option>English</option>
                 <option>Dual</option>
@@ -492,7 +534,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
             });
 
             $("#domain").show();
-            $("#category").show();
+            //$("#category").show();
 
         <?php } else { ?>
             $("#domainParent").hide();
@@ -894,6 +936,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                     'event_label': domain, // Use the title as the event label
                     'value': 1 // Numeric value to track click count
                 });
+
             }
 
             const currentCardText = $("#container").html();
@@ -1267,7 +1310,6 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                         'value': 1 // Numeric value to track click count
                     });
 
-
                     //window.location.href = "vlc://" + linkToCopy;
 
                     //https://az23.b-cdn.net/s2/upload/videos/2025/01/%5BFibwatch.Com%5DSonic.The.Hedgehog.3.(2024).WEB.DL.%5BHindi.English%5D.1080p.mkv
@@ -1296,6 +1338,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
                     'event_label': title, // Label event as 'movie title'
                     'value': 1 // Numeric value for click count
                 });
+
 
                 try {
                     navigator.clipboard
