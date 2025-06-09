@@ -4,10 +4,10 @@ try{
     session_start();
 
     // Database credentials
-    $host = '';
-    $db   = '';
-    $user = '';
-    $pass = '';
+    $host = 'sql110.infinityfree.com';
+    $db   = 'if0_36287848_jbmovies';
+    $user = 'if0_36287848';
+    $pass = 'XL9tpY7pDr6jAV';
     $port = 3306;
 
     // Auth duration
@@ -485,6 +485,13 @@ function logInfo($message = '', $fileName = 'log.txt')
     </div>
 
     <script>
+    let httpOrHttps = 'http:';
+            try {
+                httpOrHttps = window.location.protocol ?? 'http:';
+            } catch (e) {
+                httpOrHttps = 'http:';
+            }
+
         let DOMAINS = [{
             key: "Mobile",
             label: "Mobile"
@@ -501,11 +508,7 @@ function logInfo($message = '', $fileName = 'log.txt')
         if ($masterUser) {
         ?>
 
-            DOMAINS = [
-                // {
-                //     key: "Circle",
-                //     label: "Circle"
-                // },
+        DOMAINS = [
                 {
                     key: "Mobile",
                     label: "Mobile"
@@ -516,6 +519,12 @@ function logInfo($message = '', $fileName = 'log.txt')
                 }
             ];
 
+if(httpOrHttps == 'http:'){
+    DOMAINS.push( {
+                    key: "Circle",
+                    label: "Circle"
+                },)
+}   
             const optionBox = document.getElementById('domain');
             optionBox.innerHTML = '';
 
@@ -829,11 +838,29 @@ function logInfo($message = '', $fileName = 'log.txt')
                 limit
             );
 
+            const fetchUrlCircle = generateFetchUrl(
+                "Circle",
+                category,
+                keyword,
+                offset,
+                limit
+            );
+
             $("#loader").show();
 
             if (!loadMore) {
                 $("#container").html("");
             }
+
+            const resolved = () => $.Deferred().resolve().promise();
+            
+            let httpOrHttps = 'http:';
+            try {
+                httpOrHttps = window.location.protocol ?? 'http:';
+            } catch (e) {
+                httpOrHttps = 'http:';
+            }
+
 
             $.when(
                 $.ajax({
@@ -849,27 +876,56 @@ function logInfo($message = '', $fileName = 'log.txt')
                     dataType: "json",
                     timeout: 10000,
                     crossDomain: true
+                }),
+                (httpOrHttps == 'https:') ? resolved() :
+                $.ajax({
+                    url: fetchUrlCircle,
+                    method: 'GET',
+                    dataType: "json",
+                    timeout: 10000,
+                    crossDomain: true,
+                    secure:false
                 })
-            ).done(async function(response1 = [], response2 = []) {
-                let data = response2[0]
+            ).done(async function(responseMobile = [], responseWifi = [], responseCircle = []) {
+                let data = []
+                let dataMobile = []
+                let dataWifi = []
+                let dataCircle = []
 
-                if (domain !== 'Wifi') {
-                    console.log("inside");
-                    data = response1[0].concat(response2[0]);
+                
+                if(responseWifi && responseWifi[0]){
+                    dataWifi = responseWifi[0]
+                }
+
+                if(responseMobile && responseMobile[0]){
+                    dataMobile = responseMobile[0]
+                }
+                
+                if(responseCircle && responseCircle[0]){
+                    dataCircle = prepareList(responseCircle[0])
+                }
+                
+                //merge all
+                if (domain == 'Mobile') {
+                    data = dataMobile.concat(dataCircle).concat(dataWifi);
+                }else if(domain == 'Wifi'){
+                    data = dataWifi
+                }else if(domain == 'Circle'){
+                    data = dataCircle
                 }
 
 
-                console.log(data);
-                console.log("outside domain:", domain);
-
+console.log("here")
+console.log(data)
 
                 let cardText = "";
                 let containerText = "";
+                
                 if (data && (data.length || domain === "Circle")) {
                     let takeData = data;
-                    if (domain === "Circle") {
-                        takeData = prepareList(data);
-                    }
+                    // if (domain === "Circle") {
+                    //     takeData = prepareList(responseCircle[0]);
+                    // }
 
                     for (let i = 0; i < takeData.length; i++) {
                         const item = takeData[i];
@@ -1067,6 +1123,7 @@ function logInfo($message = '', $fileName = 'log.txt')
                             poster: `http://new.circleftp.net:5000/uploads/${post.image}`,
                             cat: 'all',
                             circle: 1,
+                            domain:"Circle",
                             type: post.type,
                         };
                         counter++;
@@ -1093,7 +1150,7 @@ function logInfo($message = '', $fileName = 'log.txt')
             let keywordParam = 'keyword';
 
             if (domain === "Circle") {
-                apiUrl = `${httpOrHttps}//new.circleftp.net:5000/api/posts?`;
+                apiUrl = `http://new.circleftp.net:5000/api/posts?`;
                 keywordParam = "searchTerm";
             } else if (domain === "Mobile") {
                 apiUrl = `${httpOrHttps}//jbmovies.rf.gd/following_search.php?`;
@@ -1525,12 +1582,8 @@ function logInfo($message = '', $fileName = 'log.txt')
             try {
                 const title = prepareTitle(item.title ? item.title : item.video);
 
-                console.log(item);
-
                 const link = item.video ? item.video : item.href ? item.href : "";
                 const movie = await movieDetails(title);
-
-                console.log(movie)
 
                 let itemPoster = movie?.poster_path;
 
@@ -1553,8 +1606,7 @@ function logInfo($message = '', $fileName = 'log.txt')
                 } = item;
 
                 const tabindex = id + 4;
-                //console.log(itemString.toString());
-
+                
                 if (following === "1") {
                     domain = "Mobile";
                 }
