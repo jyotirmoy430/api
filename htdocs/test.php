@@ -1,6 +1,6 @@
 <?php
 
-try{
+try {
     session_start();
 
     // Database credentials
@@ -91,8 +91,8 @@ try{
 
     // Determine if master user
     if (
-        $username === '430' ||
-        (isset($_SESSION['user']) && $_SESSION['user'] === '430') ||
+        (isset($scope) && $scope == 1) ||
+        (isset($_SESSION['scope']) && $_SESSION['scope'] == 1) ||
         isset($_GET["jb"])
     ) {
         $masterUser = true;
@@ -102,8 +102,7 @@ try{
     header("Access-Control-Allow-Origin: *");
     header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
     header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization");
-
-}catch(\Exception $e){
+} catch (\Exception $e) {
     echo "Something is wrong";
     exit;
 }
@@ -114,13 +113,14 @@ logInfo('', 'log.txt');
 
 function logInfo($message = '', $fileName = 'log.txt')
 {
-    try{
+    try {
         $dt = new DateTime("now", new DateTimeZone("Asia/Dhaka"));
         $time = $dt->format("d M Y H:i:s"); // Format: 05 May 2025 14:10:59
-        $mapLink = 'https://www.google.com/maps/@'.$_SESSION['lat'].','.$_SESSION['lon'];
-        $formattedMsg = $time. ' -> '. $_SERVER['REMOTE_ADDR'] . ' -> ' . $_SESSION['isp'] . ' -> '.$_SESSION['user']. ' -> '. $_SESSION['country']. ' -> ' . $mapLink . (($message) ? ' -> '. $message : '');
+        $mapLink = 'https://www.google.com/maps/@' . $_SESSION['lat'] . ',' . $_SESSION['lon'];
+        $formattedMsg = $time . ' -> ' . $_SERVER['REMOTE_ADDR'] . ' -> ' . $_SESSION['isp'] . ' -> ' . $_SESSION['user'] . ' -> ' . $_SESSION['country'] . ' -> ' . $mapLink . (($message) ? ' -> ' . $message : '');
         file_put_contents($fileName, $formattedMsg . "\n\n", FILE_APPEND);
-    }catch(\Exception $e){}
+    } catch (\Exception $e) {
+    }
 }
 ?>
 
@@ -135,7 +135,7 @@ function logInfo($message = '', $fileName = 'log.txt')
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <link
         href="https://cdn.jsdelivr.net/npm/tailwindcss@latest/dist/tailwind.min.css"
@@ -145,22 +145,6 @@ function logInfo($message = '', $fileName = 'log.txt')
     <link rel="apple-touch-icon" href="favicon.png" />
 
     <title>JBMovies</title>
-
-    <!-- Google tag (gtag.js) -->
-    <script
-        async
-        src="https://www.googletagmanager.com/gtag/js?id=G-QQ83Y2HBE3"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag("js", new Date());
-
-        gtag("config", "G-QQ83Y2HBE3");
-    </script>
-
     <style>
         body {
             background-color: #10202f;
@@ -485,12 +469,12 @@ function logInfo($message = '', $fileName = 'log.txt')
     </div>
 
     <script>
-    let httpOrHttps = 'http:';
-            try {
-                httpOrHttps = window.location.protocol ?? 'http:';
-            } catch (e) {
-                httpOrHttps = 'http:';
-            }
+        let httpOrHttps = 'http:';
+        try {
+            httpOrHttps = window.location.protocol ?? 'http:';
+        } catch (e) {
+            httpOrHttps = 'http:';
+        }
 
         let DOMAINS = [{
             key: "Mobile",
@@ -508,8 +492,7 @@ function logInfo($message = '', $fileName = 'log.txt')
         if ($masterUser) {
         ?>
 
-        DOMAINS = [
-                {
+            DOMAINS = [{
                     key: "Mobile",
                     label: "Mobile"
                 },
@@ -519,12 +502,12 @@ function logInfo($message = '', $fileName = 'log.txt')
                 }
             ];
 
-if(httpOrHttps == 'http:'){
-    DOMAINS.push( {
+            if (httpOrHttps == 'http:') {
+                DOMAINS.push({
                     key: "Circle",
                     label: "Circle"
-                },)
-}   
+                }, )
+            }
             const optionBox = document.getElementById('domain');
             optionBox.innerHTML = '';
 
@@ -578,8 +561,6 @@ if(httpOrHttps == 'http:'){
         function hideLinkBox() {
             $("#link").hide();
         }
-
-
 
         /* handle mouse up/down start */
 
@@ -741,13 +722,6 @@ if(httpOrHttps == 'http:'){
                     circle: circle !== "undefined" ? circle : null,
                 };
 
-                gtag('event', 'watchlater', {
-                    'movie_title': title, // Movie title parameter
-                    'event_category': 'movies', // Group under 'movies' category
-                    'event_label': title, // Use the title as the event label
-                    'value': 1 // Numeric value to track click count
-                });
-
                 if (type) {
                     takeObj.type = type;
                 }
@@ -809,10 +783,8 @@ if(httpOrHttps == 'http:'){
             const offset = offsetParam ? offsetParam : DEFAULT_OFFSET;
             const limit = limitParam ? limitParam : DEFAULT_LIMIT;
 
-
-            console.log("domain", domain)
-
             //set all values in local storage
+            localStorage.setItem("domain", domain);
             localStorage.setItem("category", category);
             localStorage.setItem("keyword", keyword);
             localStorage.setItem("offset", offset);
@@ -822,29 +794,14 @@ if(httpOrHttps == 'http:'){
             $("#keyword").val(keyword);
 
 
-            const fetchUrlWifi = generateFetchUrl(
-                "Wifi",
+            const fetchUrl = generateFetchUrl(
+                domain,
                 category,
                 keyword,
                 offset,
                 limit
             );
 
-            const fetchUrlMobile = generateFetchUrl(
-                "Mobile",
-                category,
-                keyword,
-                offset,
-                limit
-            );
-
-            const fetchUrlCircle = generateFetchUrl(
-                "Circle",
-                category,
-                keyword,
-                offset,
-                limit
-            );
 
             $("#loader").show();
 
@@ -852,8 +809,6 @@ if(httpOrHttps == 'http:'){
                 $("#container").html("");
             }
 
-            const resolved = () => $.Deferred().resolve().promise();
-            
             let httpOrHttps = 'http:';
             try {
                 httpOrHttps = window.location.protocol ?? 'http:';
@@ -864,68 +819,25 @@ if(httpOrHttps == 'http:'){
 
             $.when(
                 $.ajax({
-                    url: fetchUrlMobile,
-                    method: 'POST',
-                    dataType: "json",
-                    timeout: 10000,
-                    crossDomain: true
-                }),
-                $.ajax({
-                    url: fetchUrlWifi,
-                    method: 'POST',
-                    dataType: "json",
-                    timeout: 10000,
-                    crossDomain: true
-                }),
-                (httpOrHttps == 'https:') ? resolved() :
-                $.ajax({
-                    url: fetchUrlCircle,
-                    method: 'GET',
+                    url: fetchUrl,
+                    method: (domain === "Circle") ? 'GET' : 'POST',
                     dataType: "json",
                     timeout: 10000,
                     crossDomain: true,
-                    secure:false
-                })
-            ).done(async function(responseMobile = [], responseWifi = [], responseCircle = []) {
+                    secure: (domain === "Circle") ? false : true
+                }),
+            ).done(async function(response = []) {
                 let data = []
-                let dataMobile = []
-                let dataWifi = []
-                let dataCircle = []
-
                 
-                if(responseWifi && responseWifi[0]){
-                    dataWifi = responseWifi[0]
+                if (response) {
+                    data = response
                 }
-
-                if(responseMobile && responseMobile[0]){
-                    dataMobile = responseMobile[0]
-                }
-                
-                if(responseCircle && responseCircle[0]){
-                    dataCircle = prepareList(responseCircle[0])
-                }
-                
-                //merge all
-                if (domain == 'Mobile') {
-                    data = dataMobile.concat(dataCircle).concat(dataWifi);
-                }else if(domain == 'Wifi'){
-                    data = dataWifi
-                }else if(domain == 'Circle'){
-                    data = dataCircle
-                }
-
-
-console.log("here")
-console.log(data)
 
                 let cardText = "";
                 let containerText = "";
-                
-                if (data && (data.length || domain === "Circle")) {
+
+                if (data) {
                     let takeData = data;
-                    // if (domain === "Circle") {
-                    //     takeData = prepareList(responseCircle[0]);
-                    // }
 
                     for (let i = 0; i < takeData.length; i++) {
                         const item = takeData[i];
@@ -975,25 +887,6 @@ console.log(data)
             $("#domain").val(domain);
             $("#category").val(category);
             $("#keyword").val(keyword);
-
-
-            if (keyword) {
-                gtag('event', 'search_movie', {
-                    'movie_title': keyword, // Movie title parameter
-                    'event_category': 'search_movies', // Group under 'movies' category
-                    'event_label': keyword, // Use the title as the event label
-                    'value': 1 // Numeric value to track click count
-                });
-
-
-                gtag('event', 'domain_movie', {
-                    'movie_title': domain, // Movie title parameter
-                    'event_category': 'domain_movies', // Group under 'movies' category
-                    'event_label': domain, // Use the title as the event label
-                    'value': 1 // Numeric value to track click count
-                });
-
-            }
 
             const currentCardText = $("#container").html();
 
@@ -1123,7 +1016,7 @@ console.log(data)
                             poster: `http://new.circleftp.net:5000/uploads/${post.image}`,
                             cat: 'all',
                             circle: 1,
-                            domain:"Circle",
+                            domain: "Circle",
                             type: post.type,
                         };
                         counter++;
@@ -1360,13 +1253,6 @@ console.log(data)
                     link;
 
                 if (open && window.innerWidth < 1024) {
-                    gtag('event', 'play_movie', {
-                        'movie_title': title, // Movie title parameter
-                        'event_category': 'play_movies', // Group under 'movies' category
-                        'event_label': title, // Use the title as the event label
-                        'value': 1 // Numeric value to track click count
-                    });
-
                     //window.location.href = "vlc://" + linkToCopy;
 
                     //https://az23.b-cdn.net/s2/upload/videos/2025/01/%5BFibwatch.Com%5DSonic.The.Hedgehog.3.(2024).WEB.DL.%5BHindi.English%5D.1080p.mkv
@@ -1389,14 +1275,6 @@ console.log(data)
                     return true;
                 }
 
-                gtag('event', 'copy_movie_url', {
-                    'movie_title': title, // Movie title parameter
-                    'event_category': 'play_movies', // Group under 'movies' category
-                    'event_label': title, // Label event as 'movie title'
-                    'value': 1 // Numeric value for click count
-                });
-
-
                 try {
                     navigator.clipboard
                         .writeText(linkToCopy)
@@ -1418,14 +1296,6 @@ console.log(data)
                     }, 3000); // 3000 milliseconds = 3 seconds
 
                 } catch (e) {
-
-                    gtag('event', 'error', {
-                        'event_category': 'JavaScript Errors', // Group errors under this category
-                        'event_label': e.message, // The error message
-                        'error_type': e.type, // Custom parameter for the type of error
-                        'value': 1 // Set value to 1 for each error occurrence
-                    });
-
                     $("#linkInput").val(linkToCopy);
                     $("#link").show();
 
@@ -1454,19 +1324,13 @@ console.log(data)
 
 
             } catch (e) {
-                gtag('event', 'error', {
-                    'event_category': 'JavaScript Errors', // Group errors under this category
-                    'event_label': e.message, // The error message
-                    'error_type': e.type, // Custom parameter for the type of error
-                    'value': 1 // Set value to 1 for each error occurrence
-                });
                 console.log(e);
-
                 $("#loader").hide();
             }
         }
 
         const genreLookup = {
+            // Original genres (your list)
             28: "Action",
             12: "Adventure",
             16: "Animation",
@@ -1485,7 +1349,17 @@ console.log(data)
             10770: "Web",
             53: "Thriller",
             10752: "War",
-            37: "Western"
+            37: "Western",
+
+            // Additional genres (less common but valid in TMDb)
+            10759: "Action & Adventure", // Common in TV shows
+            10762: "Kids", // Family-friendly content
+            10763: "News", // Rare but exists
+            10764: "Reality", // Reality TV
+            10765: "Sci-Fi & Fantasy", // Hybrid genre
+            10766: "Soap", // Soap operas
+            10767: "Talk", // Talk shows
+            10768: "War & Politics", // Political/war documentaries
         };
 
         // Function to look up genre names based on an array of genre ids
@@ -1606,7 +1480,7 @@ console.log(data)
                 } = item;
 
                 const tabindex = id + 4;
-                
+
                 if (following === "1") {
                     domain = "Mobile";
                 }

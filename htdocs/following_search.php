@@ -37,6 +37,7 @@ try {
     $sort = ($_REQUEST["sort"] === 'asc') ? SORT_ASC : SORT_DESC;
 } catch (\Exception $e) {
 }
+
 if ($limit & $limit > 100) {
     $limit = 100;
 }
